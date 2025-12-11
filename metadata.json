@@ -1,0 +1,5 @@
+{
+  "name": "NihonGo - Beto Birthday Experience",
+  "description": "An intelligent travel planner for Japan powered by Gemini 2.5 Flash. Generates personalized daily itineraries based on your interests, budget, and travel style.",
+  "requestFramePermissions": []
+}

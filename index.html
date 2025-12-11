@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Beto Birthday Experience</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✈️</text></svg>">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom Tailwind Config -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'primary': '#ff1744', // Vivid Red
+              'accent': '#82b1ff',  // Bright Blue
+              'bg': '#000000',      // Pure Black Background
+              'card-bg': '#1c1c1c', // Dark Grey for cards
+              'border': '#444',     // Border colour
+              'text': '#ffffff',    // Main text
+              'sub-text': '#dddddd',// Secondary text
+              'popup-bg': '#1c1c1c',
+              'popup-btn': '#8ab4f8',
+              'popup-text': '#202124',
+            },
+            boxShadow: {
+              'custom': '0 4px 8px rgba(0,0,0,0.5)',
+            },
+            borderRadius: {
+              'xl': '12px',
+            },
+            fontSize: {
+                'xl-base': '1.25rem', // 20px
+            }
+          }
+        }
+      }
+    </script>
+
+    <!-- Global Styles -->
+    <style>
+      :root {
+        --primary: #ff1744; 
+        --popup-bg: #1c1c1c;
+      }
+
+      body { 
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        background-color: #000000;
+        color: #ffffff;
+      }
+      
+      /* Link Styling */
+      a {
+        color: #82b1ff;
+        text-decoration: none;
+        font-weight: 600;
+        border-bottom: 1px solid rgba(130, 177, 255, 0.3);
+        transition: all 0.15s ease-in-out;
+      }
+      a:hover { 
+        color: #fff;
+        background-color: #82b1ff;
+        border-bottom-color: transparent;
+        text-decoration: none;
+      }
+
+      /* Details/Summary Animation */
+      details > summary {
+        list-style: none;
+      }
+      details > summary::-webkit-details-marker {
+        display: none;
+      }
+      details > summary::after { 
+        content: '+';
+        font-size: 2rem;
+        font-weight: bold;
+        color: #fff;
+      }
+      details[open] > summary::after { 
+        content: '-';
+      }
+      details {
+        transition: border-color 0.3s;
+      }
+      details[open] {
+        border-color: #ff1744;
+      }
+
+      /* Leaflet Popup Overrides */
+      .leaflet-popup-content-wrapper {
+        background: var(--popup-bg) !important;
+        color: #fff;
+        border: 1px solid var(--primary);
+        border-radius: 12px;
+        padding: 0;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      }
+      .leaflet-popup-content {
+        margin: 20px;
+        width: 280px !important;
+        color: #ffffff;
+        text-align: left;
+      }
+      .leaflet-popup-tip-container {
+        margin-top: -1px; 
+      }
+      .leaflet-popup-tip {
+        background: var(--popup-bg);
+        border-right: 1px solid var(--primary); 
+        border-bottom: 1px solid var(--primary);
+        box-shadow: none;
+        border-top: none;
+        border-left: none;
+      }
+      .leaflet-container a.leaflet-popup-close-button {
+        color: #9aa0a6;
+        font-size: 24px;
+        top: 12px;
+        right: 12px;
+      }
+      .leaflet-container a.leaflet-popup-close-button:hover {
+        color: #fff;
+      }
+
+      /* High Contrast Map Labels */
+      .high-contrast-labels {
+        filter: brightness(1.2) contrast(1.1);
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.1",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.1/",
+    "react/": "https://esm.sh/react@^19.2.1/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.559.0"
+  }
+}
+</script>
+</head>
+  <body class="bg-bg text-text antialiased">
+    <div id="root"></div>
+  </body>
+</html>
