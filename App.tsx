@@ -99,104 +99,123 @@ const App: React.FC = () => {
   const mapRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
 
-  // Initialize Map
+  // 1. Initialize Map Effect (Runs once on mount)
   useEffect(() => {
-    if (!document.getElementById('map')) return;
-    
-    // Check if map is already initialized
-    if (!mapRef.current) {
-        mapRef.current = L.map('map').setView([35.6895, 139.6917], 12);
-        
-        // Add Base Layer (Dark, No Labels)
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-            subdomains: 'abcd',
-            maxZoom: 19
-        }).addTo(mapRef.current);
+    const mapContainer = document.getElementById('map');
+    if (!mapContainer) return;
 
-        // Add Label Layer (Dark, Only Labels) with custom CSS class for high contrast
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png', {
-            subdomains: 'abcd',
-            maxZoom: 19,
-            className: 'high-contrast-labels', // Increases brightness via CSS
-            zIndex: 650 // Ensure labels stay above polygons but below markers/popups
-        }).addTo(mapRef.current);
+    // Destroy existing map if it exists (Cleanup for HMR/Re-renders)
+    if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
     }
 
-    // Update markers based on active city and selected day
-    const updateMarkers = () => {
-        // Clear existing
-        markersRef.current.forEach(m => mapRef.current.removeLayer(m));
-        markersRef.current = [];
+    // Initialize Map with default attribution disabled
+    const map = L.map('map', { 
+        attributionControl: false,
+        zoomControl: false // Move zoom control or keep it off for cleaner mobile look
+    }).setView([35.6895, 139.6917], 12);
+    
+    // Add Zoom Control manually if desired, or leave off. 
+    // Adding top-right for better ergonomics
+    L.control.zoom({ position: 'topright' }).addTo(map);
 
-        const cityLocs = locations[activeCity];
-        if (!cityLocs) return;
+    // Add minimal custom attribution to avoid clutter
+    L.control.attribution({
+        prefix: false
+    }).addTo(map);
+    
+    // Base Layer (Dark, No Labels)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19
+    }).addTo(map);
 
-        const group = L.featureGroup();
+    // Label Layer (Dark, Only Labels)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png', {
+        subdomains: 'abcd',
+        maxZoom: 19,
+        className: 'high-contrast-labels',
+        zIndex: 650
+    }).addTo(map);
 
-        // Extract day number if a day is open (e.g., "day1" -> "1", "day8" -> "8")
-        const currentDayNumber = openDay ? openDay.replace('day', '') : null;
-        
-        // Regex to match whole word numbers. 
-        // e.g. "8" should match "Day 8" and "Day 8/11" but not "Day 18"
-        const dayRegex = currentDayNumber ? new RegExp(`\\b${currentDayNumber}\\b`) : null;
+    mapRef.current = map;
 
-        cityLocs.forEach(loc => {
-            const isHotel = loc.type === 'hotel';
-            // Show if: it is a hotel OR no day is selected OR the location's day matches the selected day
-            const matchesDay = !dayRegex || (loc.day && dayRegex.test(loc.day));
-
-            if (isHotel || matchesDay) {
-                const icon = getIcon(loc.type);
-                const titleHtml = loc.url 
-                    ? `<a href="${loc.url}" target="_blank" rel="noopener noreferrer" class="text-xl font-bold !text-white mb-1 leading-tight inline-block border-b border-white/30 hover:!text-accent hover:border-accent transition-colors duration-200">${loc.name}</a>` 
-                    : `<span class="text-xl font-bold text-primary mb-1 leading-tight block">${loc.name}</span>`;
-
-                const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lon}&travelmode=transit`;
-
-                const m = L.marker([loc.lat, loc.lon], {icon: icon})
-                    .bindPopup(`
-                        <div class="text-left">
-                            <span class="text-sub-text font-extrabold text-xs uppercase tracking-wide mb-1 block">${loc.day}</span>
-                            ${titleHtml}
-                            <span class="text-gray-400 font-bold text-xs uppercase tracking-wide mb-2 block">${loc.type}</span>
-                            <span class="text-gray-300 text-sm leading-relaxed mb-4 block">${loc.desc}</span>
-                            <a href="${directionsUrl}" 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                class="inline-block bg-[#8ab4f8] text-[#202124] px-4 py-2 rounded-full text-sm font-bold hover:bg-[#aecbfa] transition-colors shadow-md no-underline border-none">
-                                📍Get Directions
-                            </a>
-                        </div>
-                    `)
-                    .addTo(mapRef.current);
-                
-                group.addLayer(m);
-                markersRef.current.push(m);
-            }
-        });
-
-        // Fit bounds to the currently visible markers
-        if (group.getLayers().length > 0) {
-            mapRef.current.fitBounds(group.getBounds().pad(0.2));
+    // Cleanup function to remove map when component unmounts
+    return () => {
+        if (mapRef.current) {
+            mapRef.current.remove();
+            mapRef.current = null;
         }
     };
+  }, []);
 
-    updateMarkers();
+  // 2. Update Markers Effect (Runs when activeCity or openDay changes)
+  useEffect(() => {
+    if (!mapRef.current) return;
 
-    // Re-size map when tab changes as container might have shifted
+    // Clear existing markers
+    markersRef.current.forEach(m => mapRef.current.removeLayer(m));
+    markersRef.current = [];
+
+    const cityLocs = locations[activeCity];
+    if (!cityLocs) return;
+
+    const group = L.featureGroup();
+    const currentDayNumber = openDay ? openDay.replace('day', '') : null;
+    const dayRegex = currentDayNumber ? new RegExp(`\\b${currentDayNumber}\\b`) : null;
+
+    cityLocs.forEach(loc => {
+        const isHotel = loc.type === 'hotel';
+        const matchesDay = !dayRegex || (loc.day && dayRegex.test(loc.day));
+
+        if (isHotel || matchesDay) {
+            const icon = getIcon(loc.type);
+            const titleHtml = loc.url 
+                ? `<a href="${loc.url}" target="_blank" rel="noopener noreferrer" class="text-xl font-bold !text-white mb-1 leading-tight inline-block border-b border-white/30 hover:!text-accent hover:border-accent transition-colors duration-200">${loc.name}</a>` 
+                : `<span class="text-xl font-bold text-primary mb-1 leading-tight block">${loc.name}</span>`;
+
+            const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lon}&travelmode=transit`;
+
+            const m = L.marker([loc.lat, loc.lon], {icon: icon})
+                .bindPopup(`
+                    <div class="text-left">
+                        <span class="text-sub-text font-extrabold text-xs uppercase tracking-wide mb-1 block">${loc.day}</span>
+                        ${titleHtml}
+                        <span class="text-gray-400 font-bold text-xs uppercase tracking-wide mb-2 block">${loc.type}</span>
+                        <span class="text-gray-300 text-sm leading-relaxed mb-4 block">${loc.desc}</span>
+                        <a href="${directionsUrl}" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            class="inline-block bg-[#8ab4f8] text-[#202124] px-4 py-2 rounded-full text-sm font-bold hover:bg-[#aecbfa] transition-colors shadow-md no-underline border-none">
+                            📍Get Directions
+                        </a>
+                    </div>
+                `)
+                .addTo(mapRef.current);
+            
+            group.addLayer(m);
+            markersRef.current.push(m);
+        }
+    });
+
+    if (group.getLayers().length > 0) {
+        mapRef.current.fitBounds(group.getBounds().pad(0.2));
+    }
+
+    // Small delay to ensure container resize is handled if layout shifted
     setTimeout(() => {
         mapRef.current.invalidateSize();
     }, 100);
 
   }, [activeCity, openDay]);
 
-  // Close all cards when switching cities
+  // Close day when switching cities
   useEffect(() => {
     setOpenDay(null);
   }, [activeCity]);
 
-  // Handle accordion toggle
   const handleToggle = (e: React.MouseEvent, dayId: string) => {
     e.preventDefault();
     setOpenDay(prev => prev === dayId ? null : dayId);
