@@ -161,10 +161,10 @@ export const MapContainer: React.FC<MapContainerProps> = ({ activeCity, openDay,
       </div>
 
       {/* Map Legend / Toggles */}
-      <div className="flex flex-wrap justify-center gap-3 mb-8">
+      <div className="grid grid-cols-2 gap-3 mb-8 md:flex md:flex-wrap md:justify-center">
         <button 
           onClick={() => toggleCategory('sight_rec')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 shadow-sm transition-all duration-300 ${toggles.sight_rec ? 'bg-card-bg/80' : 'bg-card-bg/30 opacity-70 hover:opacity-100'}`}
+          className={`flex items-center justify-center w-full md:w-auto gap-2 px-4 py-2 rounded-full border border-white/10 shadow-sm transition-all duration-300 ${toggles.sight_rec ? 'bg-card-bg/80' : 'bg-card-bg/30 opacity-70 hover:opacity-100'}`}
         >
             <span className={`w-3 h-3 rounded-full bg-[#00BCD4] transition-all duration-300 ${toggles.sight_rec ? 'shadow-[0_0_8px_#00BCD4]' : 'opacity-40 shadow-none'}`}></span>
             <span className="text-[10px] font-black text-white uppercase tracking-widest">Landmarks</span>
@@ -172,7 +172,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({ activeCity, openDay,
         
         <button 
           onClick={() => toggleCategory('food_rec')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 shadow-sm transition-all duration-300 ${toggles.food_rec ? 'bg-card-bg/80' : 'bg-card-bg/30 opacity-70 hover:opacity-100'}`}
+          className={`flex items-center justify-center w-full md:w-auto gap-2 px-4 py-2 rounded-full border border-white/10 shadow-sm transition-all duration-300 ${toggles.food_rec ? 'bg-card-bg/80' : 'bg-card-bg/30 opacity-70 hover:opacity-100'}`}
         >
             <span className={`w-3 h-3 rounded-full bg-[#F48FB1] transition-all duration-300 ${toggles.food_rec ? 'shadow-[0_0_8px_#F48FB1]' : 'opacity-40 shadow-none'}`}></span>
             <span className="text-[10px] font-black text-white uppercase tracking-widest">Must-Try Food</span>
@@ -180,7 +180,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({ activeCity, openDay,
         
         <button 
           onClick={() => toggleCategory('shopping')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 shadow-sm transition-all duration-300 ${toggles.shopping ? 'bg-card-bg/80' : 'bg-card-bg/30 opacity-70 hover:opacity-100'}`}
+          className={`flex items-center justify-center w-full md:w-auto gap-2 px-4 py-2 rounded-full border border-white/10 shadow-sm transition-all duration-300 ${toggles.shopping ? 'bg-card-bg/80' : 'bg-card-bg/30 opacity-70 hover:opacity-100'}`}
         >
             <span className={`w-3 h-3 rounded-full bg-[#FFD700] transition-all duration-300 ${toggles.shopping ? 'shadow-[0_0_8px_#FFD700]' : 'opacity-40 shadow-none'}`}></span>
             <span className="text-[10px] font-black text-white uppercase tracking-widest">Shopping Hubs</span>
@@ -189,7 +189,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({ activeCity, openDay,
         {/* Must Buy Button */}
         <button
           onClick={onOpenShopping}
-          className="flex items-center gap-2 px-4 py-2 rounded-full border border-[#FFD700] shadow-[0_0_8px_rgba(255,215,0,0.4)] bg-[#FFD700]/10 hover:bg-[#FFD700] hover:text-black text-[#FFD700] transition-all duration-300"
+          className="flex items-center justify-center w-full md:w-auto gap-2 px-4 py-2 rounded-full border border-[#FFD700] shadow-[0_0_8px_rgba(255,215,0,0.4)] bg-[#FFD700]/10 hover:bg-[#FFD700] hover:text-black text-[#FFD700] transition-all duration-300"
         >
             <ShoppingBag className="w-3 h-3" />
             <span className="text-[10px] font-black uppercase tracking-widest">Must Buy</span>
