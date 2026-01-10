@@ -1,9 +1,9 @@
-import { GoogleGenAI, Type, Schema } from "@google/genai";
+import { GoogleGenAI, Type } from "@google/genai";
 import { UserPreferences, ItineraryResponse } from '../types';
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
-const itinerarySchema: Schema = {
+const itinerarySchema = {
   type: Type.OBJECT,
   properties: {
     tripTitle: {
@@ -61,7 +61,7 @@ export const generateItinerary = async (prefs: UserPreferences): Promise<Itinera
 
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3-flash-preview',
       contents: prompt,
       config: {
         responseMimeType: "application/json",

@@ -4,7 +4,7 @@ export interface LocationData {
   name: string;
   lat: number;
   lon: number;
-  type: 'travel' | 'sight' | 'food' | 'hotel';
+  type: 'travel' | 'sight' | 'food' | 'hotel' | 'suggestion';
   desc: string;
   day: string;
   url: string;
