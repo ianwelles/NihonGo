@@ -87,24 +87,25 @@ export const locations: LocationsMap = {
     {name: "Fuunji", lat: 35.6872, lon: 139.6967, type: "food", desc: "Legendary Tsukemen (Dipping Noodles)", day: "Day 3", url: "https://www.fu-unji.com/"},
     {name: "Hilton Tokyo", lat: 35.6925, lon: 139.6921, type: "hotel", desc: "Top Pick Hotel - 6-6-2 Nishi-Shinjuku, Shinjuku-ku, Tokyo 160-0023, Japan", day: "Stay", url: "https://www.hilton.com/en/hotels/tyohitw-hilton-tokyo/"},
     {name: "Ichiran Shinjuku", lat: 35.6909, lon: 139.7032, type: "suggestion", desc: "The ultimate solo dining experience. Customize your Tonkotsu ramen in a private booth. Perfect for a quick, focused culinary delight.", day: "Anytime", url: "https://www.instagram.com/ichiran_jp"},
-    // NEW RECOMMENDATIONS - SIGHTS (Cyan)
-    {name: "Ginza District", lat: 35.6712, lon: 139.7651, type: "sight_rec", desc: "Luxury and modernity. Elegant glass buildings.", day: "Any", url: "https://www.japan-guide.com/e/e3005.html"},
+    
+    // NEW RECOMMENDATIONS - TOKYO SIGHTS (Cyan)
+    {name: "Ginza District", lat: 35.6712, lon: 139.7665, type: "sight_rec", desc: "Symbol of luxury and modernity. Elegant glass buildings.", day: "Any", url: "https://www.japan-guide.com/e/e3005.html"},
     {name: "Tokyo Tower", lat: 35.6586, lon: 139.7454, type: "sight_rec", desc: "Iconic red tower with city views.", day: "Any", url: "https://www.tokyotower.co.jp/en/"},
-    {name: "Zojo-ji Temple", lat: 35.6575, lon: 139.7483, type: "sight_rec", desc: "Where modernity meets tradition, next to Tokyo Tower.", day: "Any", url: "https://www.zojoji.or.jp/en/"},
+    {name: "Zojo-ji Temple", lat: 35.6574, lon: 139.7482, type: "sight_rec", desc: "Where modernity meets tradition, next to Tokyo Tower.", day: "Any", url: "https://www.zojoji.or.jp/en/"},
     {name: "Meiji Shrine", lat: 35.6764, lon: 139.6993, type: "sight_rec", desc: "Serene Shinto shrine in a dense forest.", day: "Any", url: "https://www.meijijingu.or.jp/en/"},
     {name: "Kabukicho", lat: 35.6938, lon: 139.7035, type: "sight_rec", desc: "The famous 'red light' and nightlife district.", day: "Any", url: "https://www.gotokyo.org/en/destinations/western-tokyo/shinjuku/index.html"},
     {name: "Omotesando", lat: 35.6652, lon: 139.7125, type: "sight_rec", desc: "Tree-lined fashion and architecture avenue.", day: "Any", url: "https://www.japan-guide.com/e/e3006.html"},
     {name: "Takeshita Street", lat: 35.6715, lon: 139.7031, type: "sight_rec", desc: "Harajuku youth culture and urban tribes.", day: "Any", url: "https://www.japan-guide.com/e/e3006.html"},
     {name: "Hachiko Statue", lat: 35.6591, lon: 139.7006, type: "sight_rec", desc: "Legendary loyal dog statue in Shibuya.", day: "Any", url: "https://www.japan-guide.com/e/e3007.html"},
     {name: "Akihabara Electric Town", lat: 35.6997, lon: 139.7713, type: "sight_rec", desc: "Neons, anime, manga, and video games.", day: "Any", url: "https://www.japan-guide.com/e/e3003.html"},
-    {name: "Hamarikyu Gardens", lat: 35.6596, lon: 139.7634, type: "sight_rec", desc: "Quiet garden right next to Tsukiji Outer Market.", day: "Any", url: "https://www.tokyo-park.or.jp/teien/en/hama-rikyu/"},
-    // NEW RECOMMENDATIONS - FOOD (Pink)
-    {name: "Yamato Sushi", lat: 35.6465, lon: 139.7879, type: "food_rec", desc: "Fresh sushi (moved to Toyosu, 15m from Ginza).", day: "Any", url: "https://www.sushiyamato-toyosu.com/"},
-    {name: "Hakushu (Shibuya)", lat: 35.6575, lon: 139.7020, type: "food_rec", desc: "High-end Teppanyaki for authentic Kobe beef.", day: "Any", url: "https://www.shibuya-hakushu.com/"},
-    {name: "Ninja Akasaka", lat: 35.6766, lon: 139.7368, type: "food_rec", desc: "Ninja-concept theme restaurant.", day: "Any", url: "https://www.ninjaakasaka.com/"},
-    {name: "Sengoku Buyuden", lat: 35.6953, lon: 139.7028, type: "food_rec", desc: "Samurai-themed dining experience.", day: "Any", url: "https://www.sengokubuyuden.com/"},
-    {name: "Niágara Curry", lat: 35.6375, lon: 139.6917, type: "food_rec", desc: "Train-themed curry restaurant.", day: "Any", url: "https://www.niagara-curry.com/"},
-    // NEW SHOPPING HUBS (Gold)
+    {name: "Hamarikyu Gardens", lat: 35.6601, lon: 139.7630, type: "sight_rec", desc: "Quiet garden right next to Tsukiji Outer Market.", day: "Any", url: "https://www.tokyo-park.or.jp/teien/en/hama-rikyu/"},
+
+    // NEW RECOMMENDATIONS - TOKYO FOOD (Pink)
+    {name: "Yamato Sushi", lat: 35.6465, lon: 139.7879, type: "food_rec", desc: "Fresh sushi (Toyosu Market location).", day: "Any", url: "https://www.sushiyamato-toyosu.com/"},
+    {name: "Hakushu Teppanyaki", lat: 35.6558, lon: 139.7015, type: "food_rec", desc: "High-end Teppanyaki for authentic Kobe beef in Shibuya.", day: "Any", url: "https://teppanyaki-hakushu.com/"},
+    {name: "Niágara Curry", lat: 35.6375, lon: 139.6917, type: "food_rec", desc: "Train-themed curry restaurant in Yutenji. Closed Mon.", day: "Any", url: "https://www.niagara-curry.com/"},
+    
+    // Tokyo Shopping (Retained)
     {name: "Ginza Shopping Area", lat: 35.6712, lon: 139.7651, type: "shopping", desc: "Luxury boutiques and department stores.", day: "Any", url: "https://www.japan-guide.com/e/e3005.html"},
     {name: "Akihabara Shopping", lat: 35.6984, lon: 139.7731, type: "shopping", desc: "Best for electronics and anime merchandise.", day: "Any", url: "https://www.japan-guide.com/e/e3003.html"}
   ],
@@ -117,28 +118,30 @@ export const locations: LocationsMap = {
     {name: "Arashiyama Bamboo Grove", lat: 35.0094, lon: 135.6668, type: "sight", desc: "Famous Bamboo Forest", day: "Day 6", url: "https://www.japan-guide.com/e/e3912.html"},
     {name: "Nishiki Market", lat: 35.0050, lon: 135.7649, type: "food", desc: "Kyoto's Kitchen (Street Food)", day: "Day 6", url: "https://www.kyoto-nishiki.or.jp/"},
     {name: "Honke Daiichi-Asahi", lat: 34.9856, lon: 135.7602, type: "food", desc: "Classic Kyoto Soy Ramen", day: "Day 5", url: "https://www.honke-daiichiasahi.com/"},
-    {name: "Organic House Salute", lat: 34.9890, lon: 135.7550, type: "food", desc: "Vegetarian Friendly Dining", day: "Day 5", url: "https://www.happycow.net/reviews/organic-house-salute-kyoto-16345"},
     {name: "DoubleTree by Hilton Kyoto Station", lat: 34.9825, lon: 135.7621, type: "hotel", desc: "Top Pick Hotel - 15 Higashi Kujo Nishi Iwamotocho, Minami-ku, Kyoto, 601-8005, Japan", day: "Stay", url: "https://www.hilton.com/en/hotels/itmksdi-doubletree-kyoto-station/"},
     {name: "Menbaka Fire Ramen", lat: 35.0211, lon: 135.7460, type: "suggestion", desc: "A literal explosive dining experience! Watch as green onion oil is set ablaze over your bowl. High energy, high heat, and unforgettable.", day: "Anytime", url: "https://www.instagram.com/menbaka_fire_ramen"},
-    // NEW RECOMMENDATIONS - SIGHTS (Cyan)
-    {name: "Kyoto Imperial Palace", lat: 35.0254, lon: 135.7621, type: "sight_rec", desc: "Historic grounds reachable on foot from center.", day: "Any", url: "https://sankan.kunaicho.go.jp/english/"},
-    {name: "Higashiyama District", lat: 34.9986, lon: 135.7806, type: "sight_rec", desc: "Preserved district perfect for walking.", day: "Any", url: "https://www.japan-guide.com/e/e3959.html"},
-    {name: "Ninenzaka & Nene no Michi", lat: 34.9992, lon: 135.7818, type: "sight_rec", desc: "Charming traditional pedestrian slopes.", day: "Any", url: "https://www.japan-guide.com/e/e3959.html"},
-    {name: "Yasaka Pagoda (Hokan-ji)", lat: 34.9985, lon: 135.7792, type: "sight_rec", desc: "One of the most distinctive structures in Kyoto.", day: "Any", url: "https://www.japan-guide.com/e/e3959.html"},
-    {name: "Yasaka Jinja Shrine", lat: 35.0036, lon: 135.7785, type: "sight_rec", desc: "Large complex of temples and gates.", day: "Any", url: "https://www.yasaka-jinja.or.jp/en/"},
-    {name: "Shirakawa Street", lat: 35.0055, lon: 135.7738, type: "sight_rec", desc: "Canal-side walk, great for spotting Geishas.", day: "Any", url: "https://www.japan-guide.com/e/e3902.html"},
-    {name: "Nijo Castle", lat: 35.0142, lon: 135.7482, type: "sight_rec", desc: "Important palace of the old imperial city.", day: "Any", url: "https://nijo-jocastle.city.kyoto.lg.jp/?lang=en"},
-    {name: "Kinkaku-ji", lat: 35.0394, lon: 135.7292, type: "sight_rec", desc: "The famous Golden Pavilion.", day: "Any", url: "https://www.shokoku-ji.jp/en/kinkakuji/"},
-    {name: "Philosopher’s Path", lat: 35.0272, lon: 135.7958, type: "sight_rec", desc: "Pleasant canal-side walking path.", day: "Any", url: "https://www.japan-guide.com/e/e3906.html"},
-    {name: "Ginkaku-ji", lat: 35.0272, lon: 135.7982, type: "sight_rec", desc: "The Silver Pavilion.", day: "Any", url: "https://www.shokoku-ji.jp/en/ginkakuji/"},
-    // NEW RECOMMENDATIONS - FOOD (Pink)
-    {name: "Hikiniku to Come", lat: 35.0040, lon: 135.7745, type: "food_rec", desc: "Specializes in Japanese grilled hamburger steaks.", day: "Any", url: "https://www.hikinikutocome.com/"},
-    {name: "Restaurante Tomisen", lat: 35.0135, lon: 135.7675, type: "food_rec", desc: "Specialized high-quality Sushi.", day: "Any", url: "https://tomisen.jp/"},
-    {name: "Kobe Beef Mouriya Gion", lat: 35.0040, lon: 135.7725, type: "food_rec", desc: "Specializes in elite Kobe beef.", day: "Any", url: "https://www.mouriya.co.jp/en/gion"},
-    {name: "Botanic Coffee Kyoto", lat: 35.0165, lon: 135.7865, type: "food_rec", desc: "Retro café perfect for pancakes.", day: "Any", url: "https://www.instagram.com/botanic_coffee_kyoto/"},
-    {name: "Starbucks Ninenzaka", lat: 34.9990, lon: 135.7815, type: "food_rec", desc: "Located inside a traditional tatami house.", day: "Any", url: "https://www.starbucks.co.jp/en/"},
+
+    // NEW RECOMMENDATIONS - KYOTO SIGHTS (Cyan)
+    {name: "Kyoto Imperial Palace", lat: 35.0254, lon: 135.7621, type: "sight_rec", desc: "Historic palace grounds, walkable from center.", day: "Any", url: "https://sankan.kunaicho.go.jp/english/index.html"},
+    {name: "Higashiyama District", lat: 34.9949, lon: 135.7850, type: "sight_rec", desc: "Historic preserved district, walking and street food.", day: "Any", url: "https://www.japan-guide.com/e/e3959.html"},
+    {name: "Ninenzaka & Sannenzaka", lat: 34.9968, lon: 135.7820, type: "sight_rec", desc: "Charming traditional sloping streets.", day: "Any", url: "https://www.japan-guide.com/e/e3959.html"},
+    {name: "Yasaka Pagoda (Hokan-ji)", lat: 34.9985, lon: 135.7794, type: "sight_rec", desc: "Iconic 5-story pagoda view.", day: "Any", url: "https://kyoto.travel/en/shrines_temples/160.html"},
+    {name: "Yasaka Jinja", lat: 35.0037, lon: 135.7785, type: "sight_rec", desc: "Large complex of temples and gates in Gion.", day: "Any", url: "https://www.yasaka-jinja.or.jp/en/"},
+    {name: "Shirakawa Lane", lat: 35.0055, lon: 135.7758, type: "sight_rec", desc: "Beautiful canal street, good for Geisha spotting.", day: "Any", url: "https://www.japan-guide.com/e/e3902.html"},
+    {name: "Nijo Castle", lat: 35.0142, lon: 135.7482, type: "sight_rec", desc: "Shogun residence and gardens.", day: "Any", url: "https://nijo-jocastle.city.kyoto.lg.jp/?lang=en"},
+    {name: "Kinkaku-ji", lat: 35.0394, lon: 135.7292, type: "sight_rec", desc: "The Golden Pavilion.", day: "Any", url: "https://www.shokoku-ji.jp/en/kinkakuji/"},
+    {name: "Philosopher’s Path", lat: 35.0268, lon: 135.7954, type: "sight_rec", desc: "Pleasant canal-side walking path.", day: "Any", url: "https://www.japan-guide.com/e/e3906.html"},
+    {name: "Ginkaku-ji", lat: 35.0267, lon: 135.7982, type: "sight_rec", desc: "The Silver Pavilion.", day: "Any", url: "https://www.shokoku-ji.jp/en/ginkakuji/"},
+
+    // NEW RECOMMENDATIONS - KYOTO FOOD (Pink)
+    {name: "Hikiniku to Come", lat: 34.9965, lon: 135.7780, type: "food_rec", desc: "Famous charcoal grilled hamburger steaks.", day: "Any", url: "https://www.instagram.com/hikiniku.to.come/"},
+    {name: "Restaurante Tomisen", lat: 35.0040, lon: 135.7760, type: "food_rec", desc: "Specialises in Sushi.", day: "Any", url: "https://tabelog.com/en/kyoto/A2601/A260301/26002011/"},
+    {name: "Mouriya Gion", lat: 35.0045, lon: 135.7765, type: "food_rec", desc: "Specialises in Kobe Beef.", day: "Any", url: "https://www.mouriya.co.jp/en/gion"},
+    {name: "Botanic Coffee Kyoto", lat: 35.0012, lon: 135.7595, type: "food_rec", desc: "Retro café for pancakes and coffee.", day: "Any", url: "https://www.instagram.com/botanic_coffee_kyoto/"},
+    {name: "Starbucks Ninenzaka", lat: 34.9982, lon: 135.7825, type: "food_rec", desc: "Inside a traditional house with tatami floors.", day: "Any", url: "https://store.starbucks.co.jp/detail-1484/"},
+
     // NEW SHOPPING (Gold)
-    {name: "Yojiya Main Store", lat: 35.0090, lon: 135.7680, type: "shopping", desc: "Traditional cosmetics and rice products.", day: "Any", url: "https://www.yojiya.co.jp/en/"},
+    {name: "Yojiya Main Store", lat: 35.0094, lon: 135.7686, type: "shopping", desc: "Kyoto-based rice cosmetics brand.", day: "Any", url: "https://www.yojiya.co.jp/english/"},
     {name: "Shijo Kawaramachi", lat: 35.0039, lon: 135.7684, type: "shopping", desc: "Kyoto's main shopping district.", day: "Any", url: "https://www.japan-guide.com/e/e3960.html"}
   ],
   'Osaka': [
@@ -151,14 +154,19 @@ export const locations: LocationsMap = {
     {name: "Fukutaro", lat: 34.6655, lon: 135.5020, type: "food", desc: "Top Rated Okonomiyaki", day: "Day 7", url: "https://2951.jp/"},
     {name: "Ajinoya Honten", lat: 34.6680, lon: 135.5010, type: "food", desc: "Michelin Bib Gourmand Okonomiyaki", day: "Day 7", url: "http://www.ajinoya-okonomiyaki.com/top/"},
     {name: "Hilton Osaka", lat: 34.7003, lon: 135.4955, type: "hotel", desc: "Top Pick Hotel - 1-8-8, Umeda, Kita-ku, Osaka 530-0001, Japan", day: "Stay", url: "https://www.hilton.com/en/hotels/osahitw-hilton-osaka/"},
-    // NEW RECOMMENDATIONS - SIGHTS (Cyan)
-    {name: "Den Den Town", lat: 34.6596, lon: 135.5058, type: "sight_rec", desc: "The electronics and otaku district.", day: "Any", url: "https://osaka-info.jp/en/spot/den-den-town/"},
-    {name: "Nishinomaru Gardens", lat: 34.6865, lon: 135.5234, type: "sight_rec", desc: "Cherry tree haven inside castle grounds.", day: "Any", url: "https://www.osakacastle.net/english/"},
-    {name: "Glico Man Sign", lat: 34.6691, lon: 135.5013, type: "sight_rec", desc: "Specific photo spot in Dotonbori.", day: "Any", url: "https://osaka-info.jp/en/spot/dotonbori/"},
-    // NEW RECOMMENDATIONS - FOOD (Pink)
-    {name: "Kani Doraku Dontonbori", lat: 34.6685, lon: 135.5015, type: "food_rec", desc: "Famous specialized crab restaurant.", day: "Any", url: "https://douraku.co.jp/kansai/honten/"},
-    {name: "GEMS Namba", lat: 34.6660, lon: 135.5010, type: "food_rec", desc: "Multi-level meat specialty building.", day: "Any", url: "https://www.gems-portal.com/series/namba/"},
+    
+    // NEW RECOMMENDATIONS - OSAKA SIGHTS (Cyan)
+    {name: "Den Den Town", lat: 34.6593, lon: 135.5060, type: "sight_rec", desc: "Electronics district (Osaka's Akihabara).", day: "Any", url: "https://osaka-info.jp/en/spot/nipponbashi-den-den-town/"},
+    {name: "Nishinomaru Garden", lat: 34.6850, lon: 135.5255, type: "sight_rec", desc: "Osaka Castle grounds with 600 cherry trees.", day: "Any", url: "https://www.osakacastle.net/english/park/nishinomaru.html"},
+    {name: "Glico Man Sign", lat: 34.6687, lon: 135.5013, type: "sight_rec", desc: "Iconic photo spot in Dotonbori.", day: "Any", url: "https://osaka-info.jp/en/spot/dotonbori/"},
+
+    // NEW RECOMMENDATIONS - OSAKA FOOD (Pink)
+    {name: "Kani Doraku Dotonbori", lat: 34.6687, lon: 135.5013, type: "food_rec", desc: "Famous crab specialist with giant sign.", day: "Any", url: "https://douraku.co.jp/"},
+    {name: "GEMS Namba", lat: 34.6644, lon: 135.5008, type: "food_rec", desc: "Dining complex specialising in meat.", day: "Any", url: "https://www.gems-portal.com/series/detail.php?id=8"},
+    {name: "Ajinoya", lat: 34.6680, lon: 135.5015, type: "food_rec", desc: "Famous Okonomiyaki (Bib Gourmand).", day: "Any", url: "http://www.ajinoya-okonomiyaki.com/english/"},
+
     // NEW SHOPPING (Gold)
+    {name: "Don Quijote Dotonbori", lat: 34.6693, lon: 135.5028, type: "shopping", desc: "For Skincare/Snack Loot Drops (Ferris Wheel).", day: "Any", url: "https://www.donki.com/en/"},
     {name: "Shinsaibashi Shopping Arcade", lat: 34.6716, lon: 135.5015, type: "shopping", desc: "Premier covered shopping street.", day: "Any", url: "https://osaka-info.jp/en/spot/shinsaibashi-suji/"}
   ],
   'Shanghai': [
@@ -170,8 +178,7 @@ export const locations: LocationsMap = {
     {name: "Fu 1039", lat: 31.2200, lon: 121.4300, type: "food", desc: "Birthday Dinner (Classic)", day: "Day 9", url: "https://guide.michelin.com/en/shanghai-municipality/shanghai/restaurant/fu-1039"},
     {name: "Fu He Hui", lat: 31.2210, lon: 121.4310, type: "food", desc: "Birthday Dinner (Veg Option)", day: "Day 9", url: "https://guide.michelin.com/en/shanghai-municipality/shanghai/restaurant/fu-he-hui"},
     {name: "Old Jesse", lat: 31.2050, lon: 121.4400, type: "food", desc: "Authentic Local Cuisine", day: "Day 10", url: "https://guide.michelin.com/en/shanghai-municipality/shanghai/restaurant/old-jesse-xuhui"},
-    {name: "Jianguo 328", lat: 31.2080, lon: 121.4550, type: "food", desc: "MSG-Free Shanghainese", day: "Day 10", url: "https://guide.michelin.com/en/shanghai-municipality/shanghai/restaurant/jianguo-328"},
-    {name: "Eddy's", lat: 31.2100, lon: 121.4500, type: "sight", desc: "Gay Bar", day: "Day 9", url: "https://www.timeoutshanghai.com/venue/Bars__Clubs-Bars-Gay_Bars/1368/Eddys-Bar.html"},
+    {name: "Jianguo 328", lat: 31.2080, lon: 121.4550, type: "food", desc: "MSG-Free Shanghainese. Cash/Phone Bookings.", day: "Day 10", url: "https://guide.michelin.com/en/shanghai-municipality/shanghai/restaurant/jianguo-328"},
     {name: "Hilton Shanghai City Center", lat: 31.2185, lon: 121.4332, type: "hotel", desc: "Top Pick Hotel - No. 488 West Yan'an Road, Shanghai, 200050, China", day: "Stay", url: "https://www.hilton.com/en/hotels/shamshi-hilton-shanghai-city-center/"}
   ]
 };
