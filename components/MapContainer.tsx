@@ -31,6 +31,8 @@ const getIcon = (type: string) => {
 export const MapContainer: React.FC<MapContainerProps> = ({ activeCity, openDay, isAuthenticated, onOpenShopping }) => {
   const mapRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
+  const prevActiveCity = useRef<string | null>(null);
+  const prevOpenDay = useRef<string | null>(null);
   
   // State for toggling map layers
   const [toggles, setToggles] = useState({
@@ -123,14 +125,23 @@ export const MapContainer: React.FC<MapContainerProps> = ({ activeCity, openDay,
         }
     });
     
+    // Check if we should recenter (City change or Day change)
+    // We only want to fitBounds if the user changes context (City or Day), not when filtering.
+    const shouldRecenter = (activeCity !== prevActiveCity.current) || (openDay !== prevOpenDay.current);
+
     setTimeout(() => {
         if (mapRef.current) {
              mapRef.current.invalidateSize();
-             if (group.getLayers().length > 0) {
+             if (shouldRecenter && group.getLayers().length > 0) {
                  mapRef.current.fitBounds(group.getBounds().pad(0.1));
              }
         }
-    }, 250); 
+    }, 250);
+    
+    // Update refs
+    prevActiveCity.current = activeCity;
+    prevOpenDay.current = openDay;
+
   }, [activeCity, openDay, isAuthenticated, toggles]);
 
   return (
