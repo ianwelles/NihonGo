@@ -103,7 +103,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({ activeCity, openDay,
         if (isPersistent || matchesDay) {
             const icon = getIcon(loc.type);
             const titleHtml = loc.url 
-                ? `<a href="${loc.url}" target="_blank" rel="noopener noreferrer" class="text-xl font-bold !text-white mb-1 leading-tight inline-block border-b border-white/30 hover:!text-accent hover:border-accent transition-colors duration-200">${loc.name}</a>` 
+                ? `<a href="${loc.url}" target="_blank" rel="noopener noreferrer" class="text-xl font-bold !text-white mb-1 leading-tight inline-block border-b border-white/30 hover:!text-white hover:border-transparent transition-colors duration-200">${loc.name}</a>` 
                 : `<span class="text-xl font-bold text-primary mb-1 leading-tight block">${loc.name}</span>`;
             const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lon}&travelmode=transit`;
             const popupContent = `
