@@ -114,10 +114,16 @@ const App: React.FC = () => {
   const [activeCity, setActiveCity] = useState<CityName>('Tokyo');
   const [openDay, setOpenDay] = useState<string | null>(null);
   const [userLocation, setUserLocation] = useState<{lat: number, lon: number} | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return localStorage.getItem('trip_auth') === 'true';
+  });
+  const [password, setPassword] = useState('');
+  const [authError, setAuthError] = useState(false);
+
   const mapRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
 
-  // CSV Generation Functions
+  // CSV Generation Logic
   const generateCSV = (dataRows: string[][], headers: string[]) => {
     return [
       headers.join(","),
@@ -231,7 +237,18 @@ const App: React.FC = () => {
     triggerDownload(generateCSV(rows, headers), "beto_birthday_logistics.csv");
   };
 
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === 'Otto45') {
+      setIsAuthenticated(true);
+      localStorage.setItem('trip_auth', 'true');
+    } else {
+      setAuthError(true);
+    }
+  };
+
   useEffect(() => {
+    if (!isAuthenticated) return;
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -243,9 +260,10 @@ const App: React.FC = () => {
         (error) => console.log("Geolocation error:", error)
       );
     }
-  }, []);
+  }, [isAuthenticated]);
 
   useEffect(() => {
+    if (!isAuthenticated) return;
     const mapContainer = document.getElementById('map');
     if (!mapContainer) return;
     if (mapRef.current) {
@@ -276,10 +294,10 @@ const App: React.FC = () => {
             mapRef.current = null;
         }
     };
-  }, []);
+  }, [isAuthenticated]);
 
   useEffect(() => {
-    if (!mapRef.current) return;
+    if (!mapRef.current || !isAuthenticated) return;
     markersRef.current.forEach(m => mapRef.current.removeLayer(m));
     markersRef.current = [];
     const cityLocs = locations[activeCity];
@@ -315,7 +333,7 @@ const App: React.FC = () => {
         mapRef.current.fitBounds(group.getBounds().pad(0.2));
     }
     setTimeout(() => { mapRef.current.invalidateSize(); }, 100);
-  }, [activeCity, openDay]);
+  }, [activeCity, openDay, isAuthenticated]);
 
   useEffect(() => { setOpenDay(null); }, [activeCity]);
 
@@ -324,13 +342,49 @@ const App: React.FC = () => {
     setOpenDay(prev => prev === dayId ? null : dayId);
   };
 
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-bg flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-card-bg p-8 rounded-2xl border-2 border-primary shadow-2xl animate-fade-in">
+          <div className="text-center mb-8">
+            <h1 className="text-4xl mb-2">🔒</h1>
+            <h2 className="text-2xl font-bold text-white mb-2">Beto Birthday Experience</h2>
+            <p className="text-sub-text">Please enter the birthday password to view the itinerary.</p>
+          </div>
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setAuthError(false);
+                }}
+                placeholder="Enter Password"
+                className={`w-full bg-black border-2 ${authError ? 'border-red-500 animate-shake' : 'border-border'} rounded-xl px-5 py-4 text-white outline-none focus:border-primary transition-all text-xl-base`}
+                autoFocus
+              />
+              {authError && <p className="text-red-500 text-sm mt-2 font-bold">❌ Incorrect password. Try again!</p>}
+            </div>
+            <button 
+              type="submit"
+              className="w-full bg-primary text-white font-black py-4 rounded-xl hover:opacity-90 transition-opacity uppercase tracking-widest text-lg"
+            >
+              Enter Site
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-4 text-xl-base">
       <header className="text-center mb-5 pb-5 border-b-[3px] border-border relative">
         <h1 className="text-primary text-3xl md:text-4xl font-bold leading-tight mb-2 mt-0">🇯🇵 Cultural & Culinary Journey 🇨🇳</h1>
         <div className="text-lg text-sub-text font-bold mb-4">18 Feb – 28 Feb 2025 | Beto Birthday Experience</div>
         
-        {/* Export Buttons - Visible only on Desktop/Laptop (Large screens) */}
+        {/* Export Buttons - Visible only on Laptop/Desktop (Large screens) */}
         <div className="hidden lg:flex flex-wrap gap-3 justify-center">
           <button 
             onClick={downloadFullCSV}
