@@ -4,7 +4,7 @@ export interface LocationData {
   name: string;
   lat: number;
   lon: number;
-  type: 'travel' | 'sight' | 'food' | 'hotel';
+  type: 'travel' | 'sight' | 'food' | 'hotel' | 'suggestion' | 'sight_rec' | 'food_rec' | 'shopping';
   desc: string;
   day: string;
   url: string;
@@ -12,6 +12,16 @@ export interface LocationData {
 
 export interface LocationsMap {
   [key: string]: LocationData[];
+}
+
+export interface ShoppingChecklistItem {
+  name: string;
+  notes?: string;
+}
+
+export interface ShoppingCategory {
+  title: string;
+  items: ShoppingChecklistItem[];
 }
 
 export enum Interest {
