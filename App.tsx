@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { CityName, ItineraryResponse, UserPreferences, Interest, DayItinerary } from './types';
 import { LoginScreen } from './components/LoginScreen';
 import { Header } from './components/Header';
@@ -8,9 +8,8 @@ import { ShoppingModal } from './components/ShoppingModal';
 import { TimelineView } from './components/TimelineView';
 import { Controls } from './components/Controls';
 import { downloadFullCSV, downloadLogisticsCSV, downloadRecommendationsCSV } from './utils/csvHelper';
-import { generateItinerary } from './services/geminiService';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
-import { startDate } from './data'; // To calculate dates for itinerary
+import { startDate, itineraryData as initialItineraryData } from './data'; // To calculate dates for itinerary and get initial itinerary data
 
 const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
@@ -27,6 +26,7 @@ const useMediaQuery = (query: string) => {
 
 const App: React.FC = () => {
   const isMobile = useMediaQuery('(max-width: 767px)');
+  console.log("Is Mobile:", isMobile); // Added console log
   const [activeCity, setActiveCity] = useState<CityName>('Tokyo');
   const [openDay, setOpenDay] = useState<string | null>(null);
   const [isShoppingOpen, setIsShoppingOpen] = useState(false);
@@ -42,7 +42,47 @@ const App: React.FC = () => {
   });
 
   // State for itinerary data
-  const [itineraryData, setItineraryData] = useState<ItineraryResponse | null>(null);
+  const [itineraryData, setItineraryData] = useState<ItineraryResponse | null>({
+    days: initialItineraryData,
+    shoppingList: [
+      {
+        title: 'Snacks and Sweets',
+        items: [
+          { name: 'Kit Kat (unique flavors)', notes: 'Matcha, Sake, Strawberry Cheesecake' },
+          { name: 'Pocky (local varieties)', notes: 'Giant Pocky, regional flavors' },
+          { name: 'Tokyo Banana', notes: 'Classic souvenir from Tokyo' },
+          { name: 'Matcha treats', notes: 'Anything green tea flavored!' }
+        ]
+      },
+      {
+        title: 'Fashion and Accessories',
+        items: [
+          { name: 'Uniqlo / GU', notes: 'Affordable and stylish clothing' },
+          { name: 'Japanese denim', notes: 'High-quality jeans from Kojima' },
+          { name: 'Souvenir T-shirts', notes: 'Unique designs from local shops' }
+        ]
+      },
+      {
+        title: 'Beauty and Skincare',
+        items: [
+          { name: 'Daiso / Can Do / Seria', notes: '100-yen shops for various items' },
+          { name: 'Japanese sunscreen', notes: 'Popular brands like Anessa, Biore' },
+          { name: 'Sheet masks', notes: 'Variety of brands and types' },
+          { name: 'Makeup from local brands', notes: 'Canmake, Cezanne, Shu Uemura' }
+        ]
+      },
+      {
+        title: 'Home Goods and Souvenirs',
+        items: [
+          { name: 'Don Quijote', notes: 'Discount store with everything imaginable' },
+          { name: 'Japanese pottery', notes: 'From Kyoto or local craft markets' },
+          { name: 'Chopsticks', notes: 'Beautifully crafted sets' },
+          { name: 'Tenugui / Furoshiki', notes: 'Traditional Japanese cloths' },
+          { name: 'Anime/Manga merchandise', notes: 'From Akihabara or local specialty stores' }
+        ]
+      }
+    ]
+  });
   const [isLoadingItinerary, setIsLoadingItinerary] = useState(false);
   const [itineraryError, setItineraryError] = useState<string | null>(null);
 
@@ -61,35 +101,6 @@ const App: React.FC = () => {
       setAuthError(true);
     }
   };
-
-  // Dummy preferences for itinerary generation (replace with actual form data later)
-  const dummyPreferences: UserPreferences = {
-    duration: 11, 
-    season: 'Spring',
-    travelers: 'Couple',
-    budget: 'Mid-range',
-    interests: [Interest.Culture, Interest.Food, Interest.Shopping, Interest.Nature, Interest.Anime, Interest.Nightlife, Interest.Relaxation, Interest.Art],
-  };
-
-  // Fetch itinerary on component mount
-  useEffect(() => {
-    const fetchItinerary = async () => {
-      setIsLoadingItinerary(true);
-      setItineraryError(null);
-      try {
-        const data = await generateItinerary(dummyPreferences);
-        setItineraryData(data);
-      } catch (error) {
-        console.error("Failed to fetch itinerary:", error);
-        setItineraryError("Failed to load itinerary. Please try again later.");
-      } finally {
-        setIsLoadingItinerary(false);
-      }
-    };
-    if (isAuthenticated && !itineraryData) { // Only fetch if authenticated and no data yet
-      fetchItinerary();
-    }
-  }, [isAuthenticated, itineraryData]);
 
   // Filter itinerary days based on active city
   const filteredItineraryDays: DayItinerary[] = useMemo(() => {
@@ -136,7 +147,7 @@ const App: React.FC = () => {
         <p>Generating your custom itinerary...</p>
       </div>
     );
-  }
+  };
 
   if (itineraryError) {
     return (
@@ -199,6 +210,7 @@ const App: React.FC = () => {
           }
         `}>
           <div className="pointer-events-auto">
+            {isMobile && <div className="bg-red-500 p-4 text-white">TESTING MOBILE CONTROLS VISIBILITY</div>} {/* TEST ELEMENT */}
             <Controls
                 toggles={toggles}
                 toggleCategory={toggleCategory}

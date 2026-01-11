@@ -1,4 +1,4 @@
-import { LocationsMap, ShoppingCategory, CityName } from './types';
+import { DayItinerary, CityName, LocationsMap, ShoppingCategory } from './types';
 
 // --- Date Configuration ---
 export const startDate = new Date('2025-02-18');
@@ -25,7 +25,411 @@ export const dayToCity: Record<string, CityName> = {
   "Day 8": "Shanghai", "Day 9": "Shanghai", "Day 10": "Shanghai", "Day 11": "Shanghai"
 };
 
-// --- Shopping Strategy Data ---
+// --- Colour Configurations ---
+
+// UI Theme Colours by City
+export const cityThemeColors: { [key in CityName]: string } = {
+  Tokyo: '#FF1744',
+  Kyoto: '#00B0FF',
+  Osaka: '#FFEA00',
+  Shanghai: '#76FF03',
+};
+
+// Map Marker Categories
+export const mapMarkerColors: Record<string, string> = {
+  'hotel': '#ffe0b2',     // Orange
+  'food': '#ff8a80',      // Red
+  'sight': '#b9f6ca',     // Green
+  'travel': '#82b1ff',    // Blue
+  'suggestion': '#d500f9',// Purple
+  'sight_rec': '#00BCD4', // Cyan/Teal
+  'food_rec': '#F48FB1',  // Soft Pink
+  'shopping': '#FFD700',  // Gold
+  'default': '#82b1ff'
+};
+
+// --- Itinerary Data ---
+export const itineraryData: DayItinerary[] = [
+  {
+    dayNumber: 1,
+    city: 'Tokyo',
+    theme: 'Arrival & Local Life',
+    date: 'Tue 18 Feb',
+    activities: [
+      {
+        time: '10:25 AM',
+        label: 'Arrival',
+        description: 'Arrive at Haneda Airport. Pick up Suica/Pasmo cards.',
+        link: 'https://tokyo-haneda.com/en/',
+        icon: '🛬',
+      },
+      {
+        time: 'Day',
+        label: 'Shinjuku & Garden',
+        description: 'Transfer to Shinjuku. Lunch at Sobahouse Konjiki Hototogisu. Walk through Shinjuku Gyoen National Garden.',
+        link: 'https://konjikihototogisu.com/',
+        tip: 'Konjiki Hototogisu holds a Michelin Star for their clam-broth ramen. Arrive early for a ticket!',
+        icon: '🚅',
+      },
+      {
+        time: 'Evening',
+        label: 'Dinner',
+        description: 'Dinner at Torikizoku (Yakitori) or the atmospheric Omoide Yokocho.',
+        link: 'https://www.torikizoku.co.jp/en/',
+        tip: 'Torikizoku is a reliable chain where every item is the same price—great for a low-stress first meal.',
+        icon: '🍢',
+      },
+    ],
+    hotel: {
+      name: 'Hilton Tokyo',
+      address: '6-6-2 Nishi-Shinjuku, Shinjuku-ku, Tokyo 160-0023, Japan',
+      officialSite: 'https://www.hilton.com/en/hotels/tyohitw-hilton-tokyo/',
+      directions: 'https://www.google.com/maps/dir/?api=1&destination=35.6925,139.6921',
+      neighborhoodInsights: "Nishi-Shinjuku is Tokyo\'s premier skyscraper district. It offers a sophisticated, professional atmosphere a short walk from the neon-lit 'Golden Gai'. Don\'t miss the free observation decks at the Tokyo Metropolitan Government Building nearby. The area is exceptionally well-connected and borders the beautiful Shinjuku Central Park, perfect for a peaceful morning stroll.",
+      tags: ['Local Vibe', 'Expert Guide'],
+    },
+  },
+  {
+    dayNumber: 2,
+    city: 'Tokyo',
+    theme: 'Old Tokyo & Culture',
+    date: 'Wed 19 Feb',
+    activities: [
+      {
+        time: 'Morning',
+        label: 'Senso-ji Temple',
+        description: 'Visit Senso-ji Temple in Asakusa.',
+        link: 'https://www.senso-ji.jp/english/',
+        tip: 'Try the Ningyo-yaki (doll-shaped sponge cakes) on Nakamise street; they are freshly baked and filled with red bean paste.',
+        icon: '⛩️',
+      },
+      {
+        time: 'Day',
+        label: 'Imperial Palace & Tsukiji',
+        description: 'Walk the Imperial Palace East Gardens. Lunch at Tsukiji Outer Market.',
+        link: 'https://www.kunaicho.go.jp/e-event/higashigyoen02.html',
+        tip: 'At Tsukiji, look for the queues at Sushizanmai for reliable quality, or grab a Tamagoyaki (sweet egg omelette) stick for a classic street snack.',
+        icon: '🏯',
+      },
+      {
+        time: 'Evening',
+        label: 'Shinjuku Ni-chōme',
+        description: 'Dinner at Ramen Nagi (Golden Gai). Then explore Shinjuku Ni-chōme. Drinks at Bridge or New Sazae.',
+        link: 'http://www.n-nagi.com/english/',
+        tip: 'Ramen Nagi is legendary for its intense Niboshi (sardine) broth. New Sazae is a disco institution since the 60s/70s.',
+        icon: '🍸',
+      },
+    ],
+  },
+  {
+    dayNumber: 3,
+    city: 'Tokyo',
+    theme: 'Modern Icons',
+    date: 'Thu 20 Feb',
+    activities: [
+      {
+        time: 'Morning',
+        label: 'Shibuya Crossing',
+        description: 'Witness the Shibuya Crossing.',
+        link: 'https://www.japan-guide.com/e/e3007.html',
+        icon: '📸',
+      },
+      {
+        time: 'Day',
+        label: 'Tokyo Metro Gov. Building & Takeshita Street',
+        description: 'Views from Tokyo Metro Gov. Building. Walk Takeshita Street (Harajuku).',
+        link: 'https://www.yokoso.metro.tokyo.lg.jp/en/tenbou/',
+        icon: '🏙️',
+      },
+      {
+        time: 'Lunch',
+        label: 'Sushi',
+        description: 'Authentic sushi at Sushi Kunimitsu or Osushiya Taiki.',
+        link: 'https://japan-food.guide/en/restaurants/962',
+        tip: 'Kunimitsu is highly rated (4.7★) for its Omakase course. Booking essential.',
+        icon: '🍣',
+      },
+      {
+        time: 'Dinner',
+        label: 'Fuunji',
+        description: 'Fuunji (Shinjuku).',
+        link: 'https://www.fu-unji.com/',
+        tip: 'Known for the best Tsukemen (dipping noodles) in Tokyo. Expect a line, but it moves fast!',
+        icon: '🍜',
+      },
+    ],
+  },
+  {
+    dayNumber: 4,
+    city: 'Kyoto',
+    theme: 'Bullet Train & Gion',
+    date: 'Fri 21 Feb',
+    activities: [
+      {
+        time: 'Morning',
+        label: 'Shinkansen to Kyoto',
+        description: 'Shinkansen to Kyoto (2.5 hrs). Buy an Ekiben!',
+        link: 'https://www.japan-guide.com/e/e2018.html',
+        tip: 'Buy a "Makunouchi" bento at Tokyo Station\'s Ekibenya Matsuri before boarding.',
+        icon: '🚅',
+      },
+      {
+        time: 'Afternoon',
+        label: 'Gion District',
+        description: 'Check in. Explore Gion District and Pontocho Alley.',
+        link: 'https://www.japan-guide.com/e/e3902.html',
+        icon: '🍵',
+      },
+      {
+        time: 'Dinner',
+        label: 'Kyo-Kaiseki meal',
+        description: 'Traditional Kyo-Kaiseki meal in Gion.',
+        link: 'https://www.japan-guide.com/e/e2036.html',
+        tip: 'Kaiseki is the haute cuisine of Japan. If not booked, wander down Pontocho Alley for atmospheric river-side dining.',
+        icon: '🍱',
+      },
+    ],
+    hotel: {
+      name: 'DoubleTree By Hilton Kyoto Station',
+      address: '15 Higashi Kujo Nishi Iwamotocho, Minami-ku, Kyoto, 601-8005, Japan',
+      officialSite: 'https://www.hilton.com/en/hotels/itmksdi-doubletree-kyoto-station/',
+      directions: 'https://www.google.com/maps/dir/?api=1&destination=34.9825,135.7621',
+      neighborhoodInsights: "The south side of Kyoto Station is a modern gateway to the city. Often quieter than the northern entrance, it features major shopping complexes like Kyoto Avanti and Aeon Mall. It\'s the most convenient spot for Shinkansen travelers and offers the quickest rail access to the Fushimi Inari shrine and the deer park in nearby Nara.",
+      tags: ['Local Vibe', 'Expert Guide'],
+    },
+  },
+  {
+    dayNumber: 5,
+    city: 'Kyoto',
+    theme: 'Shrines, Zen & Tea',
+    date: 'Sat 22 Feb',
+    activities: [
+      {
+        time: 'Morning',
+        label: 'Fushimi Inari Taisha',
+        description: 'Fushimi Inari Taisha (1,000 Gates). Go early!',
+        link: 'http://inari.jp/en/',
+        tip: 'Arriving by 8:00 AM avoids the massive crowds and allows for a peaceful walk up the mountain.',
+        icon: '⛩️',
+      },
+      {
+        time: 'Day',
+        label: 'Kiyomizu-dera & Tea Ceremony',
+        description: 'Visit Kiyomizu-dera and attend a traditional Tea Ceremony.',
+        link: 'https://www.kiyomizudera.or.jp/en/',
+        icon: '🍂',
+      },
+      {
+        time: 'Lunch',
+        label: 'Honke Daiichi-Asahi',
+        description: 'Honke Daiichi-Asahi (Kyoto Ramen).',
+        link: 'https://www.honke-daiichiasahi.com/',
+        tip: 'A Kyoto institution serving classic soy-based ramen. A perfect "fanatic" stop.',
+        icon: '🥗',
+      },
+      {
+        time: 'Dinner',
+        label: 'Depachika',
+        description: 'Explore a Depachika (Department Store Food Hall) for a variety dinner.',
+        link: 'https://www.japan-guide.com/e/e2062.html',
+        icon: '🍱',
+      },
+    ],
+  },
+  {
+    dayNumber: 6,
+    city: 'Kyoto',
+    theme: 'Bamboo & Local Flavours',
+    date: 'Sun 23 Feb',
+    activities: [
+      {
+        time: 'Morning',
+        label: 'Nishiki Market',
+        description: 'Nishiki Market ("Kyoto\'s Kitchen").',
+        link: 'https://www.kyoto-nishiki.or.jp/',
+        tip: 'Try the Tako Tamago (red baby octopus with a quail egg inside).',
+        icon: '🥒',
+      },
+      {
+        time: 'Day',
+        label: 'Arashiyama or Nara',
+        description: 'Train to Arashiyama (Bamboo Grove) or Nara Deer Park.',
+        link: 'https://www.japan-guide.com/e/e3912.html',
+        icon: '🎋',
+      },
+      {
+        time: 'Dinner',
+        label: 'Obanzai',
+        description: 'Obanzai (home cooking) at a local tavern.',
+        link: 'https://kyoto.travel/en/dining/obanzai.html',
+        tip: 'Obanzai focuses on seasonal Kyoto vegetables. For casual exploration, walk down Kiyamachi-dori.',
+        icon: '🍲',
+      },
+    ],
+  },
+  {
+    dayNumber: 7,
+    city: 'Osaka',
+    theme: 'Kitchen of Japan',
+    date: 'Mon 24 Feb',
+    activities: [
+      {
+        time: 'Morning',
+        label: 'Osaka Castle',
+        description: 'Train to Osaka (30 mins). Visit Osaka Castle.',
+        link: 'https://www.osakacastle.net/english/',
+        icon: '🚆',
+      },
+      {
+        time: 'Day',
+        label: 'Dotonbori & Shinsekai',
+        description: 'Lunch at Kushikatsu Daruma. Eat through Dotonbori and retro Shinsekai.',
+        link: 'https://www.kushikatsu-daruma.com/',
+        tip: 'Famous for "no double dipping" fried skewers. The Dotombori branch has the giant angry chef statue!',
+        icon: '🦀',
+      },
+      {
+        time: 'Evening',
+        label: 'Dōyama-chō',
+        description: 'Visit Dōyama-chō (Gay District).',
+        link: 'https://insideosaka.com/osaka-gay-district/',
+        icon: '🏳️‍🌈',
+      },
+      {
+        time: 'Dinner',
+        label: 'Okonomiyaki',
+        description: 'Okonomiyaki at Fukutaro or Ajinoya Honten.',
+        link: 'https://2951.jp/',
+        tip: 'Both places are legendary. Order the Negiyaki (green onion pancake) at Fukutaro.',
+        icon: '🥞',
+      },
+    ],
+    hotel: {
+      name: 'Hilton Osaka',
+      address: '1-8-8, Umeda, Kita-ku, Osaka 530-0001, Japan',
+      officialSite: 'https://www.hilton.com/en/hotels/osahitw-hilton-osaka/',
+      directions: 'https://www.google.com/maps/dir/?api=1&destination=34.7003,135.4955',
+      neighborhoodInsights: "Umeda is Osaka\'s glittering northern hub. It\'s a vertical city of giant department stores, high-end dining, and the futuristic Umeda Sky Building. Being at the nexus of the city\'s rail network makes day trips to Kyoto or Kobe effortless. The \'Kitashinchi\' entertainment district nearby offers world-class cocktail bars and sophisticated dining.",
+      tags: ['Local Vibe', 'Expert Guide'],
+    },
+  },
+  {
+    dayNumber: 8,
+    city: 'Shanghai',
+    theme: 'Arrival & Maglev',
+    date: 'Tue 25 Feb',
+    activities: [
+      {
+        time: 'Travel',
+        label: 'Fly KIX to PVG. Ride the MAGLEV',
+        description: 'Fly KIX to PVG. Ride the MAGLEV (430km/h).',
+        link: 'https://www.meet-in-shanghai.net/traffic/maglev',
+        tip: 'Maglev closes at 23:40. If hungry late, wander Anfu Road near FFC.',
+        icon: '🛫',
+      },
+    ],
+  },
+  {
+    dayNumber: 9,
+    city: 'Shanghai',
+    theme: 'Birthday Celebration 🎂',
+    date: 'Wed 26 Feb',
+    activities: [
+      {
+        time: 'Day',
+        label: 'French Concession',
+        description: 'Walk the French Concession. Shopping and cafe hopping at Ferguson Lane.',
+        link: 'https://www.smartshanghai.com/articles/tourist/the-former-french-concession',
+        icon: '🌳',
+      },
+      {
+        time: 'Dinner',
+        label: 'Fu 1039 or Fu He Hui',
+        description: 'Fu 1039 (Classic) or Fu He Hui (Veg).',
+        link: 'https://guide.michelin.com/en/shanghai-municipality/shanghai/restaurant/fu-1039',
+        tip: 'Fu 1039 (1 Michelin Star) for Smoked Fish. Fu He Hui (2 Michelin Stars) for world-class vegetarian.',
+        icon: '🥢',
+      },
+      {
+        time: 'Drinks',
+        label: 'Eddy\'s or Lucca 390',
+        description: 'Eddy\'s or Lucca 390.',
+        link: 'https://www.timeoutshanghai.com/venue/Bars__Clubs-Bars-Gay_Bars/1368/Eddys-Bar.html',
+        icon: '🍸',
+      },
+    ],
+  },
+  {
+    dayNumber: 10,
+    city: 'Shanghai',
+    theme: 'History & Skylines',
+    date: 'Thu 27 Feb',
+    activities: [
+      {
+        time: 'Morning',
+        label: 'Yu Garden & Bazaar',
+        description: 'Yu Garden & Bazaar.',
+        link: 'https://www.meet-in-shanghai.net/scenic-spots/yu-garden',
+        icon: '🏮',
+      },
+      {
+        time: 'Lunch',
+        label: 'Jianguo 328',
+        description: 'Jianguo 328.',
+        link: 'https://guide.michelin.com/en/shanghai-municipality/shanghai/restaurant/jianguo-328',
+        tip: 'Bib Gourmand favorite for MSG-free home-style cooking.',
+        icon: '🥟',
+      },
+      {
+        time: 'Evening',
+        label: 'The Bund',
+        description: 'Walk The Bund.',
+        link: 'https://www.meet-in-shanghai.net/scenic-spots/the-bund',
+        icon: '🏙️',
+      },
+      {
+        time: 'Dinner',
+        label: 'Old Jesse',
+        description: 'Old Jesse.',
+        link: 'https://guide.michelin.com/en/shanghai-municipality/shanghai/restaurant/old-jesse-xuhui',
+        tip: 'Pre-order the Hong Shao Rou and Scallion Roasted Fish Head when booking!',
+        icon: '🍽️',
+      },
+    ],
+  },
+  {
+    dayNumber: 11,
+    city: 'Shanghai',
+    theme: 'Departure',
+    date: 'Fri 28 Feb',
+    activities: [
+      {
+        time: 'Morning',
+        label: 'MAGLEV to PVG',
+        description: 'Ride MAGLEV to PVG. Access First Class Lounge.',
+        link: 'https://www.meet-in-shanghai.net/traffic/maglev',
+        icon: '🛫',
+      },
+      {
+        time: 'Snack',
+        label: 'Yang\'s Dumplings',
+        description: 'Yang\'s Dumplings inside airport.',
+        tip: 'Bite a small hole in the Sheng Jian Bao first to vent the steam!',
+        icon: '🥟',
+      },
+    ],
+    hotel: {
+      name: 'Hilton Shanghai City Center',
+      address: 'No. 488 West Yan\'an Road, Shanghai, 200050, China',
+      officialSite: 'https://www.hilton.com/en/hotels/shamshi-hilton-shanghai-city-center/',
+      directions: 'https://www.google.com/maps/dir/?api=1&destination=31.2185,121.4332',
+      neighborhoodInsights: "Located near the edge of the historic Former French Concession, West Yan\'an Road offers a blend of colonial charm and modern luxury. The neighborhood is famous for its tree-lined streets, boutique cafes, and art-deco architecture. It provides a more localized and authentic \'Old Shanghai\' feel compared to the tourist-heavy Bund.",
+      tags: ['Local Vibe', 'Expert Guide'],
+    },
+  },
+];
+
+// --- Shopping Logic (Merged) ---
 export const shoppingList: ShoppingCategory[] = [
   {
     title: "Drugstores (Matsumoto Kiyoshi / Welcia)",
@@ -47,27 +451,38 @@ export const shoppingList: ShoppingCategory[] = [
     ]
   },
   {
-    title: "Specialty / Brands",
+    title: "Japanese Souvenirs & Brands",
     items: [
-      { name: "Yojiya", notes: "Kyoto-based brand (rice-based products)." }
-    ]
-  }
+      { name: "Matcha Kit", notes: "High-quality ceremonial matcha, whisk, and bowl." },
+      { name: "Yojiya", notes: "Kyoto-based brand (rice-based products)." },
+      { name: "Kimono/Yukata", notes: "Traditional Japanese garment, casual summer kimono." },
+      { name: "Japanese Sweets", notes: 'Assortment of mochi, KitKats, Pocky, and regional snacks.' },
+      { name: "Daruma Doll", notes: 'Traditional hollow, round, Japanese doll (good luck charm).' },
+    ],
+  },
+  {
+    title: 'Electronics',
+    items: [
+      { name: 'Noise-Cancelling Headphones', notes: 'For long flights and bullet train rides.' },
+      { name: 'Portable Power Bank', notes: 'Keep devices charged on the go.' },
+      { name: 'Universal Travel Adapter', notes: 'Japan uses Type A/B sockets (like North America).' },
+    ],
+  },
+  {
+    title: 'Comfort, Health & Essentials',
+    items: [
+      { name: 'Comfortable Walking Shoes', notes: 'Essential for extensive walking tours.' },
+      { name: 'Small First-Aid Kit', notes: 'Band-aids, pain relievers, antiseptic wipes.' },
+      { name: 'Hand Sanitizer', notes: 'Convenient for on-the-go hygiene.' },
+      { name: 'Passport & Visa', notes: 'Check validity and visa requirements in advance.' },
+      { name: 'Travel Insurance', notes: 'Comprehensive coverage for emergencies.' },
+      { name: 'Yen & Yuan (local currency)', notes: 'Some smaller shops may not accept cards.' },
+      { name: 'Pocket WiFi / eSIM', notes: 'Stay connected throughout your trip.' },
+    ],
+  },
 ];
 
-// --- Map Logic Colors ---
-export const iconColors: Record<string, string> = {
-  'hotel': '#ffe0b2',     // Orange
-  'food': '#ff8a80',      // Red
-  'sight': '#b9f6ca',     // Green
-  'travel': '#82b1ff',    // Blue
-  'suggestion': '#d500f9',// Purple
-  'sight_rec': '#00BCD4', // Cyan/Teal (New)
-  'food_rec': '#F48FB1',  // Soft Pink (New)
-  'shopping': '#FFD700',  // Gold (New)
-  'default': '#82b1ff'
-};
-
-// --- Location Data ---
+// --- Map Locations ---
 export const locations: LocationsMap = {
   'Tokyo': [
     // Original Itinerary
@@ -105,7 +520,7 @@ export const locations: LocationsMap = {
     {name: "Hakushu Teppanyaki", lat: 35.6558, lon: 139.7015, type: "food_rec", desc: "High-end Teppanyaki for authentic Kobe beef in Shibuya.", day: "Any", url: "https://teppanyaki-hakushu.com/"},
     {name: "Niágara Curry", lat: 35.6375, lon: 139.6917, type: "food_rec", desc: "Train-themed curry restaurant in Yutenji. Closed Mon.", day: "Any", url: "https://www.niagara-curry.com/"},
     
-    // Tokyo Shopping (Retained)
+    // Tokyo Shopping
     {name: "Ginza Shopping Area", lat: 35.6712, lon: 139.7651, type: "shopping", desc: "Luxury boutiques and department stores.", day: "Any", url: "https://www.japan-guide.com/e/e3005.html"},
     {name: "Akihabara Shopping", lat: 35.6984, lon: 139.7731, type: "shopping", desc: "Best for electronics and anime merchandise.", day: "Any", url: "https://www.japan-guide.com/e/e3003.html"}
   ],

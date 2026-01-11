@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { locations, iconColors } from '../data';
+import { locations, mapMarkerColors } from '../data';
 import { CityName } from '../types';
 
 interface Toggles {
@@ -19,7 +19,7 @@ interface MapContainerProps {
 }
 
 const getIcon = (type: string) => {
-  const color = iconColors[type] || iconColors['default'];
+  const color = mapMarkerColors[type] || mapMarkerColors['default'];
   const pinSvg = `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${color}" stroke="#1c1c1c" stroke-width="0.5">
       <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
@@ -88,7 +88,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({
     if (!cityLocs) return;
     const group = L.featureGroup();
     const currentDayNumber = openDay ? openDay.replace('day', '') : null;
-    const dayRegex = currentDayNumber ? new RegExp('\\b' + currentDayNumber + '\\b') : null;
+    const dayRegex = currentDayNumber ? new RegExp('\b' + currentDayNumber + '\b') : null;
     
     cityLocs.forEach(loc => {
         if ((loc.type === 'sight_rec' && !toggles.sight_rec) ||

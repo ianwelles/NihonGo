@@ -11,7 +11,6 @@ The project is built with a modern, lightweight tech stack:
 *   **Build Tool & Dev Server:** [Vite](https://vitejs.dev/)
 *   **Language:** [TypeScript 5.8](https://www.typescriptlang.org/)
 *   **Styling:** [Tailwind CSS](https://tailwindcss.com/)
-*   **AI Integration:** [Google AI for JavaScript/TypeScript](https://github.com/google/generative-ai-js) (using the 'gemini-3-flash-preview' model)
 *   **Icons:** [Lucide React](https://lucide.dev/guide/packages/lucide-react)
 
 ## 2. Directory Structure
