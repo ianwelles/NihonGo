@@ -46,3 +46,22 @@ aside > div::-webkit-scrollbar-thumb {
 aside > div::-webkit-scrollbar-thumb:hover {
   background-color: #6a6a6a !important; /* Slightly lighter on hover */
 }
+
+/* Leaflet Popup Overrides */
+.leaflet-popup-content-wrapper {
+  @apply bg-popup-bg text-text rounded-lg shadow-xl border-primary border-2; 
+  padding: 0 !important;
+}
+
+.leaflet-popup-content {
+  @apply p-4; 
+  margin: 0 !important; 
+}
+
+/* Corrected styling for the popup tip to match the image */
+.leaflet-popup-tip {
+  background-color: theme('colors.popup-bg') !important; /* Dark fill for the tip interior */
+  border: 2px solid theme('colors.primary') !important; /* Red border around the entire tip */
+  box-shadow: none !important; /* Remove any default shadow */
+  /* Leaflet's default dimensions and transform (rotate) will create the arrow shape */
+}
