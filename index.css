@@ -59,9 +59,16 @@ aside > div::-webkit-scrollbar-thumb:hover {
 }
 
 /* Corrected styling for the popup tip to match the image */
+.leaflet-popup-tip-container {
+  z-index: 1;
+  margin-top: -2px !important;
+}
+
 .leaflet-popup-tip {
   background-color: theme('colors.popup-bg') !important; /* Dark fill for the tip interior */
-  border: 2px solid theme('colors.primary') !important; /* Red border around the entire tip */
+  border-bottom: 2px solid theme('colors.primary') !important; /* Outer border */
+  border-right: 2px solid theme('colors.primary') !important; /* Outer border */
+  border-top: none !important;
+  border-left: none !important;
   box-shadow: none !important; /* Remove any default shadow */
-  /* Leaflet's default dimensions and transform (rotate) will create the arrow shape */
 }

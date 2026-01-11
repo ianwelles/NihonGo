@@ -204,8 +204,9 @@ const App: React.FC = () => {
                 isSidebarOpen={isSidebarOpen}
                 onToggleSidebar={() => setIsSidebarOpen(prev => !prev)}
                 isMobile={isMobile}
-                activeCity={activeCity || undefined}
+                activeCity={activeCity}
                 onSelectDay={(day) => setOpenDay(day)}
+                onSelectCity={handleCityChange}
               />
           </div>
         </div>
