@@ -14,40 +14,10 @@
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom Tailwind Config Removed: This will now be handled via tailwind.config.js and index.css -->
     
-    <!-- Custom Tailwind Config -->
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'primary': '#ff1744', // Vivid Red
-              'accent': '#82b1ff',  // Bright Blue
-              'bg': '#000000',      // Pure Black Background
-              'card-bg': '#1c1c1c', // Dark Grey for cards
-              'border': '#444',     // Border colour
-              'text': '#ffffff',    // Main text
-              'sub-text': '#dddddd',// Secondary text
-              'popup-bg': '#1c1c1c',
-              'popup-btn': '#8ab4f8',
-              'popup-text': '#202124',
-            },
-            boxShadow: {
-              'custom': '0 4px 8px rgba(0,0,0,0.5)',
-            },
-            borderRadius: {
-              'xl': '12px',
-            },
-            fontSize: {
-                'xl-base': '1.25rem', // 20px
-            }
-          }
-        }
-      }
-    </script>
-
+    <!-- Tailwind CSS (No longer CDN, will be processed by Vite) -->
+    
     <!-- Global Styles -->
     <style>
       :root {

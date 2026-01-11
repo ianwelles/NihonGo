@@ -1,4 +1,5 @@
 import React from 'react';
+import { Download, FileDown, ShoppingBag } from 'lucide-react';
 
 interface HeaderProps {
   onDownloadFull: () => void;
@@ -6,35 +7,47 @@ interface HeaderProps {
   onDownloadRecs: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ 
-  onDownloadFull, onDownloadLogistics, onDownloadRecs 
-}) => {
+export const Header: React.FC<HeaderProps> = ({ onDownloadFull, onDownloadLogistics, onDownloadRecs }) => {
   return (
-    <header className="text-center mb-5 pb-5 border-b-[3px] border-border relative">
-      <h1 className="text-primary text-3xl md:text-4xl font-bold leading-tight mb-2 mt-0">🇯🇵 Cultural & Culinary Journey 🇨🇳</h1>
-      <div className="text-lg text-sub-text font-bold mb-4">18 Feb – 28 Feb 2025 | Beto Birthday Experience</div>
+    <div className="text-center mb-6">
+      <div className="flex items-center justify-center gap-2 mb-2">
+        <span className="text-2xl">🇯🇵</span>
+        <h1 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tight leading-none">
+          Cultural & Culinary <br className="md:hidden" /> Journey
+        </h1>
+        <span className="text-2xl">🇨🇳</span>
+      </div>
       
-      {/* Export Buttons - Visible only on Laptop/Desktop (Large screens) */}
-      <div className="hidden lg:flex flex-wrap gap-3 justify-center mb-4">
+      <p className="text-gray-400 text-xs md:text-sm font-medium tracking-wide uppercase mb-4">
+        18 Feb – 28 Feb 2025 <span className="mx-2 text-white/20">|</span> Beto Birthday Experience
+      </p>
+
+      {/* Action Buttons */}
+      <div className="flex flex-wrap justify-center gap-3">
         <button 
           onClick={onDownloadFull}
-          className="inline-flex items-center gap-2 px-4 py-2 border-2 border-accent text-accent rounded-full text-sm font-bold hover:bg-accent hover:text-bg transition-all duration-300"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-xs font-bold text-gray-300 hover:text-white hover:border-white/30"
         >
-          📄 Full Itinerary CSV
+          <Download size={14} />
+          <span>Full Itinerary</span>
         </button>
+        
         <button 
           onClick={onDownloadLogistics}
-          className="inline-flex items-center gap-2 px-4 py-2 border-2 border-green-500 text-green-500 rounded-full text-sm font-bold hover:bg-green-500 hover:text-bg transition-all duration-300"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-xs font-bold text-gray-300 hover:text-white hover:border-white/30"
         >
-          📋 Logistics CSV
+          <FileDown size={14} />
+          <span>Logistics</span>
         </button>
+
         <button 
           onClick={onDownloadRecs}
-          className="inline-flex items-center gap-2 px-4 py-2 border-2 border-[#d500f9] text-[#d500f9] rounded-full text-sm font-bold hover:bg-[#d500f9] hover:text-bg transition-all duration-300"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-xs font-bold text-gray-300 hover:text-white hover:border-white/30"
         >
-          ⭐ Recommendations CSV
+          <ShoppingBag size={14} />
+          <span>Shopping List</span>
         </button>
       </div>
-    </header>
+    </div>
   );
 };

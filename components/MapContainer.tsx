@@ -1,15 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { ShoppingBag } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 import { locations, iconColors } from '../data';
 import { CityName } from '../types';
 
-declare const L: any;
+interface Toggles {
+  sight_rec: boolean;
+  food_rec: boolean;
+  shopping: boolean;
+}
 
 interface MapContainerProps {
   activeCity: CityName;
   openDay: string | null;
   isAuthenticated: boolean;
-  onOpenShopping: () => void;
+  toggles: Toggles;
+  setMapRef: (map: L.Map) => void;
 }
 
 const getIcon = (type: string) => {
@@ -28,31 +34,21 @@ const getIcon = (type: string) => {
   });
 };
 
-export const MapContainer: React.FC<MapContainerProps> = ({ activeCity, openDay, isAuthenticated, onOpenShopping }) => {
-  const mapRef = useRef<any>(null);
-  const markersRef = useRef<any[]>([]);
+export const MapContainer: React.FC<MapContainerProps> = ({ 
+  activeCity, 
+  openDay, 
+  isAuthenticated, 
+  toggles, 
+  setMapRef 
+}) => {
+  const mapRef = useRef<L.Map | null>(null);
+  const markersRef = useRef<L.Marker[]>([]);
   const prevActiveCity = useRef<string | null>(null);
   const prevOpenDay = useRef<string | null>(null);
-  
-  // State for toggling map layers
-  const [toggles, setToggles] = useState({
-    sight_rec: true,
-    food_rec: true,
-    shopping: true
-  });
-
-  const toggleCategory = (key: keyof typeof toggles) => {
-    setToggles(prev => ({ ...prev, [key]: !prev[key] }));
-  };
 
   useEffect(() => {
-    if (!isAuthenticated) return;
-    const mapContainer = document.getElementById('map');
-    if (!mapContainer) return;
-    if (mapRef.current) {
-        mapRef.current.remove();
-        mapRef.current = null;
-    }
+    if (!isAuthenticated || mapRef.current) return;
+
     const map = L.map('map', { 
         attributionControl: false,
         zoomControl: false,
@@ -72,30 +68,34 @@ export const MapContainer: React.FC<MapContainerProps> = ({ activeCity, openDay,
         className: 'high-contrast-labels',
         zIndex: 650
     }).addTo(map);
+    
     mapRef.current = map;
+    setMapRef(map);
+
     return () => {
         if (mapRef.current) {
             mapRef.current.remove();
             mapRef.current = null;
         }
     };
-  }, [isAuthenticated]);
+  }, [isAuthenticated, setMapRef]);
 
   useEffect(() => {
     if (!mapRef.current || !isAuthenticated) return;
-    markersRef.current.forEach(m => mapRef.current.removeLayer(m));
+    markersRef.current.forEach(m => mapRef.current!.removeLayer(m));
     markersRef.current = [];
     const cityLocs = locations[activeCity];
     if (!cityLocs) return;
     const group = L.featureGroup();
     const currentDayNumber = openDay ? openDay.replace('day', '') : null;
-    const dayRegex = currentDayNumber ? new RegExp(`\\b${currentDayNumber}\\b`) : null;
+    const dayRegex = currentDayNumber ? new RegExp('\\b' + currentDayNumber + '\\b') : null;
     
     cityLocs.forEach(loc => {
-        // Apply filter based on toggles
-        if (loc.type === 'sight_rec' && !toggles.sight_rec) return;
-        if (loc.type === 'food_rec' && !toggles.food_rec) return;
-        if (loc.type === 'shopping' && !toggles.shopping) return;
+        if ((loc.type === 'sight_rec' && !toggles.sight_rec) ||
+            (loc.type === 'food_rec' && !toggles.food_rec) ||
+            (loc.type === 'shopping' && !toggles.shopping)) {
+            return;
+        }
 
         const isPersistent = ['hotel', 'suggestion', 'sight_rec', 'food_rec', 'shopping'].includes(loc.type);
         const matchesDay = !dayRegex || (loc.day && (dayRegex.test(loc.day) || loc.day === 'Any'));
@@ -112,89 +112,55 @@ export const MapContainer: React.FC<MapContainerProps> = ({ activeCity, openDay,
                             ${loc.day === 'Any' ? '⭐ Recommended' : loc.day}
                         </span>
                         ${titleHtml}
-                        <span class="text-gray-400 font-bold text-xs uppercase tracking-wide mb-2 block">${loc.type.replace('_', ' ')}</span>
+                        <span class="text-gray-400 font-bold text-xs uppercase tracking-wide mb-2 block">${loc.type.replace(/_/g, ' ')}</span>
                         <span class="text-gray-300 text-sm leading-relaxed mb-4 block">${loc.desc}</span>
                         <a href="${directionsUrl}" target="_blank" rel="noopener noreferrer" class="inline-block bg-[#8ab4f8] text-[#202124] px-4 py-2 rounded-full text-sm font-bold hover:bg-[#aecbfa] transition-colors shadow-md no-underline border-none">📍Get Directions</a>
                     </div>
                 `;
             const m = L.marker([loc.lat, loc.lon], {icon: icon})
-                .bindPopup(popupContent)
-                .addTo(mapRef.current);
+                .bindPopup(popupContent);
+            
             group.addLayer(m);
             markersRef.current.push(m);
         }
     });
+
+    group.addTo(mapRef.current);
     
-    // Check if we should recenter (City change or Day change)
-    // We only want to fitBounds if the user changes context (City or Day), not when filtering.
     const shouldRecenter = (activeCity !== prevActiveCity.current) || (openDay !== prevOpenDay.current);
 
-    setTimeout(() => {
-        if (mapRef.current) {
-             mapRef.current.invalidateSize();
-             if (shouldRecenter && group.getLayers().length > 0) {
-                 mapRef.current.fitBounds(group.getBounds().pad(0.1));
-             }
-        }
-    }, 250);
+    if (shouldRecenter && group.getLayers().length > 0) {
+        setTimeout(() => {
+            if (mapRef.current) {
+                // Mobile-specific padding and maxZoom
+                const isMobile = window.innerWidth < 768;
+                const padding: [number, number] = isMobile ? [50, 50] : [0.1, 0.1]; // More padding on mobile
+                const maxZoom = isMobile ? 15 : undefined; // Force closer zoom on mobile if needed
+
+                mapRef.current.fitBounds(group.getBounds(), {
+                    padding: padding,
+                    maxZoom: maxZoom 
+                });
+            }
+        }, 250);
+    }
     
-    // Update refs
     prevActiveCity.current = activeCity;
     prevOpenDay.current = openDay;
 
   }, [activeCity, openDay, isAuthenticated, toggles]);
 
   return (
-    <>
-      <div className="relative h-[450px] w-full mb-3 rounded-xl border-2 border-border overflow-hidden z-10">
-        <div id="map" className="h-full w-full bg-gray-900"></div>
-        
-        {openDay && (
-          <div className="absolute bottom-4 left-4 z-[1000] pointer-events-none transition-opacity duration-300">
+    <div className="h-full w-full bg-gray-900" id="map">
+      {openDay && (
+          <div className="absolute bottom-4 right-4 z-[1000] pointer-events-none transition-opacity duration-300">
              <div className="bg-black/90 backdrop-blur border border-primary px-3 py-2 rounded-lg shadow-2xl flex items-center gap-2">
                 <span className="text-primary font-bold text-lg uppercase tracking-wider leading-none">
                   Day {openDay.replace('day', '')}
                 </span>
              </div>
           </div>
-        )}
-      </div>
-
-      {/* Map Legend / Toggles */}
-      <div className="grid grid-cols-2 gap-3 mb-8 md:flex md:flex-wrap md:justify-center">
-        <button 
-          onClick={() => toggleCategory('sight_rec')}
-          className={`flex items-center justify-center w-full md:w-auto gap-2 px-4 py-2 rounded-full border border-white/10 shadow-sm transition-all duration-300 ${toggles.sight_rec ? 'bg-card-bg/80' : 'bg-card-bg/30 opacity-70 hover:opacity-100'}`}
-        >
-            <span className={`w-3 h-3 rounded-full bg-[#00BCD4] transition-all duration-300 ${toggles.sight_rec ? 'shadow-[0_0_8px_#00BCD4]' : 'opacity-40 shadow-none'}`}></span>
-            <span className="text-[10px] font-black text-white uppercase tracking-widest">Landmarks</span>
-        </button>
-        
-        <button 
-          onClick={() => toggleCategory('food_rec')}
-          className={`flex items-center justify-center w-full md:w-auto gap-2 px-4 py-2 rounded-full border border-white/10 shadow-sm transition-all duration-300 ${toggles.food_rec ? 'bg-card-bg/80' : 'bg-card-bg/30 opacity-70 hover:opacity-100'}`}
-        >
-            <span className={`w-3 h-3 rounded-full bg-[#F48FB1] transition-all duration-300 ${toggles.food_rec ? 'shadow-[0_0_8px_#F48FB1]' : 'opacity-40 shadow-none'}`}></span>
-            <span className="text-[10px] font-black text-white uppercase tracking-widest">Must-Try Food</span>
-        </button>
-        
-        <button 
-          onClick={() => toggleCategory('shopping')}
-          className={`flex items-center justify-center w-full md:w-auto gap-2 px-4 py-2 rounded-full border border-white/10 shadow-sm transition-all duration-300 ${toggles.shopping ? 'bg-card-bg/80' : 'bg-card-bg/30 opacity-70 hover:opacity-100'}`}
-        >
-            <span className={`w-3 h-3 rounded-full bg-[#FFD700] transition-all duration-300 ${toggles.shopping ? 'shadow-[0_0_8px_#FFD700]' : 'opacity-40 shadow-none'}`}></span>
-            <span className="text-[10px] font-black text-white uppercase tracking-widest">Shopping Hubs</span>
-        </button>
-
-        {/* Must Buy Button */}
-        <button
-          onClick={onOpenShopping}
-          className="flex items-center justify-center w-full md:w-auto gap-2 px-4 py-2 rounded-full border border-[#FFD700] shadow-[0_0_8px_rgba(255,215,0,0.4)] bg-[#FFD700]/10 hover:bg-[#FFD700] hover:text-black text-[#FFD700] transition-all duration-300"
-        >
-            <ShoppingBag className="w-3 h-3" />
-            <span className="text-[10px] font-black uppercase tracking-widest">Must Buy</span>
-        </button>
-      </div>
-    </>
+      )}
+    </div>
   );
 };

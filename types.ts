@@ -48,13 +48,14 @@ export interface Activity {
   activityName: string;
   description: string;
   location: string;
-  tips: string;
+  tips?: string; // Made optional
 }
 
 export interface DayItinerary {
   dayNumber: number;
   theme: string;
   city: string;
+  date: string; // Adding date field to DayItinerary
   activities: Activity[];
 }
 
