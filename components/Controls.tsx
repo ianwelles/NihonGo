@@ -21,9 +21,9 @@ interface ControlsProps {
   onSelectDay?: (day: string) => void;
 }
 
-export const Controls: React.FC<ControlsProps> = ({ 
-  toggles, 
-  toggleCategory, 
+export const Controls: React.FC<ControlsProps> = ({
+  toggles,
+  toggleCategory,
   onOpenShopping,
   openDay,
   isSidebarOpen,
@@ -37,7 +37,7 @@ export const Controls: React.FC<ControlsProps> = ({
 
   // Unified styling class for all buttons
   const buttonBaseClass = "flex items-center justify-center gap-2 px-3 h-10 rounded-lg border backdrop-blur-md transition-all duration-300 text-[10px] font-black uppercase tracking-widest hover:opacity-100 hover:scale-[1.02] active:scale-95";
-  
+
   // Specific variants for active/inactive states
   const activeClass = "bg-black/60 border-white/40 text-white shadow-md opacity-100";
   const inactiveClass = "bg-black/30 border-white/10 text-gray-400 opacity-70 hover:border-white/30";
@@ -100,63 +100,61 @@ export const Controls: React.FC<ControlsProps> = ({
       </div>
 
       {/* Full-width Row for Day Indicator & Itinerary Toggle */}
-      {isMobile && (
-        <div className="grid grid-cols-2 gap-2 w-full relative" ref={menuRef}>
-            {/* Day Selection Pop-up Menu */}
-            {isDayMenuOpen && (
-                <div className="absolute bottom-12 left-0 w-[48%] bg-black/90 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden shadow-2xl z-50 flex flex-col max-h-60 overflow-y-auto animate-in slide-in-from-bottom-2 duration-200">
-                    <div className="px-3 py-2 bg-white/5 text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-white/10">
-                        Select Day
-                    </div>
-                    {availableDays.map((day) => (
-                        <button
-                            key={day}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                if (onSelectDay) {
-                                    onSelectDay(day.toLowerCase().replace(' ', ''));
-                                    setIsDayMenuOpen(false);
-                                }
-                            }}
-                            className={`px-4 py-3 text-left text-xs font-bold transition-colors hover:bg-white/10 flex items-center justify-between
-                                ${openDay === day.toLowerCase().replace(' ', '') ? 'text-[#FF1744] bg-[#FF1744]/10' : 'text-gray-200'}
-                            `}
-                        >
-                            <span>{day}</span>
-                            {openDay === day.toLowerCase().replace(' ', '') && <div className="w-1.5 h-1.5 rounded-full bg-[#FF1744]" />}
-                        </button>
-                    ))}
-                </div>
-            )}
-
-            {/* Day Indicator / Menu Trigger */}
-            <button 
-                onClick={(e) => {
-                    e.stopPropagation();
-                    setIsDayMenuOpen(!isDayMenuOpen);
-                }}
-                className={`${buttonBaseClass} ${openDay ? navClass : 'bg-black/60 border-white/50 text-white'} justify-between px-4`}
-            >
-              <div className="flex items-center gap-2">
-                  <Calendar size={14} className={openDay ? "text-[#FF1744]" : "text-white"} />
-                  <span>{openDay ? `Day ${openDay.replace('day', '')}` : 'Select Day'}</span>
+      <div className="grid grid-cols-2 gap-2 w-full relative" ref={menuRef}>
+          {/* Day Selection Pop-up Menu */}
+          {isDayMenuOpen && (
+              <div className="absolute bottom-12 left-0 w-[48%] bg-black/90 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden shadow-2xl z-50 flex flex-col max-h-60 overflow-y-auto animate-in slide-in-from-bottom-2 duration-200">
+                  <div className="px-3 py-2 bg-white/5 text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-white/10">
+                      Select Day
+                  </div>
+                  {availableDays.map((day) => (
+                      <button
+                          key={day}
+                          onClick={(e) => {
+                              e.stopPropagation();
+                              if (onSelectDay) {
+                                  onSelectDay(day.toLowerCase().replace(' ', ''));
+                                  setIsDayMenuOpen(false);
+                              }
+                          }}
+                          className={`px-4 py-3 text-left text-xs font-bold transition-colors hover:bg-white/10 flex items-center justify-between
+                              ${openDay === day.toLowerCase().replace(' ', '') ? 'text-[#FF1744] bg-[#FF1744]/10' : 'text-gray-200'}
+                          `}
+                      >
+                          <span>{day}</span>
+                          {openDay === day.toLowerCase().replace(' ', '') && <div className="w-1.5 h-1.5 rounded-full bg-[#FF1744]" />}
+                      </button>
+                  ))}
               </div>
-              <ChevronUp size={12} className={`transition-transform duration-300 ${isDayMenuOpen ? 'rotate-180' : ''}`} />
-            </button>
+          )}
 
-            {/* View Itinerary Button */}
-            <button 
-                onClick={(e) => {
-                    e.stopPropagation();
-                    onToggleSidebar && onToggleSidebar();
-                }}
-                className={`${buttonBaseClass} ${navClass}`}
-            >
-                {isSidebarOpen ? <PanelLeftClose size={14} /> : <MapIcon size={14} />}
-                <span>{isSidebarOpen ? 'Close Itinerary' : 'View Itinerary'}</span>
-            </button>
-        </div>
-      )}
+          {/* Day Indicator / Menu Trigger */}
+          <button
+              onClick={(e) => {
+                  e.stopPropagation();
+                  setIsDayMenuOpen(!isDayMenuOpen);
+              }}
+              className={`${buttonBaseClass} ${openDay ? navClass : 'bg-black/60 border-white/50 text-white'} justify-between px-4`}
+          >
+            <div className="flex items-center gap-2">
+                <Calendar size={14} className={openDay ? "text-[#FF1744]" : "text-white"} />
+                <span>{openDay ? `Day ${openDay.replace('day', '')}` : 'Select Day'}</span>
+            </div>
+            <ChevronUp size={12} className={`transition-transform duration-300 ${isDayMenuOpen ? 'rotate-180' : ''}`} />
+          </button>
+
+          {/* View Itinerary Button */}
+          <button
+              onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleSidebar && onToggleSidebar();
+              }}
+              className={`${buttonBaseClass} ${navClass}`}
+          >
+              {isSidebarOpen ? <PanelLeftClose size={14} /> : <MapIcon size={14} />}
+              <span>{isSidebarOpen ? 'Close Itinerary' : 'View Itinerary'}</span>
+          </button>
+      </div>
     </div>
   );
 };

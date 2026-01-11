@@ -39,6 +39,9 @@ export default {
       },
       fontSize: {
         'xl-base': '1.25rem', // 20px
+      },
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'], // Adding a default sans-serif font stack
       }
     },
   },

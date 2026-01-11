@@ -1,6 +1,6 @@
 import React from 'react';
-import { ItineraryResponse, DayItinerary, Activity } from '../types';
-import { MapPin, Clock, Info, ExternalLink, Download } from 'lucide-react';
+import { ItineraryResponse, DayItinerary, Activity, Hotel } from '../types';
+import { MapPin, Clock, Info, ExternalLink, Download, Home } from 'lucide-react';
 
 interface ItineraryDisplayProps {
   data: ItineraryResponse;
@@ -24,7 +24,7 @@ const ActivityCard: React.FC<{ activity: Activity, index: number }> = ({ activit
     <div className="md:col-span-10 pb-8">
       <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
         <div className="flex justify-between items-start mb-2">
-          <h4 className="text-lg font-bold text-slate-800">{activity.activityName}</h4>
+          <h4 className="text-lg font-bold text-slate-800">{activity.label}</h4>
           <span className="md:hidden text-xs font-mono bg-slate-100 px-2 py-1 rounded text-slate-500">{activity.time}</span>
         </div>
         
@@ -33,16 +33,44 @@ const ActivityCard: React.FC<{ activity: Activity, index: number }> = ({ activit
         <div className="flex flex-wrap gap-3 mt-3">
             <div className="flex items-center text-xs text-rose-600 font-medium bg-rose-50 px-3 py-1.5 rounded-full">
                 <MapPin className="w-3 h-3 mr-1" />
-                {activity.location}
+                {activity.label}
             </div>
-            {activity.tips && (
+            {activity.tip && (
                 <div className="flex items-center text-xs text-amber-700 bg-amber-50 px-3 py-1.5 rounded-full border border-amber-100">
                     <Info className="w-3 h-3 mr-1" />
-                    Tip: {activity.tips}
+                    Tip: {activity.tip}
                 </div>
             )}
         </div>
       </div>
+    </div>
+  </div>
+);
+
+const HotelCard: React.FC<{ hotel: Hotel }> = ({ hotel }) => (
+  <div className="bg-indigo-50 border-indigo-200 border rounded-xl p-5 shadow-sm mb-8">
+    <div className="flex items-center gap-3 mb-3">
+      <Home className="w-5 h-5 text-indigo-600" />
+      <h3 className="text-xl font-bold text-indigo-800">Your Hotel: {hotel.name}</h3>
+    </div>
+    <p className="text-indigo-700 text-sm mb-2">{hotel.address}</p>
+    <p className="text-indigo-600 text-sm mb-3 italic">{hotel.neighborhoodInsights}</p>
+    <div className="flex flex-wrap gap-2 mb-3">
+      {hotel.tags.map((tag, idx) => (
+        <span key={idx} className="bg-indigo-100 text-indigo-700 text-xs px-2.5 py-1 rounded-full">{tag}</span>
+      ))}
+    </div>
+    <div className="flex gap-3 mt-4">
+      {hotel.officialSite && (
+        <a href={hotel.officialSite} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center gap-1">
+          <ExternalLink className="w-3 h-3" /> Official Site
+        </a>
+      )}
+      {hotel.directions && (
+        <a href={hotel.directions} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center gap-1">
+          <MapPin className="w-3 h-3" /> Directions
+        </a>
+      )}
     </div>
   </div>
 );
@@ -71,6 +99,8 @@ const DaySection: React.FC<{ day: DayItinerary }> = ({ day }) => (
 );
 
 export const ItineraryDisplay: React.FC<ItineraryDisplayProps> = ({ data, onReset }) => {
+  let currentCityHotel: Hotel | undefined;
+
   return (
     <div className="max-w-4xl mx-auto animate-fade-in pb-20">
       {/* Header Summary */}
@@ -87,14 +117,28 @@ export const ItineraryDisplay: React.FC<ItineraryDisplayProps> = ({ data, onRese
             </button>
          </div>
 
-         <p className="text-lg text-slate-600 leading-relaxed max-w-2xl">{data.summary}</p>
+         <p className="text-lg text-slate-600 leading-relaxed max-w-2xl">A personalized {data.tripTitle} for {data.days.length} days.</p>
       </div>
 
       {/* Days Loop */}
       <div className="px-2">
-        {data.days.map((day) => (
-          <DaySection key={day.dayNumber} day={day} />
-        ))}
+        {data.days.map((day, index) => {
+          // If this is the first day of the trip or a new city, update the current hotel.
+          // Assuming the hotel is provided on the first day of the city block.
+          if (index === 0 || day.city !== data.days[index - 1].city) {
+            currentCityHotel = day.hotel;
+          }
+
+          const nextDay = data.days[index + 1];
+          const isLastDayInCity = !nextDay || nextDay.city !== day.city;
+
+          return (
+            <React.Fragment key={day.dayNumber}>
+              <DaySection day={day} />
+              {isLastDayInCity && currentCityHotel && <HotelCard hotel={currentCityHotel} />}
+            </React.Fragment>
+          );
+        })}
       </div>
 
        {/* Floating Action Button for Map (Mockup) */}

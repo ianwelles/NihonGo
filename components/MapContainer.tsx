@@ -11,11 +11,12 @@ interface Toggles {
 }
 
 interface MapContainerProps {
-  activeCity: CityName;
+  activeCity: CityName | null;
   openDay: string | null;
   isAuthenticated: boolean;
   toggles: Toggles;
   setMapRef: (map: L.Map) => void;
+  isSidebarOpen?: boolean;
 }
 
 const getIcon = (type: string) => {
@@ -34,17 +35,20 @@ const getIcon = (type: string) => {
   });
 };
 
-export const MapContainer: React.FC<MapContainerProps> = ({ 
-  activeCity, 
-  openDay, 
-  isAuthenticated, 
-  toggles, 
-  setMapRef 
+export const MapContainer: React.FC<MapContainerProps> = ({
+  activeCity,
+  openDay,
+  isAuthenticated,
+  toggles,
+  setMapRef,
+  isSidebarOpen
 }) => {
   const mapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<L.Marker[]>([]);
-  const prevActiveCity = useRef<string | null>(null);
+  const prevActiveCity = useRef<string | null | undefined>(undefined);
   const prevOpenDay = useRef<string | null>(null);
+  const prevToggles = useRef<Toggles>(toggles);
+  const prevIsSidebarOpen = useRef<boolean | undefined>(isSidebarOpen);
 
   useEffect(() => {
     if (!isAuthenticated || mapRef.current) return;
@@ -82,73 +86,130 @@ export const MapContainer: React.FC<MapContainerProps> = ({
 
   useEffect(() => {
     if (!mapRef.current || !isAuthenticated) return;
-    markersRef.current.forEach(m => mapRef.current!.removeLayer(m));
-    markersRef.current = [];
-    const cityLocs = locations[activeCity];
-    if (!cityLocs) return;
-    const group = L.featureGroup();
-    const currentDayNumber = openDay ? openDay.replace('day', '') : null;
-    const dayRegex = currentDayNumber ? new RegExp('\b' + currentDayNumber + '\b') : null;
-    
-    cityLocs.forEach(loc => {
-        if ((loc.type === 'sight_rec' && !toggles.sight_rec) ||
-            (loc.type === 'food_rec' && !toggles.food_rec) ||
-            (loc.type === 'shopping' && !toggles.shopping)) {
-            return;
-        }
 
-        const isPersistent = ['hotel', 'suggestion', 'sight_rec', 'food_rec', 'shopping'].includes(loc.type);
-        const matchesDay = !dayRegex || (loc.day && (dayRegex.test(loc.day) || loc.day === 'Any'));
-        
-        if (isPersistent || matchesDay) {
-            const icon = getIcon(loc.type);
-            const titleHtml = loc.url 
-                ? `<a href="${loc.url}" target="_blank" rel="noopener noreferrer" class="text-xl font-bold !text-white mb-1 leading-tight inline-block border-b border-white/30 hover:!text-white hover:border-transparent transition-colors duration-200">${loc.name}</a>` 
-                : `<span class="text-xl font-bold text-primary mb-1 leading-tight block">${loc.name}</span>`;
-            const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lon}&travelmode=transit`;
-            const popupContent = `
-                    <div class="text-left">
-                        <span class="${loc.type.includes('_rec') ? 'text-[#00BCD4]' : 'text-sub-text'} font-extrabold text-xs uppercase tracking-wide mb-1 block">
-                            ${loc.day === 'Any' ? '⭐ Recommended' : loc.day}
-                        </span>
-                        ${titleHtml}
-                        <span class="text-gray-400 font-bold text-xs uppercase tracking-wide mb-2 block">${loc.type.replace(/_/g, ' ')}</span>
-                        <span class="text-gray-300 text-sm leading-relaxed mb-4 block">${loc.desc}</span>
-                        <a href="${directionsUrl}" target="_blank" rel="noopener noreferrer" class="inline-block bg-[#8ab4f8] text-[#202124] px-4 py-2 rounded-full text-sm font-bold hover:bg-[#aecbfa] transition-colors shadow-md no-underline border-none">📍Get Directions</a>
-                    </div>
-                `;
-            const m = L.marker([loc.lat, loc.lon], {icon: icon})
-                .bindPopup(popupContent);
+    const isCityChange = activeCity !== prevActiveCity.current;
+    const isDayChange = openDay !== prevOpenDay.current;
+    const isToggleChange = JSON.stringify(toggles) !== JSON.stringify(prevToggles.current);
+    const isSidebarToggle = isSidebarOpen !== prevIsSidebarOpen.current;
+
+    // Only rebuild markers if city, day, or toggles changed
+    if (isCityChange || isDayChange || isToggleChange || markersRef.current.length === 0) {
+        markersRef.current.forEach(m => mapRef.current!.removeLayer(m));
+        markersRef.current = [];
+
+        // Determine which cities to show
+        const citiesToShow: CityName[] = activeCity ? [activeCity] : ['Tokyo', 'Kyoto', 'Osaka', 'Shanghai'];
+
+        citiesToShow.forEach(cityName => {
+            let cityLocs = locations[cityName];
             
-            group.addLayer(m);
-            markersRef.current.push(m);
-        }
-    });
 
-    group.addTo(mapRef.current);
-    
-    const shouldRecenter = (activeCity !== prevActiveCity.current) || (openDay !== prevOpenDay.current);
+            if (cityLocs) {
+                cityLocs.forEach(loc => {
+                    const isHotel = loc.type === 'hotel';
+                    const normalizedLocDay = loc.day?.toLowerCase().replace(' ', '');
+                    const isDayAlwaysVisible = ['suggestion', 'any', 'stay'].includes(normalizedLocDay || '');
+                    const matchesSelectedDay = openDay === null || normalizedLocDay === openDay;
 
-    if (shouldRecenter && group.getLayers().length > 0) {
-        setTimeout(() => {
-            if (mapRef.current) {
-                // Mobile-specific padding and maxZoom
-                const isMobile = window.innerWidth < 768;
-                const padding: [number, number] = isMobile ? [50, 50] : [0.1, 0.1]; // More padding on mobile
-                const maxZoom = isMobile ? 15 : undefined; // Force closer zoom on mobile if needed
+                    let shouldDisplayMarker = false;
 
-                mapRef.current.fitBounds(group.getBounds(), {
-                    padding: padding,
-                    maxZoom: maxZoom 
+                    if (isHotel) {
+                        shouldDisplayMarker = true; // Hotels are always visible
+                    } else if (!activeCity) {
+                        // If no city is active and it's not a hotel, don't display
+                        shouldDisplayMarker = false;
+                    } else {
+                        // City is active and it's not a hotel: apply toggle and day filters
+                        let passesToggleFilter = true;
+
+                        if (loc.type === 'sight_rec' && !toggles.sight_rec) passesToggleFilter = false;
+                        if (loc.type === 'food_rec' && !toggles.food_rec) passesToggleFilter = false;
+                        if (loc.type === 'shopping' && !toggles.shopping) passesToggleFilter = false;
+
+                        shouldDisplayMarker = passesToggleFilter && (isDayAlwaysVisible || matchesSelectedDay);
+                    }
+
+                    if (shouldDisplayMarker) {
+                        const icon = getIcon(loc.type);
+                        const titleHtml = loc.url 
+                            ? `<a href="${loc.url}" target="_blank" rel="noopener noreferrer" class="text-xl font-bold !text-white mb-1 leading-tight inline-block border-b border-white/30 hover:!text-white hover:border-transparent transition-colors duration-200">${loc.name}</a>` 
+                            : `<span class="text-xl font-bold text-primary mb-1 leading-tight block">${loc.name}</span>`;
+                        const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lon}&travelmode=transit`;
+                        const popupContent = `
+                                <div class="text-left">
+                                    <span class="${loc.type.includes('_rec') ? 'text-[#00BCD4]' : 'text-sub-text'}" font-extrabold text-xs uppercase tracking-wide mb-1 block">
+                                        ${loc.day === 'Any' ? '⭐ Recommended' : loc.day}
+                                    </span>
+                                    ${titleHtml}
+                                    <span class="text-gray-400 font-bold text-xs uppercase tracking-wide mb-2 block">${loc.type.replace(/_/g, ' ')}</span>
+                                    <span class="text-gray-300 text-sm leading-relaxed mb-4 block">${loc.desc}</span>
+                                    <a href="${directionsUrl}" target="_blank" rel="noopener noreferrer" class="inline-block bg-[#8ab4f8] text-[#202124] px-4 py-2 rounded-full text-sm font-bold hover:bg-[#aecbfa] transition-colors shadow-md no-underline border-none">📍Get Directions</a>
+                                </div>
+                            `;
+                        const m = L.marker([loc.lat, loc.lon], {icon: icon})
+                            .bindPopup(popupContent);
+                        
+                        m.addTo(mapRef.current!);
+                        markersRef.current.push(m);
+                    }
                 });
             }
-        }, 250);
+        });
+    }
+
+    // Recenter logic
+    const isInitialLoad = prevActiveCity.current === undefined;
+    if ((isCityChange || isDayChange || isSidebarToggle || isInitialLoad) && markersRef.current.length > 0) {
+        requestAnimationFrame(() => {
+            if (mapRef.current && markersRef.current.length > 0) {
+                const group = L.featureGroup(markersRef.current);
+                const isMobileView = window.innerWidth < 768;
+                const sidebarWidth = 320;
+
+                let fitBoundsOptions: L.FitBoundsOptions = {
+                    paddingTopLeft: [50, 50],
+                    paddingBottomRight: [50, 50],
+                    maxZoom: 15,
+                    animate: true
+                };
+
+                if (!isMobileView && isSidebarOpen) {
+                    fitBoundsOptions.paddingTopLeft = [sidebarWidth + 20, 50];
+                };
+
+                mapRef.current.stop();
+
+                if (isInitialLoad || activeCity === null) {
+                    // Zoom out to show all markers on initial load or when no city is selected
+                    mapRef.current.fitBounds(group.getBounds(), {
+                        paddingTopLeft: !isMobileView && isSidebarOpen ? [sidebarWidth + 20, 50] : [50, 50],
+                        paddingBottomRight: [50, 50],
+                        maxZoom: 7,
+                        animate: true,
+                        duration: 1.5
+                    });
+                } else if (isCityChange) {
+                    mapRef.current.flyToBounds(group.getBounds(), {
+                        ...fitBoundsOptions,
+                        duration: 1.2,
+                        easeLinearity: 0.25
+                    });
+                } else {
+                    mapRef.current.fitBounds(group.getBounds(), {
+                        ...fitBoundsOptions,
+                        duration: 0.6
+                    });
+                }
+            }
+        });
     }
     
     prevActiveCity.current = activeCity;
     prevOpenDay.current = openDay;
+    prevToggles.current = toggles;
+    prevIsSidebarOpen.current = isSidebarOpen;
 
-  }, [activeCity, openDay, isAuthenticated, toggles]);
+  }, [activeCity, openDay, isAuthenticated, toggles, isSidebarOpen]); 
 
   return (
     <div className="h-full w-full bg-gray-900" id="map">

@@ -26,8 +26,7 @@ const useMediaQuery = (query: string) => {
 
 const App: React.FC = () => {
   const isMobile = useMediaQuery('(max-width: 767px)');
-  console.log("Is Mobile:", isMobile); // Added console log
-  const [activeCity, setActiveCity] = useState<CityName>('Tokyo');
+  const [activeCity, setActiveCity] = useState<CityName | null>(null); // Initialize to null
   const [openDay, setOpenDay] = useState<string | null>(null);
   const [isShoppingOpen, setIsShoppingOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => !window.matchMedia('(max-width: 767px)').matches);
@@ -102,23 +101,10 @@ const App: React.FC = () => {
     }
   };
 
-  // Filter itinerary days based on active city
-  const filteredItineraryDays: DayItinerary[] = useMemo(() => {
-    if (!itineraryData) return [];
-    return itineraryData.days.filter(day => day.city === activeCity);
-  }, [itineraryData, activeCity]);
-
-  useEffect(() => {
+  const handleCityChange = useCallback((city: CityName | null) => {
+    setActiveCity(city);
     setOpenDay(null);
-  }, [activeCity]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      if (mapRef.current) {
-        mapRef.current.invalidateSize();
-      }
-    }, 300); 
-  }, [isSidebarOpen]);
+  }, []);
 
   const handleToggle = (e: React.MouseEvent, dayId: string) => {
     e.preventDefault();
@@ -160,35 +146,39 @@ const App: React.FC = () => {
   return (
     <div className="h-screen w-screen overflow-hidden bg-gray-900 text-white md:flex relative">
       {/* Backdrop for mobile drawer */}
-      {isMobile && isSidebarOpen && (
+      {isSidebarOpen && (
         <div 
-          className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm"
+          className={`fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm ${isMobile ? '' : 'md:hidden'}`}
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
       
       {/* Sidebar */}
       <aside
-        className={`bg-black/80 backdrop-blur-sm z-[70] h-full transition-all duration-300 ease-in-out overflow-hidden
-          ${isMobile 
-            ? `fixed top-0 left-0 w-11/12 max-w-sm shadow-2xl ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}` 
-            : `relative ${isSidebarOpen ? 'w-[450px]' : 'w-0'}`
-          }`}
+        className={`bg-black/80 backdrop-blur-sm z-[70] h-full transition-all duration-300 ease-in-out overflow-hidden fixed top-0 left-0 w-11/12 max-w-sm shadow-2xl
+          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+          `}
       >
         <div className="h-full overflow-y-auto overflow-x-hidden">
-          <div className="p-4 space-y-4 md:min-w-[450px]">
+          <div className="p-4 space-y-4">
             <Header
               onDownloadFull={downloadFullCSV}
               onDownloadLogistics={downloadLogisticsCSV}
               onDownloadRecs={downloadRecommendationsCSV}
+              isMobile={isMobile}
             />
-            <CityTabs activeCity={activeCity} setActiveCity={setActiveCity} />
+            <CityTabs
+              activeCity={activeCity}
+              setActiveCity={handleCityChange}
+              isMobile={isMobile}
+              onToggleSidebar={() => setIsSidebarOpen(prev => !prev)}
+            />
             <TimelineView 
               activeCity={activeCity}
               openDay={openDay}
               handleToggle={handleToggle}
-              itineraryDays={filteredItineraryDays}
-              startDate={startDate} // Pass startDate for date calculation
+              fullItineraryDays={itineraryData ? itineraryData.days : []} 
+              startDate={startDate}
             />
           </div>
         </div>
@@ -201,16 +191,11 @@ const App: React.FC = () => {
           isAuthenticated={isAuthenticated}
           toggles={toggles}
           setMapRef={setMapRef}
+          isSidebarOpen={isSidebarOpen}
         />
         {/* Floating Controls Overlay */}
-        <div className={`left-1/2 -translate-x-1/2 w-full max-w-sm px-4 transition-all duration-300 pointer-events-none
-          ${isMobile 
-            ? 'fixed bottom-8 z-[9999]' 
-            : 'absolute top-4 z-[50]'
-          }
-        `}>
+        <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 w-full max-w-sm px-4 transition-all duration-300 pointer-events-none z-[9999]`}>
           <div className="pointer-events-auto">
-            {isMobile && <div className="bg-red-500 p-4 text-white">TESTING MOBILE CONTROLS VISIBILITY</div>} {/* TEST ELEMENT */}
             <Controls
                 toggles={toggles}
                 toggleCategory={toggleCategory}
@@ -219,23 +204,12 @@ const App: React.FC = () => {
                 isSidebarOpen={isSidebarOpen}
                 onToggleSidebar={() => setIsSidebarOpen(prev => !prev)}
                 isMobile={isMobile}
-                activeCity={activeCity}
+                activeCity={activeCity || undefined}
                 onSelectDay={(day) => setOpenDay(day)}
               />
           </div>
         </div>
       </main>
-
-      {/* Desktop Toggle Button (Only visible on desktop) */}
-      {!isMobile && (
-        <button 
-          onClick={() => setIsSidebarOpen(prev => !prev)}
-          className="absolute top-4 left-4 z-[9999] p-2 rounded-lg bg-gray-900/80 text-white hover:bg-gray-800 border border-white/20 shadow-lg backdrop-blur-sm transition-all"
-          aria-label={isSidebarOpen ? 'Close Itinerary' : 'Open Itinerary'}
-        >
-          {isSidebarOpen ? <PanelLeftClose size={20} /> : <PanelLeftOpen size={20} />}
-        </button>
-      )}
 
       <ShoppingModal isOpen={isShoppingOpen} onClose={() => setIsShoppingOpen(false)} />
     </div>
