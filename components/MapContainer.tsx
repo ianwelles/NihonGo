@@ -137,7 +137,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                         const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lon}&travelmode=transit`;
                         const popupContent = `
                                 <div class="text-left">
-                                    <span class="${loc.type.includes('_rec') ? 'text-[#00BCD4]' : 'text-sub-text'}" font-extrabold text-xs uppercase tracking-wide mb-1 block">
+                                    <span class="${loc.type.includes('_rec') ? 'text-[#00BCD4]' : 'text-sub-text'} font-extrabold text-xs uppercase tracking-wide mb-1 block">
                                         ${loc.day === 'Any' ? '⭐ Recommended' : loc.day}
                                     </span>
                                     ${titleHtml}
