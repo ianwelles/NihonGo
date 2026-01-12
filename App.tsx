@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { CityName, ItineraryResponse, UserPreferences, Interest, DayItinerary } from './types';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { CityName, ItineraryResponse } from './types';
 import { LoginScreen } from './components/LoginScreen';
 import { Header } from './components/Header';
 import { CityTabs } from './components/CityTabs';
@@ -8,8 +8,7 @@ import { ShoppingModal } from './components/ShoppingModal';
 import { TimelineView } from './components/TimelineView';
 import { Controls } from './components/Controls';
 import { downloadFullCSV, downloadLogisticsCSV, downloadRecommendationsCSV } from './utils/csvHelper';
-import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
-import { startDate, itineraryData as initialItineraryData } from './data'; // To calculate dates for itinerary and get initial itinerary data
+import { startDate, itineraryData as initialItineraryData, shoppingList as initialShoppingList } from './data'; 
 
 const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
@@ -26,7 +25,7 @@ const useMediaQuery = (query: string) => {
 
 const App: React.FC = () => {
   const isMobile = useMediaQuery('(max-width: 767px)');
-  const [activeCity, setActiveCity] = useState<CityName | null>(null); // Initialize to null
+  const [activeCity, setActiveCity] = useState<CityName | null>(null); 
   const [openDay, setOpenDay] = useState<string | null>(null);
   const [isShoppingOpen, setIsShoppingOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => !window.matchMedia('(max-width: 767px)').matches);
@@ -41,49 +40,12 @@ const App: React.FC = () => {
   });
 
   // State for itinerary data
-  const [itineraryData, setItineraryData] = useState<ItineraryResponse | null>({
+  const [itineraryData] = useState<ItineraryResponse | null>({
     days: initialItineraryData,
-    shoppingList: [
-      {
-        title: 'Snacks and Sweets',
-        items: [
-          { name: 'Kit Kat (unique flavors)', notes: 'Matcha, Sake, Strawberry Cheesecake' },
-          { name: 'Pocky (local varieties)', notes: 'Giant Pocky, regional flavors' },
-          { name: 'Tokyo Banana', notes: 'Classic souvenir from Tokyo' },
-          { name: 'Matcha treats', notes: 'Anything green tea flavored!' }
-        ]
-      },
-      {
-        title: 'Fashion and Accessories',
-        items: [
-          { name: 'Uniqlo / GU', notes: 'Affordable and stylish clothing' },
-          { name: 'Japanese denim', notes: 'High-quality jeans from Kojima' },
-          { name: 'Souvenir T-shirts', notes: 'Unique designs from local shops' }
-        ]
-      },
-      {
-        title: 'Beauty and Skincare',
-        items: [
-          { name: 'Daiso / Can Do / Seria', notes: '100-yen shops for various items' },
-          { name: 'Japanese sunscreen', notes: 'Popular brands like Anessa, Biore' },
-          { name: 'Sheet masks', notes: 'Variety of brands and types' },
-          { name: 'Makeup from local brands', notes: 'Canmake, Cezanne, Shu Uemura' }
-        ]
-      },
-      {
-        title: 'Home Goods and Souvenirs',
-        items: [
-          { name: 'Don Quijote', notes: 'Discount store with everything imaginable' },
-          { name: 'Japanese pottery', notes: 'From Kyoto or local craft markets' },
-          { name: 'Chopsticks', notes: 'Beautifully crafted sets' },
-          { name: 'Tenugui / Furoshiki', notes: 'Traditional Japanese cloths' },
-          { name: 'Anime/Manga merchandise', notes: 'From Akihabara or local specialty stores' }
-        ]
-      }
-    ]
+    shoppingList: initialShoppingList
   });
-  const [isLoadingItinerary, setIsLoadingItinerary] = useState(false);
-  const [itineraryError, setItineraryError] = useState<string | null>(null);
+  const [isLoadingItinerary] = useState(false);
+  const [itineraryError] = useState<string | null>(null);
 
   const mapRef = useRef<any>(null);
 
@@ -105,6 +67,25 @@ const App: React.FC = () => {
     setActiveCity(city);
     setOpenDay(null);
   }, []);
+
+  // Sync recommendation toggles based on city/day selection state
+  useEffect(() => {
+    if (activeCity !== null && openDay === null) {
+      // Only city selected: toggle recommendations ON
+      setToggles({
+        sight_rec: true,
+        food_rec: true,
+        shopping: true,
+      });
+    } else {
+      // Either a specific day is open, or we're in the global overview: toggle recommendations OFF
+      setToggles({
+        sight_rec: false,
+        food_rec: false,
+        shopping: false,
+      });
+    }
+  }, [openDay, activeCity]);
 
   const handleToggle = (e: React.MouseEvent, dayId: string) => {
     e.preventDefault();
@@ -143,6 +124,8 @@ const App: React.FC = () => {
     );
   }
 
+  const fullItineraryDays = itineraryData ? itineraryData.days : [];
+
   return (
     <div className="h-screen w-screen overflow-hidden bg-gray-900 text-white md:flex relative">
       {/* Backdrop for mobile drawer */}
@@ -172,12 +155,13 @@ const App: React.FC = () => {
               setActiveCity={handleCityChange}
               isMobile={isMobile}
               onToggleSidebar={() => setIsSidebarOpen(prev => !prev)}
+              fullItineraryDays={fullItineraryDays}
             />
             <TimelineView 
               activeCity={activeCity}
               openDay={openDay}
               handleToggle={handleToggle}
-              fullItineraryDays={itineraryData ? itineraryData.days : []} 
+              fullItineraryDays={fullItineraryDays} 
               startDate={startDate}
             />
           </div>

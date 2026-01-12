@@ -1,17 +1,33 @@
 import React from 'react';
-import { CityName } from '../types';
+import { CityName, DayItinerary } from '../types';
 
 interface CityTabsProps {
   activeCity: CityName | null;
   setActiveCity: (city: CityName | null) => void;
   isMobile: boolean;
   onToggleSidebar: () => void;
+  fullItineraryDays: DayItinerary[];
 }
 
-export const CityTabs: React.FC<CityTabsProps> = ({ activeCity, setActiveCity, isMobile, onToggleSidebar }) => {
+export const CityTabs: React.FC<CityTabsProps> = ({ activeCity, setActiveCity, isMobile, onToggleSidebar, fullItineraryDays }) => {
   const cities: CityName[] = ['Tokyo', 'Kyoto', 'Osaka', 'Shanghai'];
-  const dateRanges = ["18–20 Feb", "21–23 Feb", "24–25 Feb", "25–28 Feb"];
   const emojis = ["🗼", "⛩️", "🐙", "🥟"];
+
+  const getCityDateRange = (city: CityName) => {
+    const cityDays = fullItineraryDays.filter(d => d.city === city);
+    if (cityDays.length === 0) return "";
+    
+    const start = cityDays[0].date.split(' ').slice(1).join(' '); // e.g., "18 Feb"
+    const end = cityDays[cityDays.length - 1].date.split(' ').slice(1).join(' '); // e.g., "20 Feb"
+    
+    if (start === end) return start;
+
+    const startDay = start.split(' ')[0];
+    const endDay = end.split(' ')[0];
+    const month = end.split(' ')[1];
+
+    return `${startDay}–${endDay} ${month}`;
+  };
 
   return (
     <div className="mb-6">
@@ -21,9 +37,7 @@ export const CityTabs: React.FC<CityTabsProps> = ({ activeCity, setActiveCity, i
                 key={city}
                 onClick={() => {
                     setActiveCity(city);
-                    if (isMobile) {
-                      onToggleSidebar();
-                    }
+                    // Removed auto-close sidebar on mobile
                 }}
                 className={`
                     py-3 px-4 rounded-2xl font-bold text-base text-center w-full transition-all duration-300 border
@@ -37,7 +51,9 @@ export const CityTabs: React.FC<CityTabsProps> = ({ activeCity, setActiveCity, i
                     <span>{city}</span>
                     <span className="text-sm opacity-80 filter grayscale-[0.3]">{emojis[index]}</span>
                 </div>
-                <span className={`block text-xs font-medium ${activeCity === city ? 'text-[#FF1744]' : 'text-gray-600'}`}>{dateRanges[index]}</span>
+                <span className={`block text-xs font-medium ${activeCity === city ? 'text-[#FF1744]' : 'text-gray-600'}`}>
+                    {getCityDateRange(city)}
+                </span>
             </button>
         ))}
         </div>

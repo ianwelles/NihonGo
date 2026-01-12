@@ -1,87 +1,52 @@
+export type PlaceCategory = 'hotel' | 'food' | 'sight' | 'travel' | 'shopping' | 'suggestion' | 'sight_rec' | 'food_rec';
+
 export type CityName = 'Tokyo' | 'Kyoto' | 'Osaka' | 'Shanghai';
 
-export interface Activity {
-  time: string;
-  label: string;
+export interface Place {
+  id: string;
+  name: string;
+  type: PlaceCategory;
+  city: CityName; // Added field
+  coordinates: {
+    lat: number;
+    lon: number;
+  };
   description: string;
-  link?: string;
-  tip?: string;
-  icon?: string;
+  url?: string;
+  // Hotel-specific metadata (optional)
+  hotelMeta?: {
+    address: string;
+    directions: string;
+    neighborhoodInsights: string;
+    tags: string[];
+  };
 }
 
-export interface Hotel {
-  name: string;
-  address: string;
-  officialSite: string;
-  directions: string;
-  neighborhoodInsights: string;
-  tags: string[];
+export interface Activity {
+  placeId: string; // References the Place dictionary
+  time: string;
+  label?: string; // Overrides Place name if needed
+  description?: string; // Overrides static Place description if needed
+  tip?: string;
+  icon?: string;
+  link?: string; // Optional override link
 }
 
 export interface DayItinerary {
   dayNumber: number;
   city: CityName;
+  date: string; 
   theme: string;
-  date: string; // e.g., "Tue 18 Feb"
+  hotelId?: string; 
   activities: Activity[];
-  hotel?: Hotel;
 }
 
 export interface ShoppingItem {
   name: string;
-  notes?: string;
+  notes: string;
 }
 
 export interface ShoppingCategory {
   title: string;
   items: ShoppingItem[];
-}
-
-export type LocationType = "travel" | "sight" | "food" | "hotel" | "suggestion" | "sight_rec" | "food_rec" | "shopping";
-
-export interface LocationItem {
-  name: string;
-  lat: number;
-  lon: number;
-  type: LocationType;
-  desc: string;
-  day: string;
-  url: string;
-}
-
-export type LocationsMap = { [city in CityName]: LocationItem[] };
-
-export type CityThemeColors = {
-  [key in CityName]: { 
-    primary: string;
-    accent: string; 
-  };
-};
-
-export type MapMarkerColors = {
-  [key in LocationType]: string;
-};
-
-export enum Interest {
-  Culture = 'Culture',
-  Food = 'Food',
-  Shopping = 'Shopping',
-  Nature = 'Nature',
-  Anime = 'Anime',
-  Nightlife = 'Nightlife',
-  Relaxation = 'Relaxation',
-  Art = 'Art',
-}
-
-export interface ItineraryResponse {
-  days: DayItinerary[];
-  shoppingList: ShoppingCategory[];
-}
-
-export interface UserPreferences {
-  duration: number;
-  season: string;
-  travelers: string;
-  budget: string;
-  interests: Interest[];
 }

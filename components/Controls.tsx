@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ShoppingBag, Landmark, Utensils, Store, PanelLeftClose, Map as MapIcon, Calendar, ChevronUp, ChevronRight } from 'lucide-react';
-import { dayToCity } from '../data';
+import { itineraryData } from '../data'; // Changed import source
 import { CityName } from '../types';
 
 interface Toggles {
@@ -37,10 +37,15 @@ export const Controls: React.FC<ControlsProps> = ({
   const [expandedCity, setExpandedCity] = useState<CityName | null>(activeCity || null);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Group days by city
-  const cityGroups = Object.entries(dayToCity).reduce((acc, [day, city]) => {
-    if (!acc[city]) acc[city] = [];
-    acc[city].push(day);
+  // Group days by city using itineraryData (Source of Truth)
+  const cityGroups = itineraryData.reduce((acc, day) => {
+    const city = day.city;
+    const dayLabel = `Day ${day.dayNumber}`;
+
+    if (!acc[city]) {
+      acc[city] = [];
+    }
+    acc[city].push(dayLabel);
     return acc;
   }, {} as Record<CityName, string[]>);
 

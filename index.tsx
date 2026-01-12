@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import './index.css'; // Add this line to import Tailwind CSS
+import './index.css'; 
+import 'leaflet/dist/leaflet.css';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
