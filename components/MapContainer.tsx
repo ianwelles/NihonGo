@@ -80,32 +80,42 @@ const getUserIcon = (heading: number | null) => L.divIcon({
 });
 
 /**
- * Ensures map popups stay within view by panning the map if necessary.
+ * Manages map popups, closing them if they scroll off-screen.
  */
 const PopupManager: React.FC = () => {
   const map = useMap();
-  
+  const openPopups = useRef<Set<L.Popup>>(new Set());
+
   useEffect(() => {
     const handlePopupOpen = (e: L.PopupEvent) => {
-      const popup = e.popup;
-      // Use keepInView option to ensure popup is visible
-      // This is natively supported by Leaflet if set on the popup,
-      // but we can also trigger it here or ensure the map pans.
-      // Leaflet's Popup has a 'keepInView' option which is true by default,
-      // but sometimes layout shifts or UI overlays interfere.
-      
-      // Force a small delay to allow for DOM rendering of the popup content
-      setTimeout(() => {
-        const container = popup.getElement();
-        if (container) {
-          map.panInsideBounds(map.getBounds(), { animate: true });
+      openPopups.current.add(e.popup);
+    };
+
+    const handlePopupClose = (e: L.PopupEvent) => {
+      openPopups.current.delete(e.popup);
+    };
+
+    const checkPopupsVisibility = () => {
+      const mapBounds = map.getBounds();
+      openPopups.current.forEach(popup => {
+        // Get the coordinates of the popup's anchor
+        const popupLatLng = popup.getLatLng();
+        
+        // If the popup's anchor is outside the map bounds, close it
+        if (!mapBounds.contains(popupLatLng)) {
+          popup.remove();
         }
-      }, 100);
+      });
     };
 
     map.on('popupopen', handlePopupOpen);
+    map.on('popupclose', handlePopupClose);
+    map.on('move', checkPopupsVisibility); // Check visibility on any map movement
+
     return () => {
       map.off('popupopen', handlePopupOpen);
+      map.off('popupclose', handlePopupClose);
+      map.off('move', checkPopupsVisibility);
     };
   }, [map]);
 

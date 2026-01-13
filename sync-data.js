@@ -6,11 +6,9 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const SHEET_BASE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRniSOAatP5VkPcJar3i-lMab0sZxPd3Q5td67o9kig_Zc9ZgjR4mCWL78dWHnxy0Yr9HAHdUxskKwb/pub?output=csv';
-
 const CONFIG = {
   places: {
-    url: `${SHEET_BASE_URL}&gid=1152874887`,
+    url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRniSOAatP5VkPcJar3i-lMab0sZxPd3Q5td67o9kig_Zc9ZgjR4mCWL78dWHnxy0Yr9HAHdUxskKwb/pub?gid=1152874887&single=true&output=csv',
     path: 'places.ts',
     transform: (rows) => {
       const places = {};
@@ -27,6 +25,7 @@ const CONFIG = {
           },
           description: row.description,
           url: row.url || undefined,
+          tags: row.tags ? row.tags.split(',').map(t => t.trim()) : []
         };
         
         if (row.type === 'hotel' && row.address) {
@@ -34,7 +33,9 @@ const CONFIG = {
             address: row.address,
             directions: row.directions,
             neighborhoodInsights: row.neighborhoodInsights,
-            tags: row.tags ? row.tags.split(',').map(t => t.trim()) : []
+            // Tags are now handled at the top level for all places.
+            // Keeping `tags` here for backward compatibility if needed, but it's redundant now.
+            tags: row.tags ? row.tags.split(',').map(t => t.trim()) : [] 
           };
         }
         places[row.id] = place;
@@ -43,7 +44,7 @@ const CONFIG = {
     }
   },
   itinerary: {
-    url: `${SHEET_BASE_URL}&gid=1332892089`,
+    url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRniSOAatP5VkPcJar3i-lMab0sZxPd3Q5td67o9kig_Zc9ZgjR4mCWL78dWHnxy0Yr9HAHdUxskKwb/pub?gid=1332892089&single=true&output=csv',
     path: 'itinerary.ts',
     transform: (rows) => {
       const daysMap = new Map();
@@ -80,7 +81,7 @@ const CONFIG = {
     }
   },
   theme: {
-    url: `${SHEET_BASE_URL}&gid=1754683644`,
+    url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRniSOAatP5VkPcJar3i-lMab0sZxPd3Q5td67o9kig_Zc9ZgjR4mCWL78dWHnxy0Yr9HAHdUxskKwb/pub?gid=1754683644&single=true&output=csv',
     path: 'theme.ts',
     transform: (rows) => {
       const cityColors = {};
@@ -93,7 +94,7 @@ const CONFIG = {
     }
   },
   tips: {
-    url: `${SHEET_BASE_URL}&gid=489356129`,
+    url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRniSOAatP5VkPcJar3i-lMab0sZxPd3Q5td67o9kig_Zc9ZgjR4mCWL78dWHnxy0Yr9HAHdUxskKwb/pub?gid=489356129&single=true&output=csv',
     path: 'tips.tsx',
     transform: (rows) => {
       const tipsMap = new Map();

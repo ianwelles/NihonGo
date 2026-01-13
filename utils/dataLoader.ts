@@ -6,14 +6,11 @@ import { cityThemeColors as fallbackCityColors, mapMarkerColors as fallbackMarke
 import { tipsList as fallbackTips } from '../tips';
 
 // --- CONFIGURATION ---
-// Base URL for the published Google Sheet CSV
-const SHEET_BASE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRniSOAatP5VkPcJar3i-lMab0sZxPd3Q5td67o9kig_Zc9ZgjR4mCWL78dWHnxy0Yr9HAHdUxskKwb/pub?output=csv';
-
-// GIDs for each specific sheet
-export const PLACES_CSV_URL = `${SHEET_BASE_URL}&gid=1152874887`;
-export const ITINERARY_CSV_URL = `${SHEET_BASE_URL}&gid=1332892089`;
-export const THEME_CSV_URL = `${SHEET_BASE_URL}&gid=1754683644`;
-export const TIPS_CSV_URL = `${SHEET_BASE_URL}&gid=489356129`;
+// Full URLs for the published Google Sheet CSVs
+export const PLACES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRniSOAatP5VkPcJar3i-lMab0sZxPd3Q5td67o9kig_Zc9ZgjR4mCWL78dWHnxy0Yr9HAHdUxskKwb/pub?gid=1152874887&single=true&output=csv';
+export const ITINERARY_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRniSOAatP5VkPcJar3i-lMab0sZxPd3Q5td67o9kig_Zc9ZgjR4mCWL78dWHnxy0Yr9HAHdUxskKwb/pub?gid=1332892089&single=true&output=csv';
+export const THEME_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRniSOAatP5VkPcJar3i-lMab0sZxPd3Q5td67o9kig_Zc9ZgjR4mCWL78dWHnxy0Yr9HAHdUxskKwb/pub?gid=1754683644&single=true&output=csv';
+export const TIPS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRniSOAatP5VkPcJar3i-lMab0sZxPd3Q5td67o9kig_Zc9ZgjR4mCWL78dWHnxy0Yr9HAHdUxskKwb/pub?gid=489356129&single=true&output=csv';
 
 // --- CSV STRUCTURE DOCUMENTATION ---
 
@@ -64,17 +61,12 @@ export interface AppData {
 const fetchCSV = async (url: string): Promise<any[]> => {
   if (!url) throw new Error("URL not provided");
   
-  // Add a cache-busting timestamp to the URL and use cache: 'no-store'
+  // Add a cache-busting timestamp to the URL
   const cacheBuster = `&t=${Date.now()}`;
   const fetchUrl = url.includes('?') ? `${url}${cacheBuster}` : `${url}?${cacheBuster}`;
 
-  const response = await fetch(fetchUrl, {
-    cache: 'no-store',
-    headers: {
-      'Cache-Control': 'no-cache',
-      'Pragma': 'no-cache'
-    }
-  });
+  // Removed custom headers and cache: 'no-store' as per CORS preflight fix
+  const response = await fetch(fetchUrl);
 
   if (!response.ok) throw new Error(`Failed to fetch CSV: ${response.statusText}`);
   const text = await response.text();
@@ -121,6 +113,7 @@ export const loadAppData = async (): Promise<AppData> => {
           },
           description: row.description,
           url: row.url || undefined,
+          tags: row.tags ? row.tags.split(',').map((t: string) => t.trim()) : [], // Populate tags for all Place types
           hotelMeta: (row.type === 'hotel' && row.address) ? {
             address: row.address,
             directions: row.directions,
