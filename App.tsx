@@ -137,7 +137,7 @@ const App: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="h-screen w-screen flex flex-col items-center justify-center bg-gray-900 text-white animate-in fade-in duration-500">
+      <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-gray-900 text-white animate-in fade-in duration-500">
         <div className="relative mb-8">
           <div className="absolute inset-0 bg-red-500/20 blur-3xl rounded-full" />
           <svg className="w-32 h-32 relative z-10 animate-pulse" viewBox="0 0 100 100">

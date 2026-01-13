@@ -48,6 +48,11 @@ aside > div::-webkit-scrollbar-thumb:hover {
 }
 
 /* Leaflet Popup Overrides */
+.leaflet-popup-pane {
+  /* Ensure popups appear over all custom UI overlays (buttons z-1000, controls z-10000) */
+  z-index: 11000 !important;
+}
+
 .leaflet-popup-content-wrapper {
   @apply bg-popup-bg text-text rounded-lg shadow-xl border-primary border-2; 
   padding: 0 !important;
