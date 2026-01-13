@@ -13,6 +13,7 @@ export interface Place {
   };
   description: string;
   url?: string;
+  tags?: string[]; // Added tags property to Place interface
   hotelMeta?: {
     address: string;
     directions: string;
