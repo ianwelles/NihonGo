@@ -135,11 +135,11 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
         </Marker>
       )}
       
-      {/* Container for buttons - Vertical Stack in bottom right */}
+      {/* Container for buttons - Vertical Stack in top right for mobile, bottom right for desktop */}
       <div 
-        className={`absolute z-[1000] flex flex-col gap-2 transition-all duration-300 pointer-events-auto mb-[env(safe-area-inset-bottom)]
+        className={`absolute z-[1000] flex flex-col gap-2 transition-all duration-300 pointer-events-auto
           ${isMobile 
-            ? 'bottom-52 right-4' 
+            ? 'top-4 right-4' 
             : 'bottom-8 right-6'
           }
         `}
