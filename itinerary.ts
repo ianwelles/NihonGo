@@ -7,344 +7,344 @@ export const endDate = new Date('2025-02-28');
 // --- Itinerary Data ---
 export const itineraryData: DayItinerary[] = [
   {
-    dayNumber: 1,
-    city: 'Tokyo',
-    theme: 'Arrival & Local Life',
-    date: 'Tue 18 Feb',
-    hotelId: 'hilton-tokyo',
-    activities: [
+    "dayNumber": 1,
+    "city": "Tokyo",
+    "theme": "Arrival & Local Life",
+    "date": "Wed 18 Feb",
+    "hotelId": "hilton-tokyo",
+    "activities": [
       {
-        placeId: 'haneda-airport',
-        time: '10:25 AM',
-        label: 'Arrival',
-        icon: '🛬',
+        "placeId": "haneda-airport",
+        "time": "10:25",
+        "label": "Arrival",
+        "icon": "🛬"
       },
       {
-        placeId: 'shinjuku-gyoen',
-        time: 'Day',
-        label: 'Shinjuku & Garden',
-        tip: 'Konjiki Hototogisu holds a Michelin Star for their clam-broth ramen. Arrive early for a ticket!',
-        description: 'Transfer to Shinjuku. Lunch at Sobahouse Konjiki Hototogisu. Walk through Shinjuku Gyoen National Garden.',
-        icon: '🚅',
+        "placeId": "shinjuku-gyoen",
+        "time": "Day",
+        "label": "Shinjuku & Garden",
+        "description": "Transfer to Shinjuku. Lunch at Sobahouse Konjiki Hototogisu. Walk through Shinjuku Gyoen National Garden.",
+        "tip": "Konjiki Hototogisu holds a Michelin Star for their clam-broth ramen. Arrive early for a ticket!",
+        "icon": "🚅"
       },
       {
-        placeId: 'torikizoku',
-        time: 'Evening',
-        label: 'Dinner',
-        description: 'Dinner at Torikizoku (Yakitori) or the atmospheric Omoide Yokocho.',
-        tip: 'Torikizoku is a reliable chain where every item is the same price—great for a low-stress first meal.',
-        icon: '🍢',
-      },
-    ],
+        "placeId": "torikizoku",
+        "time": "Evening",
+        "label": "Dinner",
+        "description": "Dinner at Torikizoku (Yakitori) or the atmospheric Omoide Yokocho.",
+        "tip": "Torikizoku is a reliable chain where every item is the same price—great for a low-stress first meal.",
+        "icon": "🍢"
+      }
+    ]
   },
   {
-    dayNumber: 2,
-    city: 'Tokyo',
-    theme: 'Old Tokyo & Culture',
-    date: 'Wed 19 Feb',
-    hotelId: 'hilton-tokyo',
-    activities: [
+    "dayNumber": 2,
+    "city": "Tokyo",
+    "theme": "Old Tokyo & Culture",
+    "date": "Thu 19 Feb",
+    "hotelId": "hilton-tokyo",
+    "activities": [
       {
-        placeId: 'senso-ji',
-        time: 'Morning',
-        label: 'Senso-ji Temple',
-        tip: 'Try the Ningyo-yaki (doll-shaped sponge cakes) on Nakamise street.',
-        icon: '⛩️',
+        "placeId": "senso-ji",
+        "time": "Morning",
+        "label": "Senso-ji Temple",
+        "tip": "Try the Ningyo-yaki (doll-shaped sponge cakes) on Nakamise street.",
+        "icon": "⛩️"
       },
       {
-        placeId: 'imperial-palace-east',
-        time: 'Day',
-        label: 'Imperial Palace & Tsukiji',
-        description: 'Walk the Imperial Palace East Gardens. Lunch at Tsukiji Outer Market.',
-        tip: 'At Tsukiji, look for the queues at Sushizanmai for reliable quality.',
-        icon: '🏯',
+        "placeId": "imperial-palace-east",
+        "time": "Day",
+        "label": "Imperial Palace & Tsukiji",
+        "description": "Walk the Imperial Palace East Gardens. Lunch at Tsukiji Outer Market.",
+        "tip": "At Tsukiji, look for the queues at Sushizanmai for reliable quality.",
+        "icon": "🏯"
       },
       {
-        placeId: 'shinjuku-nichome',
-        time: 'Evening',
-        label: 'Shinjuku Ni-chōme',
-        description: 'Dinner at Ramen Nagi (Golden Gai). Then explore Shinjuku Ni-chōme.',
-        tip: 'Ramen Nagi is legendary for its intense Niboshi (sardine) broth.',
-        icon: '🍸',
-      },
-    ],
+        "placeId": "shinjuku-nichome",
+        "time": "Evening",
+        "label": "Shinjuku Ni-chōme",
+        "description": "Dinner at Ramen Nagi (Golden Gai). Then explore Shinjuku Ni-chōme.",
+        "tip": "Ramen Nagi is legendary for its intense Niboshi (sardine) broth.",
+        "icon": "🍸"
+      }
+    ]
   },
   {
-    dayNumber: 3,
-    city: 'Tokyo',
-    theme: 'Modern Icons',
-    date: 'Thu 20 Feb',
-    hotelId: 'hilton-tokyo',
-    activities: [
+    "dayNumber": 3,
+    "city": "Tokyo",
+    "theme": "Modern Icons",
+    "date": "Fri 20 Feb",
+    "hotelId": "hilton-tokyo",
+    "activities": [
       {
-        placeId: 'shibuya-crossing',
-        time: 'Morning',
-        label: 'Shibuya Crossing',
-        icon: '📸',
+        "placeId": "shibuya-crossing",
+        "time": "Morning",
+        "label": "Shibuya Crossing",
+        "icon": "📸"
       },
       {
-        placeId: 'tokyo-metro-gov',
-        time: 'Day',
-        label: 'Tokyo Metro Gov. Building',
-        description: 'Views from Tokyo Metro Gov. Building. Walk Takeshita Street (Harajuku).',
-        icon: '🏙️',
+        "placeId": "tokyo-metro-gov",
+        "time": "Day",
+        "label": "Tokyo Metro Gov. Building",
+        "description": "Views from Tokyo Metro Gov. Building. Walk Takeshita Street (Harajuku).",
+        "icon": "🏙️"
       },
       {
-        placeId: 'sushi-kunimitsu',
-        time: 'Lunch',
-        label: 'Sushi',
-        description: 'Authentic sushi at Sushi Kunimitsu or Osushiya Taiki.',
-        tip: 'Kunimitsu is highly rated (4.7★) for its Omakase course. Booking essential.',
-        icon: '🍣',
+        "placeId": "sushi-kunimitsu",
+        "time": "Lunch",
+        "label": "Sushi",
+        "description": "Authentic sushi at Sushi Kunimitsu or Osushiya Taiki.",
+        "tip": "Kunimitsu is highly rated (4.7★) for its Omakase course. Booking essential.",
+        "icon": "🍣"
       },
       {
-        placeId: 'fuunji',
-        time: 'Dinner',
-        label: 'Fuunji',
-        description: 'Fuunji (Shinjuku).',
-        tip: 'Known for the best Tsukemen (dipping noodles) in Tokyo. Expect a line, but it moves fast!',
-        icon: '🍜',
-      },
-    ],
+        "placeId": "fuunji",
+        "time": "Dinner",
+        "label": "Fuunji",
+        "description": "Fuunji (Shinjuku).",
+        "tip": "Known for the best Tsukemen (dipping noodles) in Tokyo. Expect a line, but it moves fast!",
+        "icon": "🍜"
+      }
+    ]
   },
   {
-    dayNumber: 4,
-    city: 'Kyoto',
-    theme: 'Bullet Train & Gion',
-    date: 'Fri 21 Feb',
-    hotelId: 'doubletree-kyoto',
-    activities: [
+    "dayNumber": 4,
+    "city": "Kyoto",
+    "theme": "Bullet Train & Gion",
+    "date": "Sat 21 Feb",
+    "hotelId": "doubletree-kyoto",
+    "activities": [
       {
-        placeId: 'shinjuku-station',
-        time: 'Morning',
-        label: 'Shinkansen to Kyoto',
-        description: 'Shinkansen to Kyoto (2.5 hrs). Buy an Ekiben!',
-        tip: 'Buy a "Makunouchi" bento at Tokyo Station\'s Ekibenya Matsuri before boarding.',
-        icon: '🚅',
+        "placeId": "shinjuku-station",
+        "time": "Morning",
+        "label": "Shinkansen to Kyoto",
+        "description": "Shinkansen to Kyoto (2.5 hrs). Buy an Ekiben!",
+        "tip": "Buy a \"Makunouchi\" bento at Tokyo Station's Ekibenya Matsuri before boarding.",
+        "icon": "🚅"
       },
       {
-        placeId: 'gion-district',
-        time: 'Afternoon',
-        label: 'Gion District',
-        description: 'Check in. Explore Gion District and Pontocho Alley.',
-        icon: '🍵',
+        "placeId": "gion-district",
+        "time": "Afternoon",
+        "label": "Gion District",
+        "description": "Check in. Explore Gion District and Pontocho Alley.",
+        "icon": "🍵"
       },
       {
-        placeId: 'gion-district', 
-        time: 'Dinner',
-        label: 'Kyo-Kaiseki meal',
-        description: 'Traditional Kyo-Kaiseki meal in Gion.',
-        tip: 'If not booked, wander down Pontocho Alley for atmospheric river-side dining.',
-        icon: '🍱',
-      },
-    ],
+        "placeId": "gion-district",
+        "time": "Dinner",
+        "label": "Kyo-Kaiseki meal",
+        "description": "Traditional Kyo-Kaiseki meal in Gion.",
+        "tip": "If not booked, wander down Pontocho Alley for atmospheric river-side dining.",
+        "icon": "🍱"
+      }
+    ]
   },
   {
-    dayNumber: 5,
-    city: 'Kyoto',
-    theme: 'Shrines, Zen & Tea',
-    date: 'Sat 22 Feb',
-    hotelId: 'doubletree-kyoto',
-    activities: [
+    "dayNumber": 5,
+    "city": "Kyoto",
+    "theme": "Shrines, Zen & Tea",
+    "date": "Sun 22 Feb",
+    "hotelId": "doubletree-kyoto",
+    "activities": [
       {
-        placeId: 'fushimi-inari',
-        time: 'Morning',
-        label: 'Fushimi Inari Taisha',
-        tip: 'Arriving by 8:00 AM avoids the massive crowds.',
-        icon: '⛩️',
+        "placeId": "fushimi-inari",
+        "time": "Morning",
+        "label": "Fushimi Inari Taisha",
+        "tip": "Arriving by 8:00 AM avoids the massive crowds.",
+        "icon": "⛩️"
       },
       {
-        placeId: 'kiyomizu-dera',
-        time: 'Day',
-        label: 'Kiyomizu-dera',
-        description: 'Visit Kiyomizu-dera and attend a traditional Tea Ceremony.',
-        icon: '🍂',
+        "placeId": "kiyomizu-dera",
+        "time": "Day",
+        "label": "Kiyomizu-dera",
+        "description": "Visit Kiyomizu-dera and attend a traditional Tea Ceremony.",
+        "icon": "🍂"
       },
       {
-        placeId: 'honke-daiichi',
-        time: 'Lunch',
-        label: 'Honke Daiichi-Asahi',
-        tip: 'A Kyoto institution serving classic soy-based ramen.',
-        icon: '🥗',
-      },
-    ],
+        "placeId": "honke-daiichi",
+        "time": "Lunch",
+        "label": "Honke Daiichi-Asahi",
+        "tip": "A Kyoto institution serving classic soy-based ramen.",
+        "icon": "🥗"
+      }
+    ]
   },
   {
-    dayNumber: 6,
-    city: 'Kyoto',
-    theme: 'Bamboo & Local Flavours',
-    date: 'Sun 23 Feb',
-    hotelId: 'doubletree-kyoto',
-    activities: [
+    "dayNumber": 6,
+    "city": "Kyoto",
+    "theme": "Bamboo & Local Flavours",
+    "date": "Mon 23 Feb",
+    "hotelId": "doubletree-kyoto",
+    "activities": [
       {
-        placeId: 'nishiki-market',
-        time: 'Morning',
-        label: 'Nishiki Market',
-        tip: 'Try the Tako Tamago (red baby octopus with a quail egg inside).',
-        icon: '🥒',
+        "placeId": "nishiki-market",
+        "time": "Morning",
+        "label": "Nishiki Market",
+        "tip": "Try the Tako Tamago (red baby octopus with a quail egg inside).",
+        "icon": "🥒"
       },
       {
-        placeId: 'arashiyama',
-        time: 'Day',
-        label: 'Arashiyama or Nara',
-        description: 'Train to Arashiyama (Bamboo Grove) or Nara Deer Park.',
-        icon: '🎋',
+        "placeId": "arashiyama",
+        "time": "Day",
+        "label": "Arashiyama or Nara",
+        "description": "Train to Arashiyama (Bamboo Grove) or Nara Deer Park.",
+        "icon": "🎋"
       },
       {
-        placeId: 'gion-district',
-        time: 'Dinner',
-        label: 'Obanzai',
-        description: 'Obanzai (home cooking) at a local tavern.',
-        tip: 'Obanzai focuses on seasonal Kyoto vegetables.',
-        icon: '🍲',
-      },
-    ],
+        "placeId": "gion-district",
+        "time": "Dinner",
+        "label": "Obanzai",
+        "description": "Obanzai (home cooking) at a local tavern.",
+        "tip": "Obanzai focuses on seasonal Kyoto vegetables.",
+        "icon": "🍲"
+      }
+    ]
   },
   {
-    dayNumber: 7,
-    city: 'Osaka',
-    theme: 'Kitchen of Japan',
-    date: 'Mon 24 Feb',
-    hotelId: 'hilton-osaka',
-    activities: [
+    "dayNumber": 7,
+    "city": "Osaka",
+    "theme": "Kitchen of Japan",
+    "date": "Tue 24 Feb",
+    "hotelId": "hilton-osaka",
+    "activities": [
       {
-        placeId: 'osaka-castle',
-        time: 'Morning',
-        label: 'Osaka Castle',
-        description: 'Train to Osaka (30 mins). Visit Osaka Castle.',
-        icon: '🚆',
+        "placeId": "osaka-castle",
+        "time": "Morning",
+        "label": "Osaka Castle",
+        "description": "Train to Osaka (30 mins). Visit Osaka Castle.",
+        "icon": "🚆"
       },
       {
-        placeId: 'kushikatsu-daruma',
-        time: 'Day',
-        label: 'Dotonbori & Shinsekai',
-        description: 'Lunch at Kushikatsu Daruma. Eat through Dotonbori and retro Shinsekai.',
-        tip: 'Famous for "no double dipping" fried skewers.',
-        icon: '🦀',
+        "placeId": "kushikatsu-daruma",
+        "time": "Day",
+        "label": "Dotonbori & Shinsekai",
+        "description": "Lunch at Kushikatsu Daruma. Eat through Dotonbori and retro Shinsekai.",
+        "tip": "Famous for \"no double dipping\" fried skewers.",
+        "icon": "🦀"
       },
       {
-        placeId: 'doyama-cho',
-        time: 'Evening',
-        label: 'Dōyama-chō',
-        description: 'Visit Dōyama-chō (Gay District).',
-        icon: '🏳️‍🌈',
+        "placeId": "doyama-cho",
+        "time": "Evening",
+        "label": "Dōyama-chō",
+        "description": "Visit Dōyama-chō (Gay District).",
+        "icon": "🏳️‍🌈"
       },
       {
-        placeId: 'fukutaro',
-        time: 'Dinner',
-        label: 'Okonomiyaki',
-        description: 'Okonomiyaki at Fukutaro or Ajinoya Honten.',
-        tip: 'Order the Negiyaki (green onion pancake) at Fukutaro.',
-        icon: '🥞',
-      },
-    ],
+        "placeId": "fukutaro",
+        "time": "Dinner",
+        "label": "Okonomiyaki",
+        "description": "Okonomiyaki at Fukutaro or Ajinoya Honten.",
+        "tip": "Order the Negiyaki (green onion pancake) at Fukutaro.",
+        "icon": "🥞"
+      }
+    ]
   },
   {
-    dayNumber: 8,
-    city: 'Shanghai',
-    theme: 'Arrival & Maglev',
-    date: 'Tue 25 Feb',
-    hotelId: 'hilton-shanghai',
-    activities: [
+    "dayNumber": 8,
+    "city": "Shanghai",
+    "theme": "Arrival & Maglev",
+    "date": "Wed 25 Feb",
+    "hotelId": "hilton-shanghai",
+    "activities": [
       {
-        placeId: 'pudong-airport',
-        time: 'Travel',
-        label: 'Fly KIX to PVG',
-        description: 'Fly KIX to PVG. Ride the MAGLEV (430km/h).',
-        tip: 'Maglev closes at 23:40.',
-        icon: '🛫',
-      },
-    ],
+        "placeId": "pudong-airport",
+        "time": "Travel",
+        "label": "Fly KIX to PVG",
+        "description": "Fly KIX to PVG. Ride the MAGLEV (430km/h).",
+        "tip": "Maglev closes at 23:40.",
+        "icon": "🛫"
+      }
+    ]
   },
   {
-    dayNumber: 9,
-    city: 'Shanghai',
-    theme: 'Birthday Celebration 🎂',
-    date: 'Wed 26 Feb',
-    hotelId: 'hilton-shanghai',
-    activities: [
+    "dayNumber": 9,
+    "city": "Shanghai",
+    "theme": "Birthday Celebration 🎂",
+    "date": "Thu 26 Feb",
+    "hotelId": "hilton-shanghai",
+    "activities": [
       {
-        placeId: 'french-concession',
-        time: 'Day',
-        label: 'French Concession',
-        description: 'Walk the French Concession. Shopping and cafe hopping at Ferguson Lane.',
-        icon: '🌳',
+        "placeId": "french-concession",
+        "time": "Day",
+        "label": "French Concession",
+        "description": "Walk the French Concession. Shopping and cafe hopping at Ferguson Lane.",
+        "icon": "🌳"
       },
       {
-        placeId: 'fu-1039',
-        time: 'Dinner',
-        label: 'Fu 1039 or Fu He Hui',
-        description: 'Fu 1039 (Classic) or Fu He Hui (Veg).',
-        tip: 'Fu 1039 (1 Michelin Star) for Smoked Fish. Fu He Hui (2 Michelin Stars) for world-class vegetarian.',
-        icon: '🥢',
+        "placeId": "fu-1039",
+        "time": "Dinner",
+        "label": "Fu 1039 or Fu He Hui",
+        "description": "Fu 1039 (Classic) or Fu He Hui (Veg).",
+        "tip": "Fu 1039 (1 Michelin Star) for Smoked Fish. Fu He Hui (2 Michelin Stars) for world-class vegetarian.",
+        "icon": "🥢"
       },
       {
-        placeId: 'eddys-bar',
-        time: 'Drinks',
-        label: 'Eddy\'s or Lucca 390',
-        icon: '🍸',
-      },
-    ],
+        "placeId": "eddys-bar",
+        "time": "Drinks",
+        "label": "Eddy's or Lucca 390",
+        "icon": "🍸"
+      }
+    ]
   },
   {
-    dayNumber: 10,
-    city: 'Shanghai',
-    theme: 'History & Skylines',
-    date: 'Thu 27 Feb',
-    hotelId: 'hilton-shanghai',
-    activities: [
+    "dayNumber": 10,
+    "city": "Shanghai",
+    "theme": "History & Skylines",
+    "date": "Fri 27 Feb",
+    "hotelId": "hilton-shanghai",
+    "activities": [
       {
-        placeId: 'yu-garden',
-        time: 'Morning',
-        label: 'Yu Garden & Bazaar',
-        icon: '🏮',
+        "placeId": "yu-garden",
+        "time": "Morning",
+        "label": "Yu Garden & Bazaar",
+        "icon": "🏮"
       },
       {
-        placeId: 'jianguo-328',
-        time: 'Lunch',
-        label: 'Jianguo 328',
-        tip: 'Bib Gourmand favorite for MSG-free home-style cooking.',
-        icon: '🥟',
+        "placeId": "jianguo-328",
+        "time": "Lunch",
+        "label": "Jianguo 328",
+        "tip": "Bib Gourmand favorite for MSG-free home-style cooking.",
+        "icon": "🥟"
       },
       {
-        placeId: 'the-bund',
-        time: 'Evening',
-        label: 'The Bund',
-        description: 'Walk The Bund.',
-        icon: '🏙️',
+        "placeId": "the-bund",
+        "time": "Evening",
+        "label": "The Bund",
+        "description": "Walk The Bund.",
+        "icon": "🏙️"
       },
       {
-        placeId: 'old-jesse',
-        time: 'Dinner',
-        label: 'Old Jesse',
-        description: 'Old Jesse.',
-        tip: 'Pre-order the Hong Shao Rou and Scallion Roasted Fish Head when booking!',
-        icon: '🍽️',
-      },
-    ],
+        "placeId": "old-jesse",
+        "time": "Dinner",
+        "label": "Old Jesse",
+        "description": "Old Jesse.",
+        "tip": "Pre-order the Hong Shao Rou and Scallion Roasted Fish Head when booking!",
+        "icon": "🍽️"
+      }
+    ]
   },
   {
-    dayNumber: 11,
-    city: 'Shanghai',
-    theme: 'Departure',
-    date: 'Fri 28 Feb',
-    hotelId: 'hilton-shanghai',
-    activities: [
+    "dayNumber": 11,
+    "city": "Shanghai",
+    "theme": "Departure",
+    "date": "Sat 28 Feb",
+    "hotelId": "hilton-shanghai",
+    "activities": [
       {
-        placeId: 'maglev-station',
-        time: 'Morning',
-        label: 'MAGLEV to PVG',
-        description: 'Ride MAGLEV to PVG. Access First Class Lounge.',
-        icon: '🛫',
+        "placeId": "maglev-station",
+        "time": "Morning",
+        "label": "MAGLEV to PVG",
+        "description": "Ride MAGLEV to PVG. Access First Class Lounge.",
+        "icon": "🛫"
       },
       {
-        placeId: 'yangs-dumplings',
-        time: 'Snack',
-        label: 'Yang\'s Dumplings',
-        description: 'Yang\'s Dumplings inside airport.',
-        tip: 'Bite a small hole in the Sheng Jian Bao first to vent the steam!',
-        icon: '🥟',
-      },
-    ],
-  },
+        "placeId": "yangs-dumplings",
+        "time": "Snack",
+        "label": "Yang's Dumplings",
+        "description": "Yang's Dumplings inside airport.",
+        "tip": "Bite a small hole in the Sheng Jian Bao first to vent the steam!",
+        "icon": "🥟"
+      }
+    ]
+  }
 ];
