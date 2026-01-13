@@ -191,33 +191,33 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
       {position && (
         <Marker position={position} icon={getUserIcon(heading)} zIndexOffset={1000}>
           <Popup>
-            <div className="text-sm font-bold text-gray-900">You are here</div>
+            <div className="text-base font-bold text-gray-900">You are here</div>
           </Popup>
         </Marker>
       )}
       
       {/* Container for buttons - Vertical Stack in top right */}
       <div 
-        className="absolute z-[1000] flex flex-col gap-2 transition-all duration-300 pointer-events-auto top-4 right-4 md:top-6 md:right-6"
+        className="absolute z-[1000] flex flex-col gap-3 transition-all duration-300 pointer-events-auto top-4 right-4 md:top-6 md:right-6"
       >
         <button
           onClick={toggleFullscreen}
-          className="flex items-center justify-center w-10 h-10 rounded-lg border border-white/10 bg-black/30 backdrop-blur-md text-gray-400 opacity-70 hover:opacity-100 hover:scale-[1.05] active:scale-95 cursor-pointer shadow-lg transition-all duration-300"
+          className="flex items-center justify-center w-14 h-14 rounded-xl border border-white/10 bg-black/40 backdrop-blur-md text-gray-200 opacity-90 hover:opacity-100 hover:scale-[1.05] active:scale-95 cursor-pointer shadow-xl transition-all duration-300"
           title="Toggle Fullscreen"
         >
-          {isFullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
+          {isFullscreen ? <Minimize size={24} /> : <Maximize size={24} />}
         </button>
         <button
           onClick={handleLocateClick}
           className={`
-            flex items-center justify-center w-10 h-10 rounded-lg border backdrop-blur-md transition-all duration-300 
+            flex items-center justify-center w-14 h-14 rounded-xl border backdrop-blur-md transition-all duration-300 
             ${isLocating ? 'animate-pulse' : ''} 
-            ${position ? 'bg-black/60 border-white/40 text-blue-400' : 'bg-black/30 border-white/10 text-gray-400 opacity-70'}
-            hover:opacity-100 hover:scale-[1.05] active:scale-95 cursor-pointer shadow-lg
+            ${position ? 'bg-black/70 border-white/40 text-blue-400 opacity-100' : 'bg-black/40 border-white/10 text-gray-200 opacity-90'}
+            hover:opacity-100 hover:scale-[1.05] active:scale-95 cursor-pointer shadow-xl
           `}
           title="Center on my location"
         >
-          <Navigation size={18} className={position ? 'fill-blue-400/20' : ''} />
+          <Navigation size={24} className={position ? 'fill-blue-400/20' : ''} />
         </button>
       </div>
     </>
@@ -416,25 +416,25 @@ export const MapContainer: React.FC<MapProps> = ({
               icon={getIcon(place.type)}
             >
               <Popup>
-                <div className="text-left min-w-[200px]">
-                  <span className={`${place.type.includes('_rec') ? 'text-[#00BCD4]' : 'text-sub-text'} font-extrabold text-xs uppercase tracking-wide mb-1 block`}>
+                <div className="text-left min-w-[240px] py-1">
+                  <span className={`${place.type.includes('_rec') ? 'text-[#00BCD4]' : 'text-sub-text'} font-extrabold text-sm uppercase tracking-widest mb-2 block`}>
                     {place.type.replace(/_/g, ' ')}
                   </span>
                   {place.url ? (
-                    <a href={place.url} target="_blank" rel="noopener noreferrer" className="text-xl font-bold !text-white mb-1 leading-tight inline-block border-b border-white/30 hover:!text-white hover:border-transparent transition-colors duration-200">
+                    <a href={place.url} target="_blank" rel="noopener noreferrer" className="text-2xl font-bold !text-white mb-2 leading-tight inline-block border-b-2 border-white/30 hover:!text-white hover:border-transparent transition-colors duration-200">
                       {place.name}
                     </a>
                   ) : (
-                    <span className="text-xl font-bold text-primary mb-1 leading-tight block">{place.name}</span>
+                    <span className="text-2xl font-bold text-primary mb-2 leading-tight block">{place.name}</span>
                   )}
-                  <span className="text-gray-300 text-sm leading-relaxed mb-4 block">{place.description}</span>
+                  <span className="text-gray-100 text-base leading-relaxed mb-5 block">{place.description}</span>
                   <a
                     href={directionsUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block bg-[#8ab4f8] text-[#202124] px-4 py-2 rounded-full text-sm font-bold hover:bg-[#aecbfa] transition-colors shadow-md no-underline border-none"
+                    className="inline-block bg-[#8ab4f8] text-[#202124] px-6 py-3 rounded-full text-base font-bold hover:bg-[#aecbfa] transition-all shadow-lg no-underline border-none active:scale-95"
                   >
-                    📍Get Directions
+                    📍 Get Directions
                   </a>
                 </div>
               </Popup>

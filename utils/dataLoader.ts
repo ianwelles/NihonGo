@@ -6,12 +6,14 @@ import { cityThemeColors as fallbackCityColors, mapMarkerColors as fallbackMarke
 import { tipsList as fallbackTips } from '../tips';
 
 // --- CONFIGURATION ---
-// REPLACE THESE EMPTY STRINGS WITH YOUR PUBLISHED GOOGLE SHEET CSV URLs
-// To publish: File > Share > Publish to web > Select Sheet > CSV > Copy Link
-export const PLACES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRniSOAatP5VkPcJar3i-lMab0sZxPd3Q5td67o9kig_Zc9ZgjR4mCWL78dWHnxy0Yr9HAHdUxskKwb/pub?output=csv&gid=1152874887';
-export const ITINERARY_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRniSOAatP5VkPcJar3i-lMab0sZxPd3Q5td67o9kig_Zc9ZgjR4mCWL78dWHnx12345xskKwxxxyyyttb/pub?output=csv&gid=1152874887';
-export const THEME_CSV_URL = '';
-export const TIPS_CSV_URL = '';
+// Base URL for the published Google Sheet CSV
+const SHEET_BASE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRniSOAatP5VkPcJar3i-lMab0sZxPd3Q5td67o9kig_Zc9ZgjR4mCWL78dWHnxy0Yr9HAHdUxskKwb/pub?output=csv';
+
+// GIDs for each specific sheet
+export const PLACES_CSV_URL = `${SHEET_BASE_URL}&gid=1152874887`;
+export const ITINERARY_CSV_URL = `${SHEET_BASE_URL}&gid=1332892089`;
+export const THEME_CSV_URL = `${SHEET_BASE_URL}&gid=1754683644`;
+export const TIPS_CSV_URL = `${SHEET_BASE_URL}&gid=489356129`;
 
 // --- CSV STRUCTURE DOCUMENTATION ---
 
