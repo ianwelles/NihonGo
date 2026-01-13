@@ -8,6 +8,7 @@ import { TimelineView } from './components/TimelineView';
 import { Controls } from './components/Controls';
 import { downloadPlacesCSV, downloadItineraryCSV, downloadThemeCSV, downloadTipsCSV } from './utils/csvHelper';
 import { loadAppData } from './utils/dataLoader';
+import { LayoutPanelTop, SlidersHorizontal } from 'lucide-react';
 
 const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
@@ -38,6 +39,7 @@ const App: React.FC = () => {
   const [activeCity, setActiveCity] = useState<CityName | null>(null); 
   const [openDay, setOpenDay] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => !window.matchMedia('(max-width: 767px)').matches);
+  const [showControls, setShowControls] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => localStorage.getItem('trip_auth') === 'true');
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState(false);
@@ -237,10 +239,42 @@ const App: React.FC = () => {
           itineraryData={itineraryData}
           places={places}
         />
+
+        {/* Floating Toggle for Controls (when hidden) */}
+        <div
+          className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[10000] transition-all duration-500 pointer-events-none mb-[env(safe-area-inset-bottom)]
+            ${!isMobile && isSidebarOpen ? 'md:left-[calc(50%+192px)]' : ''}
+            ${!showControls ? 'translate-y-0 opacity-100' : 'translate-y-[150%] opacity-0'}`}
+        >
+          <button
+            onClick={() => setShowControls(true)}
+            className="active:scale-90 transition-all duration-300 hover:scale-110 pointer-events-auto"
+          >
+            <div className="relative group">
+              {/* Glow effect */}
+              <div className="absolute inset-0 bg-red-600/40 blur-xl rounded-full group-hover:bg-red-500/60 transition-colors" />
+              
+              {/* Favicon-style Button - Consistent with Loading Screen and Favicon */}
+              <div className="relative w-16 h-16 flex items-center justify-center drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]">
+                <svg className="w-full h-full overflow-visible" viewBox="0 0 100 100">
+                  {/* Black Circle with Red Border */}
+                  <circle cx="50" cy="50" r="32" fill="black" stroke="#ef4444" strokeWidth="4" />
+                  {/* Plane Icon - Scaled to be bigger than the circle */}
+                  <g transform="translate(50 50) rotate(45) scale(4.2) translate(-11.5 -12)">
+                    <path d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z" fill="white" />
+                  </g>
+                </svg>
+              </div>
+            </div>
+          </button>
+        </div>
+
         {/* Floating Controls Overlay */}
         <div 
-          className={`fixed bottom-8 md:bottom-8 left-1/2 -translate-x-1/2 w-full max-w-sm px-4 transition-all duration-300 pointer-events-none z-[9999] mb-[env(safe-area-inset-bottom)] 
-            ${!isMobile && isSidebarOpen ? 'md:left-[calc(50%+192px)]' : ''}`}
+          className={`fixed bottom-8 md:bottom-8 left-1/2 -translate-x-1/2 w-full max-w-sm px-4 transition-all duration-500 pointer-events-none z-[9999] mb-[env(safe-area-inset-bottom)] 
+            ${!isMobile && isSidebarOpen ? 'md:left-[calc(50%+192px)]' : ''}
+            ${showControls ? 'translate-y-0 opacity-100' : 'translate-y-[120%] opacity-0'}
+            `}
         >
           <div className="pointer-events-auto">
             <Controls
@@ -255,6 +289,7 @@ const App: React.FC = () => {
                 onSelectCity={handleCityChange}
                 itineraryData={itineraryData}
                 tipsList={tipsList}
+                onHide={() => setShowControls(false)}
               />
           </div>
         </div>

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Landmark, Utensils, Store, PanelLeftClose, Map as MapIcon, Calendar, ChevronUp, ChevronRight, Info } from 'lucide-react';
+import { Landmark, Utensils, Store, PanelLeftClose, Map as MapIcon, Calendar, ChevronUp, ChevronRight, Info, EyeOff } from 'lucide-react';
 import { CityName, DayItinerary, TipCategory } from '../types';
 import { itineraryData as fallbackItinerary, tipsList as fallbackTips } from '../data';
 
@@ -21,6 +21,7 @@ interface ControlsProps {
   onSelectCity?: (city: CityName | null) => void;
   itineraryData?: DayItinerary[];
   tipsList?: TipCategory[];
+  onHide?: () => void;
 }
 
 export const Controls: React.FC<ControlsProps> = ({
@@ -33,7 +34,9 @@ export const Controls: React.FC<ControlsProps> = ({
   onSelectDay,
   onSelectCity,
   itineraryData,
-  tipsList
+  tipsList,
+  onHide,
+  isMobile
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isTipsOpen, setIsTipsOpen] = useState(false);
@@ -58,7 +61,6 @@ export const Controls: React.FC<ControlsProps> = ({
   }, {} as Record<CityName, string[]>);
 
   // Unified styling class for all buttons
-  // Increased height from h-10 to h-14, font size to text-xs (12px) from 10px, and padding
   const buttonBaseClass = "flex items-center justify-center gap-3 px-4 h-14 rounded-xl border backdrop-blur-md transition-all duration-300 text-xs font-black uppercase tracking-widest hover:opacity-100 hover:scale-[1.02] active:scale-95";
 
   // Specific variants for active/inactive states
@@ -117,14 +119,45 @@ export const Controls: React.FC<ControlsProps> = ({
   };
 
   // Safe height calculation to prevent pop-up from extending past top of window
-  const popupMaxHeightClass = "max-h-[calc(100dvh-240px)]";
+  // On mobile, we need more space for:
+  // - Bottom bar (8px / 32px)
+  // - env(safe-area-inset-bottom)
+  // - Main controls (~180px)
+  // - Spacing (12px * 3)
+  // - Hide handle (~40px)
+  const popupMaxHeightClass = isMobile ? "max-h-[calc(100dvh-320px)]" : "max-h-[calc(100dvh-280px)]";
+
+  const HideButton = () => (
+    <div className="flex justify-center flex-shrink-0">
+      <button 
+        onClick={(e) => {
+          e.stopPropagation();
+          onHide?.();
+        }}
+        className="bg-black/60 backdrop-blur-md border border-white/10 text-gray-400 hover:text-white px-4 py-1.5 rounded-full flex items-center gap-2 transition-all hover:bg-black/80 group pointer-events-auto"
+        title="Hide Controls"
+      >
+        <div className="w-8 h-1 bg-[#ef4444]/60 rounded-full group-hover:bg-[#ef4444] transition-colors shadow-[0_0_8px_rgba(239,68,68,0.3)]" />
+        <EyeOff size={14} className="group-hover:text-[#ef4444] transition-colors" />
+      </button>
+    </div>
+  );
 
   return (
     <div className="flex flex-col gap-3 w-full relative" ref={menuRef}>
-      {/* City Selector Pop-up Menu */}
-      {isMenuOpen && (
-          <div className={`absolute bottom-full mb-3 left-0 w-full bg-black/95 backdrop-blur-xl border border-white/20 rounded-2xl overflow-hidden shadow-2xl z-[10000] flex flex-col ${popupMaxHeightClass} animate-in slide-in-from-bottom-2 duration-200`}>
-              <div className="px-5 py-4 bg-white/5 text-xs font-black text-gray-300 uppercase tracking-widest border-b border-white/10 flex justify-between items-center">
+      {/* 
+          Pop-up / Overlay Area 
+          Positioned above the main controls.
+          Contains the Hide button (when menu open) and the active menu itself.
+      */}
+      <div className="absolute bottom-full left-0 w-full mb-3 flex flex-col gap-3 pointer-events-none z-[10000]">
+        {/* Hide Button (Above the menu when menu is open) */}
+        {(isMenuOpen || isTipsOpen) && <HideButton />}
+
+        {/* City Selector Pop-up Menu */}
+        {isMenuOpen && (
+          <div className={`w-full bg-black/95 backdrop-blur-xl border border-white/20 rounded-2xl overflow-hidden shadow-2xl flex flex-col ${popupMaxHeightClass} animate-in slide-in-from-bottom-2 duration-200 pointer-events-auto`}>
+              <div className="px-5 py-4 bg-white/5 text-xs font-black text-gray-300 uppercase tracking-widest border-b border-white/10 flex justify-between items-center flex-shrink-0">
                   <div className="flex items-center gap-4">
                     <div className="h-4 w-1 bg-[#FF1744] rounded-full"></div>
                     <span>Select City</span>
@@ -186,12 +219,12 @@ export const Controls: React.FC<ControlsProps> = ({
                 ))}
               </div>
           </div>
-      )}
+        )}
 
-      {/* Travel Tips Pop-up Menu */}
-      {isTipsOpen && (
-          <div className={`absolute bottom-full mb-3 left-0 w-full bg-black/95 backdrop-blur-xl border border-white/20 rounded-2xl overflow-hidden shadow-2xl z-[10000] flex flex-col ${popupMaxHeightClass} animate-in slide-in-from-bottom-2 duration-200`}>
-              <div className="px-5 py-4 bg-white/5 border-b border-white/10 flex justify-between items-center">
+        {/* Travel Tips Pop-up Menu */}
+        {isTipsOpen && (
+          <div className={`w-full bg-black/95 backdrop-blur-xl border border-white/20 rounded-2xl overflow-hidden shadow-2xl flex flex-col ${popupMaxHeightClass} animate-in slide-in-from-bottom-2 duration-200 pointer-events-auto`}>
+              <div className="px-5 py-4 bg-white/5 border-b border-white/10 flex justify-between items-center flex-shrink-0">
                   <div className="flex items-center gap-4">
                     <div className="h-4 w-1 bg-amber-400 rounded-full"></div>
                     <span className="text-xs font-black text-amber-400 uppercase tracking-widest">Shopping & Travel Tips</span>
@@ -231,6 +264,16 @@ export const Controls: React.FC<ControlsProps> = ({
                 ))}
               </div>
           </div>
+        )}
+      </div>
+
+      {/* 
+          Default Hide Button (Only shown when no menu is open) 
+      */}
+      {!isMenuOpen && !isTipsOpen && (
+        <div className="-mb-1">
+          <HideButton />
+        </div>
       )}
 
       {/* 2x2 Grid for Categories */}
@@ -270,7 +313,6 @@ export const Controls: React.FC<ControlsProps> = ({
 
       {/* Full-width Row for Day/City Selector & Itinerary Toggle */}
       <div className="grid grid-cols-2 gap-3 w-full relative">
-          {/* Combined Indicator / Menu Trigger */}
           <button
               onClick={(e) => {
                   e.stopPropagation();
@@ -285,7 +327,6 @@ export const Controls: React.FC<ControlsProps> = ({
             <ChevronUp size={16} className={`shrink-0 transition-transform duration-300 ${isMenuOpen ? 'rotate-180' : ''}`} />
           </button>
 
-          {/* View Itinerary Button */}
           <button
               onClick={(e) => {
                   e.stopPropagation();
