@@ -78,12 +78,66 @@ const getUserIcon = (heading: number | null) => L.divIcon({
   iconAnchor: [8, 8],
 });
 
+/**
+ * Ensures map popups stay within view by panning the map if necessary.
+ */
+const PopupManager: React.FC = () => {
+  const map = useMap();
+  
+  useEffect(() => {
+    const handlePopupOpen = (e: L.PopupEvent) => {
+      const popup = e.popup;
+      // Use keepInView option to ensure popup is visible
+      // This is natively supported by Leaflet if set on the popup,
+      // but we can also trigger it here or ensure the map pans.
+      // Leaflet's Popup has a 'keepInView' option which is true by default,
+      // but sometimes layout shifts or UI overlays interfere.
+      
+      // Force a small delay to allow for DOM rendering of the popup content
+      setTimeout(() => {
+        const container = popup.getElement();
+        if (container) {
+          map.panInsideBounds(map.getBounds(), { animate: true });
+        }
+      }, 100);
+    };
+
+    map.on('popupopen', handlePopupOpen);
+    return () => {
+      map.off('popupopen', handlePopupOpen);
+    };
+  }, [map]);
+
+  return null;
+};
+
 const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: boolean; isMobile?: boolean }> = ({ filteredPlaces, isSidebarOpen, isMobile }) => {
   const map = useMap();
   const [position, setPosition] = useState<L.LatLng | null>(null);
   const [heading, setHeading] = useState<number | null>(null);
   const [isLocating, setIsLocating] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false); // New state for popup open status
+
+  // Effect to track popup open/close state
+  useEffect(() => {
+    const handlePopupOpen = () => {
+      console.log('Popup opened!');
+      setIsPopupOpen(true);
+    };
+    const handlePopupClose = () => {
+      console.log('Popup closed!');
+      setIsPopupOpen(false);
+    };
+
+    map.on('popupopen', handlePopupOpen);
+    map.on('popupclose', handlePopupClose);
+
+    return () => {
+      map.off('popupopen', handlePopupOpen);
+      map.off('popupclose', handlePopupClose);
+    };
+  }, [map]);
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -188,9 +242,25 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
 
   return (
     <>
+      <style>{`
+        @keyframes popup-scale-in {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .leaflet-popup-content-wrapper {
+            animation: popup-scale-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+      `}</style>
+
       {position && (
         <Marker position={position} icon={getUserIcon(heading)} zIndexOffset={1000}>
-          <Popup>
+          <Popup keepInView={true} autoPanPadding={L.point(50, 50)}>
             <div className="text-base font-bold text-gray-900">You are here</div>
           </Popup>
         </Marker>
@@ -198,7 +268,10 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
       
       {/* Container for buttons - Vertical Stack in top right */}
       <div 
-        className="absolute z-[1000] flex flex-col gap-3 transition-all duration-300 pointer-events-auto top-4 right-4 md:top-6 md:right-6"
+        className={`
+          absolute z-[1000] flex flex-col gap-3 transition-all duration-300 pointer-events-auto top-4 right-4 md:top-6 md:right-6
+          ${isPopupOpen ? 'opacity-0 pointer-events-none translate-y-4' : 'opacity-100 translate-y-0'}
+        `}
       >
         <button
           onClick={toggleFullscreen}
@@ -325,7 +398,7 @@ export const MapContainer: React.FC<MapProps> = ({
   itineraryData
 }) => {
   const filteredPlaces = useMemo(() => {
-    // We access places from fallbackPlaces for now because MapContainer logic relies on global `places`.
+    // We access places from fallbackPlaces for now because MapContainer logic relies on global `places`.'
     // In a full refactor, `places` should be passed as prop too.
     const allPlaces = Object.values(fallbackPlaces);
     
@@ -406,6 +479,7 @@ export const MapContainer: React.FC<MapProps> = ({
           setMapRef={setMapRef}
           filteredPlaces={filteredPlaces}
         />
+        <PopupManager />
         <UserLocationMarker filteredPlaces={filteredPlaces} isSidebarOpen={isSidebarOpen} isMobile={isMobile} />
         {filteredPlaces.map((place) => {
           const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${place.coordinates.lat},${place.coordinates.lon}&travelmode=transit`;
@@ -415,7 +489,7 @@ export const MapContainer: React.FC<MapProps> = ({
               position={[place.coordinates.lat, place.coordinates.lon]}
               icon={getIcon(place.type)}
             >
-              <Popup>
+              <Popup keepInView={true} autoPanPadding={L.point(50, 100)}>
                 <div className="text-left min-w-[240px] py-1">
                   <span className={`${place.type.includes('_rec') ? 'text-[#00BCD4]' : 'text-sub-text'} font-extrabold text-sm uppercase tracking-widest mb-2 block`}>
                     {place.type.replace(/_/g, ' ')}
@@ -425,7 +499,7 @@ export const MapContainer: React.FC<MapProps> = ({
                       {place.name}
                     </a>
                   ) : (
-                    <span className="text-2xl font-bold text-primary mb-2 leading-tight block">{place.name}</span>
+                    <span className="text-2xl font-bold text-primary mb-2 leading-tight block">K{place.name}</span>
                   )}
                   <span className="text-gray-100 text-base leading-relaxed mb-5 block">{place.description}</span>
                   <a
