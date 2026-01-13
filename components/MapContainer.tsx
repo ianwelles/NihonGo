@@ -1,9 +1,10 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { MapContainer as LeafletMap, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { places, mapMarkerColors, itineraryData } from '../data';
 import { CityName, Place } from '../types';
+import { Navigation, Maximize, Minimize } from 'lucide-react';
 
 // Standard Leaflet icon fix for default markers
 // @ts-ignore
@@ -27,6 +28,7 @@ interface MapProps {
   toggles: Toggles;
   setMapRef: (map: L.Map) => void;
   isSidebarOpen?: boolean;
+  isMobile?: boolean;
 }
 
 const getIcon = (type: string) => {
@@ -43,6 +45,127 @@ const getIcon = (type: string) => {
     iconAnchor: [18, 36],
     popupAnchor: [0, -32]
   });
+};
+
+const userIcon = L.divIcon({
+  className: 'user-location-marker',
+  html: `
+    <div class="relative">
+      <div class="absolute -inset-2 bg-blue-500 rounded-full animate-ping opacity-25"></div>
+      <div class="relative bg-blue-500 border-2 border-white rounded-full w-4 h-4 shadow-lg"></div>
+    </div>
+  `,
+  iconSize: [16, 16],
+  iconAnchor: [8, 8],
+});
+
+const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: boolean; isMobile?: boolean }> = ({ filteredPlaces, isSidebarOpen, isMobile }) => {
+  const map = useMap();
+  const [position, setPosition] = useState<L.LatLng | null>(null);
+  const [isLocating, setIsLocating] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  useEffect(() => {
+    // Attempt to get initial location
+    map.locate({ watch: true, enableHighAccuracy: true });
+
+    const onLocationFound = (e: L.LocationEvent) => {
+      setPosition(e.latlng);
+      setIsLocating(false);
+    };
+
+    const onLocationError = (e: L.ErrorEvent) => {
+      console.warn("Geolocation error:", e.message);
+      setIsLocating(false);
+    };
+
+    map.on('locationfound', onLocationFound);
+    map.on('locationerror', onLocationError);
+
+    return () => {
+      map.off('locationfound', onLocationFound);
+      map.off('locationerror', onLocationError);
+      map.stopLocate();
+    };
+  }, [map]);
+
+  const handleLocateClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (position) {
+      map.flyTo(position, 16, {
+        duration: 1.5,
+        easeLinearity: 0.25
+      });
+    } else {
+      setIsLocating(true);
+      map.locate({ setView: true, maxZoom: 16, enableHighAccuracy: true });
+    }
+  };
+
+  const toggleFullscreen = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(err => {
+        console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
+  return (
+    <>
+      {position && (
+        <Marker position={position} icon={userIcon} zIndexOffset={1000}>
+          <Popup>
+            <div className="text-sm font-bold text-gray-900">You are here</div>
+          </Popup>
+        </Marker>
+      )}
+      
+      {/* Container for buttons - Vertical Stack in bottom right */}
+      <div 
+        className={`absolute z-[1000] flex flex-col gap-2 transition-all duration-300 pointer-events-auto mb-[env(safe-area-inset-bottom)]
+          ${isMobile 
+            ? 'bottom-44 right-4' 
+            : 'bottom-8 right-6'
+          }
+        `}
+      >
+        <button
+          onClick={toggleFullscreen}
+          className="flex items-center justify-center w-10 h-10 rounded-lg border border-white/10 bg-black/30 backdrop-blur-md text-gray-400 opacity-70 hover:opacity-100 hover:scale-[1.05] active:scale-95 cursor-pointer shadow-lg transition-all duration-300"
+          title="Toggle Fullscreen"
+        >
+          {isFullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
+        </button>
+        <button
+          onClick={handleLocateClick}
+          className={`
+            flex items-center justify-center w-10 h-10 rounded-lg border backdrop-blur-md transition-all duration-300 
+            ${isLocating ? 'animate-pulse' : ''} 
+            ${position ? 'bg-black/60 border-white/40 text-blue-400' : 'bg-black/30 border-white/10 text-gray-400 opacity-70'}
+            hover:opacity-100 hover:scale-[1.05] active:scale-95 cursor-pointer shadow-lg
+          `}
+          title="Center on my location"
+        >
+          <Navigation size={18} className={position ? 'fill-blue-400/20' : ''} />
+        </button>
+      </div>
+    </>
+  );
 };
 
 const MapController: React.FC<{
@@ -75,7 +198,7 @@ const MapController: React.FC<{
       const markers = filteredPlaces.map(place => L.marker([place.coordinates.lat, place.coordinates.lon]));
       const group = L.featureGroup(markers);
       const isMobileView = window.innerWidth < 768;
-      const sidebarWidth = 320;
+      const sidebarWidth = 384; // Matching max-w-sm (24rem = 384px)
 
       let fitBoundsOptions: L.FitBoundsOptions = {
         paddingTopLeft: [50, 50],
@@ -126,7 +249,8 @@ export const MapContainer: React.FC<MapProps> = ({
   isAuthenticated,
   toggles,
   setMapRef,
-  isSidebarOpen
+  isSidebarOpen,
+  isMobile
 }) => {
   const filteredPlaces = useMemo(() => {
     const allPlaces = Object.values(places);
@@ -205,6 +329,7 @@ export const MapContainer: React.FC<MapProps> = ({
           setMapRef={setMapRef}
           filteredPlaces={filteredPlaces}
         />
+        <UserLocationMarker filteredPlaces={filteredPlaces} isSidebarOpen={isSidebarOpen} isMobile={isMobile} />
         {filteredPlaces.map((place) => {
           const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${place.coordinates.lat},${place.coordinates.lon}&travelmode=transit`;
           return (

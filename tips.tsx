@@ -1,6 +1,6 @@
-import { ShoppingCategory } from './types';
+import { TipCategory } from './types';
 
-export const shoppingList: ShoppingCategory[] = [
+export const tipsList: TipCategory[] = [
   {
     title: "Drugstores (Matsumoto Kiyoshi / Welcia)",
     items: [

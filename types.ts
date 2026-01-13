@@ -6,14 +6,13 @@ export interface Place {
   id: string;
   name: string;
   type: PlaceCategory;
-  city: CityName; // Added field
+  city: CityName; 
   coordinates: {
     lat: number;
     lon: number;
   };
   description: string;
   url?: string;
-  // Hotel-specific metadata (optional)
   hotelMeta?: {
     address: string;
     directions: string;
@@ -23,13 +22,13 @@ export interface Place {
 }
 
 export interface Activity {
-  placeId: string; // References the Place dictionary
+  placeId: string; 
   time: string;
-  label?: string; // Overrides Place name if needed
-  description?: string; // Overrides static Place description if needed
+  label?: string; 
+  description?: string; 
   tip?: string;
   icon?: string;
-  link?: string; // Optional override link
+  link?: string; 
 }
 
 export interface DayItinerary {
@@ -41,12 +40,17 @@ export interface DayItinerary {
   activities: Activity[];
 }
 
-export interface ShoppingItem {
+export interface TipItem {
   name: string;
   notes: string;
 }
 
-export interface ShoppingCategory {
+export interface TipCategory {
   title: string;
-  items: ShoppingItem[];
+  items: TipItem[];
+}
+
+export interface ItineraryResponse {
+  days: DayItinerary[];
+  tipsList: TipCategory[];
 }

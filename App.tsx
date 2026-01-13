@@ -4,11 +4,10 @@ import { LoginScreen } from './components/LoginScreen';
 import { Header } from './components/Header';
 import { CityTabs } from './components/CityTabs';
 import { MapContainer } from './components/MapContainer';
-import { ShoppingModal } from './components/ShoppingModal';
 import { TimelineView } from './components/TimelineView';
 import { Controls } from './components/Controls';
 import { downloadFullCSV, downloadLogisticsCSV, downloadRecommendationsCSV } from './utils/csvHelper';
-import { startDate, itineraryData as initialItineraryData, shoppingList as initialShoppingList } from './data'; 
+import { startDate, itineraryData as initialItineraryData, tipsList as initialTipsList } from './data'; 
 
 const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
@@ -23,11 +22,21 @@ const useMediaQuery = (query: string) => {
   return matches;
 };
 
+// SHA-256 hash of 'password'
+const PASSWORD_HASH = '9ff855c14133ee4cbe57a39fd5d5c5abe26d4bff63b73476c13f3342410bedc3';
+
+async function hashPassword(password: string): Promise<string> {
+  const msgUint8 = new TextEncoder().encode(password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+}
+
 const App: React.FC = () => {
   const isMobile = useMediaQuery('(max-width: 767px)');
   const [activeCity, setActiveCity] = useState<CityName | null>(null); 
   const [openDay, setOpenDay] = useState<string | null>(null);
-  const [isShoppingOpen, setIsShoppingOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => !window.matchMedia('(max-width: 767px)').matches);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => localStorage.getItem('trip_auth') === 'true');
   const [password, setPassword] = useState('');
@@ -42,7 +51,7 @@ const App: React.FC = () => {
   // State for itinerary data
   const [itineraryData] = useState<ItineraryResponse | null>({
     days: initialItineraryData,
-    shoppingList: initialShoppingList
+    tipsList: initialTipsList
   });
   const [isLoadingItinerary] = useState(false);
   const [itineraryError] = useState<string | null>(null);
@@ -53,9 +62,10 @@ const App: React.FC = () => {
     mapRef.current = map;
   }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === 'Otto45') {
+    const hashedInput = await hashPassword(password);
+    if (hashedInput === PASSWORD_HASH) {
       setIsAuthenticated(true);
       localStorage.setItem('trip_auth', 'true');
     } else {
@@ -142,7 +152,7 @@ const App: React.FC = () => {
           ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
           `}
       >
-        <div className="h-full overflow-y-auto overflow-x-hidden">
+        <div className="h-full overflow-y-auto overflow-x-hidden pb-[env(safe-area-inset-bottom)]">
           <div className="p-4 space-y-4">
             <Header
               onDownloadFull={downloadFullCSV}
@@ -176,14 +186,17 @@ const App: React.FC = () => {
           toggles={toggles}
           setMapRef={setMapRef}
           isSidebarOpen={isSidebarOpen}
+          isMobile={isMobile}
         />
         {/* Floating Controls Overlay */}
-        <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 w-full max-w-sm px-4 transition-all duration-300 pointer-events-none z-[9999]`}>
+        <div 
+          className={`fixed bottom-8 md:bottom-8 left-1/2 -translate-x-1/2 w-full max-w-sm px-4 transition-all duration-300 pointer-events-none z-[9999] mb-[env(safe-area-inset-bottom)] 
+            ${!isMobile && isSidebarOpen ? 'md:left-[calc(50%+192px)]' : ''}`}
+        >
           <div className="pointer-events-auto">
             <Controls
                 toggles={toggles}
                 toggleCategory={toggleCategory}
-                onOpenShopping={() => setIsShoppingOpen(true)}
                 openDay={openDay}
                 isSidebarOpen={isSidebarOpen}
                 onToggleSidebar={() => setIsSidebarOpen(prev => !prev)}
@@ -195,8 +208,6 @@ const App: React.FC = () => {
           </div>
         </div>
       </main>
-
-      <ShoppingModal isOpen={isShoppingOpen} onClose={() => setIsShoppingOpen(false)} />
     </div>
   );
 };
