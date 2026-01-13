@@ -71,55 +71,5 @@ export const tipsList: TipCategory[] = [
         "notes": "Traditional hollow, round, Japanese doll (good luck charm)."
       }
     ]
-  },
-  {
-    "title": "Electronics",
-    "items": [
-      {
-        "name": "Noise-Cancelling Headphones",
-        "notes": "For long flights and bullet train rides."
-      },
-      {
-        "name": "Portable Power Bank",
-        "notes": "Keep devices charged on the go."
-      },
-      {
-        "name": "Universal Travel Adapter",
-        "notes": "Japan uses Type A/B sockets (like North America)."
-      }
-    ]
-  },
-  {
-    "title": "Comfort, Health & Essentials",
-    "items": [
-      {
-        "name": "Comfortable Walking Shoes",
-        "notes": "Essential for extensive walking tours."
-      },
-      {
-        "name": "Small First-Aid Kit",
-        "notes": "Band-aids, pain relievers, antiseptic wipes."
-      },
-      {
-        "name": "Hand Sanitizer",
-        "notes": "Convenient for on-the-go hygiene."
-      },
-      {
-        "name": "Passport & Visa",
-        "notes": "Check validity and visa requirements in advance."
-      },
-      {
-        "name": "Travel Insurance",
-        "notes": "Comprehensive coverage for emergencies."
-      },
-      {
-        "name": "Yen & Yuan (local currency)",
-        "notes": "Some smaller shops may not accept cards."
-      },
-      {
-        "name": "Pocket WiFi / eSIM",
-        "notes": "Stay connected throughout your trip."
-      }
-    ]
   }
 ];

@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { MapContainer as LeafletMap, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { places as fallbackPlaces, mapMarkerColors as fallbackMapMarkerColors } from '../data'; // Fallbacks just in case
+import { mapMarkerColors as fallbackMapMarkerColors } from '../data'; // Fallbacks just in case
 import { CityName, Place, DayItinerary } from '../types';
 import { Navigation, Maximize, Minimize } from 'lucide-react';
 
@@ -18,6 +18,7 @@ L.Icon.Default.mergeOptions({
 interface Toggles {
   sight_rec: boolean;
   food_rec: boolean;
+  bar_rec: boolean;
   shopping: boolean;
 }
 
@@ -29,8 +30,8 @@ interface MapProps {
   setMapRef: (map: L.Map) => void;
   isSidebarOpen?: boolean;
   isMobile?: boolean;
-  // New prop to receive dynamic itinerary data
-  itineraryData?: DayItinerary[];
+  itineraryData: DayItinerary[];
+  places: Record<string, Place>; // Add places to props
 }
 
 // We need to access theme colors dynamically if possible, or fallback.
@@ -393,12 +394,11 @@ export const MapContainer: React.FC<MapProps> = ({
   setMapRef,
   isSidebarOpen,
   isMobile,
-  itineraryData
+  itineraryData,
+  places // Destructure places prop
 }) => {
   const filteredPlaces = useMemo(() => {
-    // We access places from fallbackPlaces for now because MapContainer logic relies on global `places`.'
-    // In a full refactor, `places` should be passed as prop too.
-    const allPlaces = Object.values(fallbackPlaces);
+    const allPlaces = Object.values(places); // Use the 'places' prop instead of fallbackPlaces
     
     // 1. Identify context (Current City and Open Day items)
     const scheduledPlaceIds = new Set<string>();
@@ -418,11 +418,12 @@ export const MapContainer: React.FC<MapProps> = ({
     }
 
     return allPlaces.filter(place => {
-      const isRecommendation = ['sight_rec', 'food_rec', 'shopping'].includes(place.type);
+      const isRecommendation = ['sight_rec', 'food_rec', 'bar_rec', 'shopping'].includes(place.type);
       
       // Filter by category toggles
       if (place.type === 'sight_rec' && !toggles.sight_rec) return false;
       if (place.type === 'food_rec' && !toggles.food_rec) return false;
+      if (place.type === 'bar_rec' && !toggles.bar_rec) return false;
       if (place.type === 'shopping' && !toggles.shopping) return false;
 
       // If we are in a specific city (either selected or inferred from open day)
@@ -445,7 +446,7 @@ export const MapContainer: React.FC<MapProps> = ({
       // Default (Overview Mode): Only show hotels
       return place.type === 'hotel';
     });
-  }, [activeCity, openDay, toggles, itineraryData]);
+  }, [activeCity, openDay, toggles, itineraryData, places]); // Add places to dependencies
 
   if (!isAuthenticated) return <div className="h-full w-full bg-gray-900" />;
 
@@ -497,7 +498,7 @@ export const MapContainer: React.FC<MapProps> = ({
                       {place.name}
                     </a>
                   ) : (
-                    <span className="text-2xl font-bold text-primary mb-2 leading-tight block">K{place.name}</span>
+                    <span className="text-2xl font-bold text-primary mb-2 leading-tight block">{place.name}</span>
                   )}
                   <span className="text-gray-100 text-base leading-relaxed mb-5 block">{place.description}</span>
                   <a

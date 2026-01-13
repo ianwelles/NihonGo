@@ -23,7 +23,7 @@ export const itineraryData: DayItinerary[] = [
         "placeId": "shinjuku-gyoen",
         "time": "Day",
         "label": "Shinjuku & Garden",
-        "description": "Transfer to Shinjuku. Lunch at Sobahouse Konjiki Hototogisu. Walk through Shinjuku Gyoen National Garden.",
+        "description": "Transfer to Shinjuku (Hotel Shuttle). Lunch at Sobahouse Konjiki Hototogisu. Walk through Shinjuku Gyoen National Garden.",
         "tip": "Konjiki Hototogisu holds a Michelin Star for their clam-broth ramen. Arrive early for a ticket!",
         "icon": "🚅"
       },
@@ -87,6 +87,7 @@ export const itineraryData: DayItinerary[] = [
         "time": "Day",
         "label": "Tokyo Metro Gov. Building",
         "description": "Views from Tokyo Metro Gov. Building. Walk Takeshita Street (Harajuku).",
+        "tip": "The South Observatory is often less crowded than the North one.",
         "icon": "🏙️"
       },
       {
@@ -126,7 +127,7 @@ export const itineraryData: DayItinerary[] = [
         "placeId": "gion-district",
         "time": "Afternoon",
         "label": "Gion District",
-        "description": "Check in. Explore Gion District and Pontocho Alley.",
+        "description": "Check in (Hotel is opposite Station). Explore Gion District and Pontocho Alley.",
         "icon": "🍵"
       },
       {
@@ -142,7 +143,7 @@ export const itineraryData: DayItinerary[] = [
   {
     "dayNumber": 5,
     "city": "Kyoto",
-    "theme": "Shrines, Zen & Tea",
+    "theme": "Shrines & Deer",
     "date": "Sun 22 Feb",
     "hotelId": "doubletree-kyoto",
     "activities": [
@@ -150,53 +151,58 @@ export const itineraryData: DayItinerary[] = [
         "placeId": "fushimi-inari",
         "time": "Morning",
         "label": "Fushimi Inari Taisha",
+        "description": "Visit Fushimi Inari early. Then take JR Nara Line to Nara.",
         "tip": "Arriving by 8:00 AM avoids the massive crowds.",
         "icon": "⛩️"
       },
       {
-        "placeId": "kiyomizu-dera",
+        "placeId": "nara-park",
         "time": "Day",
-        "label": "Kiyomizu-dera",
-        "description": "Visit Kiyomizu-dera and attend a traditional Tea Ceremony.",
-        "icon": "🍂"
+        "label": "Nara Deer Park",
+        "description": "Feed the deer at Nara Park and visit Todai-ji Temple. Return to Kyoto.",
+        "tip": "Don't carry open food—the deer can be aggressive!",
+        "icon": "🦌"
       },
       {
         "placeId": "honke-daiichi",
-        "time": "Lunch",
+        "time": "Dinner",
         "label": "Honke Daiichi-Asahi",
+        "description": "Dinner at Honke Daiichi-Asahi near Kyoto Station.",
         "tip": "A Kyoto institution serving classic soy-based ramen.",
-        "icon": "🥗"
+        "icon": "🍜"
       }
     ]
   },
   {
     "dayNumber": 6,
     "city": "Kyoto",
-    "theme": "Bamboo & Local Flavours",
+    "theme": "Bamboo & Temples",
     "date": "Mon 23 Feb",
     "hotelId": "doubletree-kyoto",
     "activities": [
       {
-        "placeId": "nishiki-market",
+        "placeId": "arashiyama",
         "time": "Morning",
+        "label": "Arashiyama Bamboo",
+        "description": "Train to Arashiyama (Bamboo Grove). Visit Tenryu-ji Temple.",
+        "tip": "Go as early as possible for the best photos.",
+        "icon": "🎋"
+      },
+      {
+        "placeId": "nishiki-market",
+        "time": "Lunch",
         "label": "Nishiki Market",
+        "description": "Return to central Kyoto for lunch at Nishiki Market.",
         "tip": "Try the Tako Tamago (red baby octopus with a quail egg inside).",
         "icon": "🥒"
       },
       {
-        "placeId": "arashiyama",
-        "time": "Day",
-        "label": "Arashiyama or Nara",
-        "description": "Train to Arashiyama (Bamboo Grove) or Nara Deer Park.",
-        "icon": "🎋"
-      },
-      {
-        "placeId": "gion-district",
-        "time": "Dinner",
-        "label": "Obanzai",
-        "description": "Obanzai (home cooking) at a local tavern.",
-        "tip": "Obanzai focuses on seasonal Kyoto vegetables.",
-        "icon": "🍲"
+        "placeId": "kiyomizu-dera",
+        "time": "Afternoon",
+        "label": "Kiyomizu-dera",
+        "description": "Visit Kiyomizu-dera Temple. Walk down Sannenzaka.",
+        "tip": "Great spot for sunset views over the city.",
+        "icon": "🍂"
       }
     ]
   },
@@ -212,6 +218,7 @@ export const itineraryData: DayItinerary[] = [
         "time": "Morning",
         "label": "Osaka Castle",
         "description": "Train to Osaka (30 mins). Visit Osaka Castle.",
+        "tip": "Hotel is at Umeda; Castle is a short loop line ride away.",
         "icon": "🚆"
       },
       {
@@ -226,7 +233,8 @@ export const itineraryData: DayItinerary[] = [
         "placeId": "doyama-cho",
         "time": "Evening",
         "label": "Dōyama-chō",
-        "description": "Visit Dōyama-chō (Gay District).",
+        "description": "Visit Dōyama-chō (Gay District) - walking distance from Hilton.",
+        "tip": "Umeda is the main gay area in Osaka.",
         "icon": "🏳️‍🌈"
       },
       {
@@ -267,7 +275,8 @@ export const itineraryData: DayItinerary[] = [
         "placeId": "french-concession",
         "time": "Day",
         "label": "French Concession",
-        "description": "Walk the French Concession. Shopping and cafe hopping at Ferguson Lane.",
+        "description": "Walk the French Concession. Shopping and cafe hopping.",
+        "tip": "Hotel is located near the French Concession border.",
         "icon": "🌳"
       },
       {
@@ -279,9 +288,11 @@ export const itineraryData: DayItinerary[] = [
         "icon": "🥢"
       },
       {
-        "placeId": "eddys-bar",
+        "placeId": "asia-blue",
         "time": "Drinks",
-        "label": "Eddy's or Lucca 390",
+        "label": "HUNT or Asia Blue",
+        "description": "Drinks at HUNT (Bear friendly) or Asia Blue (Relaxed).",
+        "tip": "HUNT is busy and energetic; Asia Blue is quieter for conversation.",
         "icon": "🍸"
       }
     ]
@@ -311,6 +322,7 @@ export const itineraryData: DayItinerary[] = [
         "time": "Evening",
         "label": "The Bund",
         "description": "Walk The Bund.",
+        "tip": "Best views are just after sunset when the lights turn on.",
         "icon": "🏙️"
       },
       {

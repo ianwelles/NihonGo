@@ -16,5 +16,6 @@ export const mapMarkerColors: Record<string, string> = {
   "sight_rec": "#00BCD4",
   "food_rec": "#F48FB1",
   "shopping": "#FFD700",
+  "bar": "#007BFF",
   "default": "#82b1ff"
 };

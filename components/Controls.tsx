@@ -6,6 +6,7 @@ import { itineraryData as fallbackItinerary, tipsList as fallbackTips } from '..
 interface Toggles {
   sight_rec: boolean;
   food_rec: boolean;
+  bar_rec: boolean;
   shopping: boolean;
 }
 
@@ -287,11 +288,11 @@ export const Controls: React.FC<ControlsProps> = ({
         </button>
 
         <button
-          onClick={() => toggleCategory('food_rec')}
-          className={`${buttonBaseClass} ${toggles.food_rec ? activeClass : inactiveClass}`}
+          onClick={() => { toggleCategory('food_rec'); toggleCategory('bar_rec'); }}
+          className={`${buttonBaseClass} ${(toggles.food_rec || toggles.bar_rec) ? activeClass : inactiveClass}`}
         >
-          <Utensils size={18} className={toggles.food_rec ? "text-[#F48FB1]" : "text-gray-400"} />
-          <span>Food</span>
+          <Utensils size={18} className={(toggles.food_rec || toggles.bar_rec) ? "text-[#F48FB1]" : "text-gray-400"} />
+          <span>Food & Drink</span>
         </button>
 
         <button

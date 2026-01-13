@@ -47,6 +47,7 @@ const App: React.FC = () => {
   const [toggles, setToggles] = useState({
     sight_rec: true,
     food_rec: true,
+    bar_rec: true,
     shopping: true,
   });
 
@@ -103,12 +104,14 @@ const App: React.FC = () => {
       setToggles({
         sight_rec: true,
         food_rec: true,
+        bar_rec: true,
         shopping: true,
       });
     } else {
       setToggles({
         sight_rec: false,
         food_rec: false,
+        bar_rec: false,
         shopping: false,
       });
     }

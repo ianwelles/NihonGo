@@ -133,7 +133,7 @@ export const places: Record<string, Place> = {
   "omoide-yokocho": {
     "id": "omoide-yokocho",
     "name": "Omoide Yokocho",
-    "type": "food",
+    "type": "food_rec",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6929,
@@ -145,7 +145,7 @@ export const places: Record<string, Place> = {
   "tsukiji-market": {
     "id": "tsukiji-market",
     "name": "Tsukiji Outer Market",
-    "type": "food",
+    "type": "food_rec",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6655,
@@ -157,7 +157,7 @@ export const places: Record<string, Place> = {
   "konjiki-hototogisu": {
     "id": "konjiki-hototogisu",
     "name": "Konjiki Hototogisu",
-    "type": "food",
+    "type": "food_rec",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6897,
@@ -169,7 +169,7 @@ export const places: Record<string, Place> = {
   "ramen-nagi": {
     "id": "ramen-nagi",
     "name": "Ramen Nagi (Golden Gai)",
-    "type": "food",
+    "type": "food_rec",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6943,
@@ -193,7 +193,7 @@ export const places: Record<string, Place> = {
   "ichiran-shinjuku": {
     "id": "ichiran-shinjuku",
     "name": "Ichiran Shinjuku",
-    "type": "suggestion",
+    "type": "suggestion_rec",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6909,
@@ -373,7 +373,7 @@ export const places: Record<string, Place> = {
   "ginza-shopping": {
     "id": "ginza-shopping",
     "name": "Ginza Shopping Area",
-    "type": "shopping",
+    "type": "shopping_rec",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6712,
@@ -385,7 +385,7 @@ export const places: Record<string, Place> = {
   "akihabara-shopping": {
     "id": "akihabara-shopping",
     "name": "Akihabara Shopping",
-    "type": "shopping",
+    "type": "shopping_rec",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6984,
@@ -418,7 +418,7 @@ export const places: Record<string, Place> = {
   "kyoto-station": {
     "id": "kyoto-station",
     "name": "Kyoto Station",
-    "type": "travel",
+    "type": "travel_rec",
     "city": "Kyoto",
     "coordinates": {
       "lat": 34.9858,
@@ -502,7 +502,7 @@ export const places: Record<string, Place> = {
   "menbaka-fire": {
     "id": "menbaka-fire",
     "name": "Menbaka Fire Ramen",
-    "type": "suggestion",
+    "type": "suggestion_rec",
     "city": "Kyoto",
     "coordinates": {
       "lat": 35.0211,
@@ -694,7 +694,7 @@ export const places: Record<string, Place> = {
   "yojiya-main": {
     "id": "yojiya-main",
     "name": "Yojiya Main Store",
-    "type": "shopping",
+    "type": "shopping_rec",
     "city": "Kyoto",
     "coordinates": {
       "lat": 35.0094,
@@ -706,7 +706,7 @@ export const places: Record<string, Place> = {
   "shijo-kawaramachi": {
     "id": "shijo-kawaramachi",
     "name": "Shijo Kawaramachi",
-    "type": "shopping",
+    "type": "shopping_rec",
     "city": "Kyoto",
     "coordinates": {
       "lat": 35.0039,
@@ -751,7 +751,7 @@ export const places: Record<string, Place> = {
   "dotonbori": {
     "id": "dotonbori",
     "name": "Dotonbori",
-    "type": "sight",
+    "type": "sight_rec",
     "city": "Osaka",
     "coordinates": {
       "lat": 34.6687,
@@ -763,7 +763,7 @@ export const places: Record<string, Place> = {
   "shinsekai": {
     "id": "shinsekai",
     "name": "Shinsekai",
-    "type": "sight",
+    "type": "sight_rec",
     "city": "Osaka",
     "coordinates": {
       "lat": 34.652,
@@ -811,7 +811,7 @@ export const places: Record<string, Place> = {
   "ajinoya-honten": {
     "id": "ajinoya-honten",
     "name": "Ajinoya Honten",
-    "type": "food",
+    "type": "food_rec",
     "city": "Osaka",
     "coordinates": {
       "lat": 34.668,
@@ -895,7 +895,7 @@ export const places: Record<string, Place> = {
   "don-quijote": {
     "id": "don-quijote",
     "name": "Don Quijote Dotonbori",
-    "type": "shopping",
+    "type": "shopping_rec",
     "city": "Osaka",
     "coordinates": {
       "lat": 34.6693,
@@ -907,7 +907,7 @@ export const places: Record<string, Place> = {
   "shinsaibashi-arcade": {
     "id": "shinsaibashi-arcade",
     "name": "Shinsaibashi Shopping Arcade",
-    "type": "shopping",
+    "type": "shopping_rec",
     "city": "Osaka",
     "coordinates": {
       "lat": 34.6716,
@@ -1012,7 +1012,7 @@ export const places: Record<string, Place> = {
   "fu-he-hui": {
     "id": "fu-he-hui",
     "name": "Fu He Hui",
-    "type": "food",
+    "type": "food_rec",
     "city": "Shanghai",
     "coordinates": {
       "lat": 31.221,
@@ -1045,18 +1045,6 @@ export const places: Record<string, Place> = {
     "description": "MSG-Free Shanghainese.",
     "url": "https://guide.michelin.com/en/shanghai-municipality/shanghai/restaurant/jianguo-328"
   },
-  "eddys-bar": {
-    "id": "eddys-bar",
-    "name": "Eddy's Bar",
-    "type": "suggestion",
-    "city": "Shanghai",
-    "coordinates": {
-      "lat": 31.22,
-      "lon": 121.44
-    },
-    "description": "Long-standing inclusive venue.",
-    "url": "https://www.timeoutshanghai.com/venue/Bars__Clubs-Bars-Gay_Bars/1368/Eddys-Bar.html"
-  },
   "yangs-dumplings": {
     "id": "yangs-dumplings",
     "name": "Yang's Dumplings",
@@ -1067,5 +1055,40 @@ export const places: Record<string, Place> = {
       "lon": 121.8083
     },
     "description": "Famous Sheng Jian Bao chain (PVG Airport)."
+  },
+  "hunt-bar": {
+    "id": "hunt-bar",
+    "name": "HUNT",
+    "type": "bar_rec",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.2057,
+      "lon": 121.4336
+    },
+    "description": "Popular Gay Bar/Club (Bear Friendly)"
+  },
+  "nara-park": {
+    "id": "nara-park",
+    "name": "Nara Deer Park",
+    "type": "sight",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 34.685,
+      "lon": 135.843
+    },
+    "description": "Park with free-roaming deer and temples.",
+    "url": "https://www.japan-guide.com/e/e4103.html"
+  },
+  "asia-blue": {
+    "id": "asia-blue",
+    "name": "Asia Blue",
+    "type": "bar",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.203857,
+      "lon": 121.430064
+    },
+    "description": "Shanghai's oldest gay bar and pioneer of LGBTQ+ nightlife.",
+    "url": "https://www.smartshanghai.com/venue/20153/asia_blue_panyu_lu"
   }
 };
