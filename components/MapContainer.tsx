@@ -122,11 +122,9 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
   // Effect to track popup open/close state
   useEffect(() => {
     const handlePopupOpen = () => {
-      console.log('Popup opened!');
       setIsPopupOpen(true);
     };
     const handlePopupClose = () => {
-      console.log('Popup closed!');
       setIsPopupOpen(false);
     };
 
