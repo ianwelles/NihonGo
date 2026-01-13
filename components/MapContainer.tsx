@@ -139,7 +139,7 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
       <div 
         className={`absolute z-[1000] flex flex-col gap-2 transition-all duration-300 pointer-events-auto mb-[env(safe-area-inset-bottom)]
           ${isMobile 
-            ? 'bottom-44 right-4' 
+            ? 'bottom-52 right-4' 
             : 'bottom-8 right-6'
           }
         `}
