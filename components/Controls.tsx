@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Landmark, Utensils, Store, PanelLeftClose, Map as MapIcon, Calendar, ChevronUp, ChevronRight, Info } from 'lucide-react';
-import { itineraryData, tipsList } from '../data';
-import { CityName } from '../types';
+import { CityName, DayItinerary, TipCategory } from '../types';
+import { itineraryData as fallbackItinerary, tipsList as fallbackTips } from '../data';
 
 interface Toggles {
   sight_rec: boolean;
@@ -19,6 +19,8 @@ interface ControlsProps {
   activeCity?: CityName | null;
   onSelectDay?: (day: string) => void;
   onSelectCity?: (city: CityName | null) => void;
+  itineraryData?: DayItinerary[];
+  tipsList?: TipCategory[];
 }
 
 export const Controls: React.FC<ControlsProps> = ({
@@ -29,7 +31,9 @@ export const Controls: React.FC<ControlsProps> = ({
   onToggleSidebar,
   activeCity,
   onSelectDay,
-  onSelectCity
+  onSelectCity,
+  itineraryData,
+  tipsList
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isTipsOpen, setIsTipsOpen] = useState(false);
@@ -37,8 +41,12 @@ export const Controls: React.FC<ControlsProps> = ({
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
+  // Use props or fallbacks
+  const currentItinerary = itineraryData || fallbackItinerary;
+  const currentTips = tipsList || fallbackTips;
+
   // Group days by city using itineraryData (Source of Truth)
-  const cityGroups = itineraryData.reduce((acc, day) => {
+  const cityGroups = currentItinerary.reduce((acc, day) => {
     const city = day.city;
     const dayLabel = `Day ${day.dayNumber}`;
 
@@ -190,7 +198,7 @@ export const Controls: React.FC<ControlsProps> = ({
               </div>
               
               <div className="overflow-y-auto py-2 custom-scrollbar">
-                {tipsList.map((category) => (
+                {currentTips.map((category) => (
                   <div key={category.title} className="flex flex-col">
                     <button
                       onClick={() => setExpandedCategory(expandedCategory === category.title ? null : category.title)}

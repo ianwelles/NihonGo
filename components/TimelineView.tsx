@@ -1,7 +1,6 @@
 import React from 'react';
 import { CityName, DayItinerary, Activity, Place } from '../types';
 import { Plus, Info, MapPin, Clock, ExternalLink } from 'lucide-react';
-import { places } from '../data';
 
 interface TimelineViewProps {
   activeCity: CityName | null;
@@ -9,9 +8,10 @@ interface TimelineViewProps {
   handleToggle: (e: React.MouseEvent, dayId: string) => void;
   fullItineraryDays: DayItinerary[];
   startDate: Date;
+  places: Record<string, Place>;
 }
 
-const ActivityCard: React.FC<{ activity: Activity }> = ({ activity }) => {
+const ActivityCard: React.FC<{ activity: Activity; places: Record<string, Place> }> = ({ activity, places }) => {
   const place = places[activity.placeId];
 
   if (!place) {
@@ -92,7 +92,7 @@ const HotelCard: React.FC<{ place: Place }> = ({ place }) => {
   );
 };
 
-export const TimelineView: React.FC<TimelineViewProps> = ({ activeCity, openDay, handleToggle, fullItineraryDays, startDate }) => {
+export const TimelineView: React.FC<TimelineViewProps> = ({ activeCity, openDay, handleToggle, fullItineraryDays, startDate, places }) => {
   if (!activeCity) {
     return (
       <div className="py-12 px-6 text-center bg-card-bg rounded-2xl border border-border">
@@ -144,7 +144,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ activeCity, openDay,
               </summary>
               <div className="day-content p-5 pt-0 text-gray-200 border-t border-white/5 flex flex-col gap-4">
                 {day.activities.map((activity, activityIndex) => (
-                  <ActivityCard key={activityIndex} activity={activity} />
+                  <ActivityCard key={activityIndex} activity={activity} places={places} />
                 ))}
               </div>
             </details>

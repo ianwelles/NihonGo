@@ -2,13 +2,20 @@ import React from 'react';
 import { Download, FileDown } from 'lucide-react';
 
 interface HeaderProps {
-  onDownloadFull: () => void;
-  onDownloadLogistics: () => void;
-  onDownloadRecs: () => void;
+  onDownloadPlaces: () => void;
+  onDownloadItinerary: () => void;
+  onDownloadTheme: () => void;
+  onDownloadTips: () => void;
   isMobile: boolean;
 }
      
-export const Header: React.FC<HeaderProps> = ({ onDownloadFull, onDownloadLogistics, onDownloadRecs, isMobile }) => {
+export const Header: React.FC<HeaderProps> = ({ 
+  onDownloadPlaces, 
+  onDownloadItinerary, 
+  onDownloadTheme, 
+  onDownloadTips, 
+  isMobile 
+}) => {
   return (
     <div className="text-center mb-6">
       <div className="flex items-center justify-center gap-2 mb-2">
@@ -26,29 +33,41 @@ export const Header: React.FC<HeaderProps> = ({ onDownloadFull, onDownloadLogist
       {/* Action Buttons */}
       {!isMobile && (
         <div className="flex flex-col gap-3 w-full">
-          <button 
-            onClick={onDownloadFull}
-            className="flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-xs font-bold text-gray-300 hover:text-white hover:border-white/30 w-full"
-          >
-            <Download size={14} />
-            <span>Full Itinerary</span>
-          </button>
-          
-          <button 
-            onClick={onDownloadLogistics}
-            className="flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-xs font-bold text-gray-300 hover:text-white hover:border-white/30 w-full"
-          >
-            <Download size={14} /> {/* Changed icon to Download */}
-            <span>Logistics</span>
-          </button>
+          <div className="grid grid-cols-2 gap-3">
+            <button 
+              onClick={onDownloadPlaces}
+              className="flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-xs font-bold text-gray-300 hover:text-white hover:border-white/30 w-full"
+            >
+              <Download size={14} />
+              <span>Places</span>
+            </button>
+            
+            <button 
+              onClick={onDownloadItinerary}
+              className="flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-xs font-bold text-gray-300 hover:text-white hover:border-white/30 w-full"
+            >
+              <Download size={14} />
+              <span>Itinerary</span>
+            </button>
+          </div>
 
-          <button 
-            onClick={onDownloadRecs}
-            className="flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-xs font-bold text-gray-300 hover:text-white hover:border-white/30 w-full"
-          >
-            <Download size={14} />
-            <span>Recommendations</span>
-          </button>
+          <div className="grid grid-cols-2 gap-3">
+            <button 
+              onClick={onDownloadTheme}
+              className="flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-xs font-bold text-gray-300 hover:text-white hover:border-white/30 w-full"
+            >
+              <Download size={14} />
+              <span>Theme</span>
+            </button>
+
+            <button 
+              onClick={onDownloadTips}
+              className="flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-xs font-bold text-gray-300 hover:text-white hover:border-white/30 w-full"
+            >
+              <Download size={14} />
+              <span>Tips</span>
+            </button>
+          </div>
         </div>
       )}
     </div>

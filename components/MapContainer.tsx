@@ -2,8 +2,8 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { MapContainer as LeafletMap, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { places, mapMarkerColors, itineraryData } from '../data';
-import { CityName, Place } from '../types';
+import { places as fallbackPlaces, mapMarkerColors as fallbackMapMarkerColors } from '../data'; // Fallbacks just in case
+import { CityName, Place, DayItinerary } from '../types';
 import { Navigation, Maximize, Minimize } from 'lucide-react';
 
 // Standard Leaflet icon fix for default markers
@@ -29,30 +29,49 @@ interface MapProps {
   setMapRef: (map: L.Map) => void;
   isSidebarOpen?: boolean;
   isMobile?: boolean;
+  // New prop to receive dynamic itinerary data
+  itineraryData?: DayItinerary[];
 }
 
+// We need to access theme colors dynamically if possible, or fallback.
+// Since MapContainer doesn't receive the full AppData object, we'll use fallbacks for now 
+// or one could refactor to pass theme colors as props.
 const getIcon = (type: string) => {
-  const color = mapMarkerColors[type] || mapMarkerColors['default'] || '#3B82F6';
-  const pinSvg = `
+    // Ideally this should come from props or a context if colors are dynamic
+    const color = fallbackMapMarkerColors[type] || fallbackMapMarkerColors['default'] || '#3B82F6';
+    const pinSvg = `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${color}" stroke="#1c1c1c" stroke-width="0.5">
       <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
       <circle cx="12" cy="9" r="2.5" fill="#1c1c1c"/>
     </svg>`;
-  return L.divIcon({
-    className: 'custom-pin',
-    html: pinSvg,
-    iconSize: [36, 36],
-    iconAnchor: [18, 36],
-    popupAnchor: [0, -32]
-  });
+    return L.divIcon({
+        className: 'custom-pin',
+        html: pinSvg,
+        iconSize: [36, 36],
+        iconAnchor: [18, 36],
+        popupAnchor: [0, -32]
+    });
 };
 
-const userIcon = L.divIcon({
+const getUserIcon = (heading: number | null) => L.divIcon({
   className: 'user-location-marker',
   html: `
-    <div class="relative">
+    <div class="relative flex items-center justify-center">
+      ${heading !== null ? `
+        <div class="absolute transition-transform duration-200" style="transform: rotate(${heading}deg); width: 60px; height: 60px; pointer-events: none;">
+          <svg viewBox="0 0 100 100" class="w-full h-full">
+            <defs>
+              <radialGradient id="beamGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                <stop offset="0%" stop-color="#3B82F6" stop-opacity="0.4" />
+                <stop offset="100%" stop-color="#3B82F6" stop-opacity="0" />
+              </radialGradient>
+            </defs>
+            <path d="M50 50 L30 0 A 50 50 0 0 1 70 0 Z" fill="url(#beamGradient)" />
+          </svg>
+        </div>
+      ` : ''}
       <div class="absolute -inset-2 bg-blue-500 rounded-full animate-ping opacity-25"></div>
-      <div class="relative bg-blue-500 border-2 border-white rounded-full w-4 h-4 shadow-lg"></div>
+      <div class="relative bg-blue-500 border-2 border-white rounded-full w-4 h-4 shadow-lg z-10"></div>
     </div>
   `,
   iconSize: [16, 16],
@@ -62,6 +81,7 @@ const userIcon = L.divIcon({
 const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: boolean; isMobile?: boolean }> = ({ filteredPlaces, isSidebarOpen, isMobile }) => {
   const map = useMap();
   const [position, setPosition] = useState<L.LatLng | null>(null);
+  const [heading, setHeading] = useState<number | null>(null);
   const [isLocating, setIsLocating] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
@@ -71,6 +91,47 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
     };
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  useEffect(() => {
+    // Handle orientation
+    const handleOrientation = (e: DeviceOrientationEvent) => {
+      // @ts-ignore
+      let compass = e.webkitCompassHeading || e.alpha;
+      
+      // On some Android devices, alpha is relative. We prefer absolute orientation if available.
+      // @ts-ignore
+      if (e.absolute === false && e.webkitCompassHeading === undefined) {
+        // Fallback or handle relative orientation if needed
+      }
+
+      if (compass !== null && compass !== undefined) {
+        setHeading(compass);
+      }
+    };
+
+    const requestOrientationPermission = async () => {
+      // @ts-ignore
+      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        try {
+          // @ts-ignore
+          const permissionState = await DeviceOrientationEvent.requestPermission();
+          if (permissionState === 'granted') {
+            window.addEventListener('deviceorientation', handleOrientation);
+          }
+        } catch (error) {
+          console.error('DeviceOrientation permission error:', error);
+        }
+      } else {
+        window.addEventListener('deviceorientation', handleOrientation);
+      }
+    };
+
+    requestOrientationPermission();
+
+    return () => {
+      window.removeEventListener('deviceorientation', handleOrientation);
+    };
   }, []);
 
   useEffect(() => {
@@ -128,21 +189,16 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
   return (
     <>
       {position && (
-        <Marker position={position} icon={userIcon} zIndexOffset={1000}>
+        <Marker position={position} icon={getUserIcon(heading)} zIndexOffset={1000}>
           <Popup>
             <div className="text-sm font-bold text-gray-900">You are here</div>
           </Popup>
         </Marker>
       )}
       
-      {/* Container for buttons - Vertical Stack in top right for mobile, bottom right for desktop */}
+      {/* Container for buttons - Vertical Stack in top right */}
       <div 
-        className={`absolute z-[1000] flex flex-col gap-2 transition-all duration-300 pointer-events-auto
-          ${isMobile 
-            ? 'top-4 right-4' 
-            : 'bottom-8 right-6'
-          }
-        `}
+        className="absolute z-[1000] flex flex-col gap-2 transition-all duration-300 pointer-events-auto top-4 right-4 md:top-6 md:right-6"
       >
         <button
           onClick={toggleFullscreen}
@@ -200,25 +256,40 @@ const MapController: React.FC<{
       const isMobileView = window.innerWidth < 768;
       const sidebarWidth = 384; // Matching max-w-sm (24rem = 384px)
 
+      // Increased padding to avoid UI elements obscuring markers
+      // Top padding for status bars/header/buttons
+      // Left padding for sidebar (if open)
+      // Right padding for top-right map action buttons
+      // Bottom padding for floating controls
       let fitBoundsOptions: L.FitBoundsOptions = {
-        paddingTopLeft: [50, 50],
-        paddingBottomRight: [50, 50],
         maxZoom: 15,
         animate: true
       };
 
-      if (!isMobileView && isSidebarOpen) {
-        fitBoundsOptions.paddingTopLeft = [sidebarWidth + 20, 50];
+      if (isMobileView) {
+        // Mobile: Large bottom padding for controls, moderate top for header
+        fitBoundsOptions.paddingTopLeft = [20, 70];
+        fitBoundsOptions.paddingBottomRight = [20, 200];
+      } else {
+        // Desktop
+        // sidebarWidth + 60 provides ample space for the sidebar on the left
+        // 100 right padding ensures pins aren't under the top-right buttons
+        // 160 bottom padding ensures pins aren't under the floating control bar
+        const leftPadding = isSidebarOpen ? sidebarWidth + 60 : 60;
+        const rightPadding = 100; 
+        const topPadding = 80;
+        const bottomPadding = 160; 
+
+        fitBoundsOptions.paddingTopLeft = [leftPadding, topPadding];
+        fitBoundsOptions.paddingBottomRight = [rightPadding, bottomPadding];
       }
 
       map.stop();
 
       if (isInitialLoad || (activeCity === null && openDay === null)) {
         map.fitBounds(group.getBounds(), {
-          paddingTopLeft: !isMobileView && isSidebarOpen ? [sidebarWidth + 20, 50] : [50, 50],
-          paddingBottomRight: [50, 50],
+          ...fitBoundsOptions,
           maxZoom: 7,
-          animate: true,
           duration: 1.5
         });
       } else if (isCityChange || isDayChange) {
@@ -250,18 +321,24 @@ export const MapContainer: React.FC<MapProps> = ({
   toggles,
   setMapRef,
   isSidebarOpen,
-  isMobile
+  isMobile,
+  itineraryData
 }) => {
   const filteredPlaces = useMemo(() => {
-    const allPlaces = Object.values(places);
+    // We access places from fallbackPlaces for now because MapContainer logic relies on global `places`.
+    // In a full refactor, `places` should be passed as prop too.
+    const allPlaces = Object.values(fallbackPlaces);
     
     // 1. Identify context (Current City and Open Day items)
     const scheduledPlaceIds = new Set<string>();
     let currentCity: CityName | null = activeCity;
 
+    // Use passed itineraryData or fallback
+    const currentItinerary = itineraryData || [];
+
     if (openDay !== null) {
       const dayNum = parseInt(openDay.replace('day', ''));
-      const dayItinerary = itineraryData.find(d => d.dayNumber === dayNum);
+      const dayItinerary = currentItinerary.find(d => d.dayNumber === dayNum);
       if (dayItinerary) {
         currentCity = dayItinerary.city;
         dayItinerary.activities.forEach(act => scheduledPlaceIds.add(act.placeId));
@@ -297,7 +374,7 @@ export const MapContainer: React.FC<MapProps> = ({
       // Default (Overview Mode): Only show hotels
       return place.type === 'hotel';
     });
-  }, [activeCity, openDay, toggles]);
+  }, [activeCity, openDay, toggles, itineraryData]);
 
   if (!isAuthenticated) return <div className="h-full w-full bg-gray-900" />;
 

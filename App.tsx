@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { CityName, ItineraryResponse } from './types';
+import { CityName, ItineraryResponse, Place, DayItinerary } from './types';
 import { LoginScreen } from './components/LoginScreen';
 import { Header } from './components/Header';
 import { CityTabs } from './components/CityTabs';
 import { MapContainer } from './components/MapContainer';
 import { TimelineView } from './components/TimelineView';
 import { Controls } from './components/Controls';
-import { downloadFullCSV, downloadLogisticsCSV, downloadRecommendationsCSV } from './utils/csvHelper';
-import { startDate, itineraryData as initialItineraryData, tipsList as initialTipsList } from './data'; 
+import { downloadPlacesCSV, downloadItineraryCSV, downloadThemeCSV, downloadTipsCSV } from './utils/csvHelper';
+import { loadAppData } from './utils/dataLoader';
 
 const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
@@ -48,18 +48,35 @@ const App: React.FC = () => {
     shopping: true,
   });
 
-  // State for itinerary data
-  const [itineraryData] = useState<ItineraryResponse | null>({
-    days: initialItineraryData,
-    tipsList: initialTipsList
-  });
-  const [isLoadingItinerary] = useState(false);
-  const [itineraryError] = useState<string | null>(null);
+  // State for data
+  const [itineraryData, setItineraryData] = useState<DayItinerary[]>([]);
+  const [tipsList, setTipsList] = useState<any[]>([]);
+  const [places, setPlaces] = useState<Record<string, Place>>({});
+  const [appStartDate, setAppStartDate] = useState<Date>(new Date());
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const mapRef = useRef<any>(null);
 
   const setMapRef = useCallback((map: any) => {
     mapRef.current = map;
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await loadAppData();
+        setItineraryData(data.itinerary);
+        setTipsList(data.tips);
+        setPlaces(data.places);
+        setAppStartDate(data.startDate);
+        setIsLoading(false);
+      } catch (err: any) {
+        setError(err.message || 'Failed to load data');
+        setIsLoading(false);
+      }
+    };
+    fetchData();
   }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -81,14 +98,12 @@ const App: React.FC = () => {
   // Sync recommendation toggles based on city/day selection state
   useEffect(() => {
     if (activeCity !== null && openDay === null) {
-      // Only city selected: toggle recommendations ON
       setToggles({
         sight_rec: true,
         food_rec: true,
         shopping: true,
       });
     } else {
-      // Either a specific day is open, or we're in the global overview: toggle recommendations OFF
       setToggles({
         sight_rec: false,
         food_rec: false,
@@ -118,23 +133,53 @@ const App: React.FC = () => {
     );
   }
 
-  if (isLoadingItinerary) {
+  if (isLoading) {
     return (
-      <div className="h-screen w-screen flex items-center justify-center bg-gray-900 text-white">
-        <p>Generating your custom itinerary...</p>
+      <div className="h-screen w-screen flex flex-col items-center justify-center bg-gray-900 text-white animate-in fade-in duration-500">
+        <div className="relative mb-8">
+          <div className="absolute inset-0 bg-red-500/20 blur-3xl rounded-full" />
+          <svg className="w-32 h-32 relative z-10 animate-pulse" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="32" fill="black" stroke="#ef4444" strokeWidth="4" />
+            <g transform="translate(50 50) rotate(45) scale(4.2) translate(-11.5 -12)">
+              <path d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z" fill="white" />
+            </g>
+          </svg>
+        </div>
+        
+        <div className="text-center space-y-2">
+          <h1 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter">
+            Send Noods & Dim Sum More
+          </h1>
+          <div className="flex items-center justify-center gap-2">
+            <div className="h-1 w-1 bg-red-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+            <div className="h-1 w-1 bg-red-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+            <div className="h-1 w-1 bg-red-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+          </div>
+          <p className="text-gray-400 text-sm font-medium tracking-widest uppercase pt-4">
+            Generating your custom itinerary
+          </p>
+        </div>
       </div>
     );
   };
 
-  if (itineraryError) {
+  if (error) {
     return (
-      <div className="h-screen w-screen flex items-center justify-center bg-gray-900 text-white">
-        <p className="text-red-500">Error: {itineraryError}</p>
+      <div className="h-screen w-screen flex flex-col items-center justify-center bg-gray-900 text-white p-4">
+        <div className="bg-red-500/10 border border-red-500/20 p-6 rounded-2xl max-w-md w-full text-center">
+          <div className="text-red-500 text-4xl mb-4">⚠️</div>
+          <h2 className="text-xl font-bold mb-2 text-red-500 uppercase">Oops! Something went wrong</h2>
+          <p className="text-gray-400 text-sm">{error}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="mt-6 px-6 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-bold uppercase tracking-widest transition-all"
+          >
+            Try Refreshing
+          </button>
+        </div>
       </div>
     );
   }
-
-  const fullItineraryDays = itineraryData ? itineraryData.days : [];
 
   return (
     <div className="h-screen w-screen overflow-hidden bg-gray-900 text-white md:flex relative">
@@ -155,9 +200,10 @@ const App: React.FC = () => {
         <div className="h-full overflow-y-auto overflow-x-hidden pb-[env(safe-area-inset-bottom)]">
           <div className="p-4 space-y-4">
             <Header
-              onDownloadFull={downloadFullCSV}
-              onDownloadLogistics={downloadLogisticsCSV}
-              onDownloadRecs={downloadRecommendationsCSV}
+              onDownloadPlaces={() => downloadPlacesCSV()}
+              onDownloadItinerary={() => downloadItineraryCSV()}
+              onDownloadTheme={() => downloadThemeCSV()}
+              onDownloadTips={() => downloadTipsCSV()}
               isMobile={isMobile}
             />
             <CityTabs
@@ -165,14 +211,15 @@ const App: React.FC = () => {
               setActiveCity={handleCityChange}
               isMobile={isMobile}
               onToggleSidebar={() => setIsSidebarOpen(prev => !prev)}
-              fullItineraryDays={fullItineraryDays}
+              fullItineraryDays={itineraryData}
             />
             <TimelineView 
               activeCity={activeCity}
               openDay={openDay}
               handleToggle={handleToggle}
-              fullItineraryDays={fullItineraryDays} 
-              startDate={startDate}
+              fullItineraryDays={itineraryData} 
+              startDate={appStartDate}
+              places={places}
             />
           </div>
         </div>
@@ -187,6 +234,8 @@ const App: React.FC = () => {
           setMapRef={setMapRef}
           isSidebarOpen={isSidebarOpen}
           isMobile={isMobile}
+          itineraryData={itineraryData}
+          places={places}
         />
         {/* Floating Controls Overlay */}
         <div 
@@ -204,6 +253,8 @@ const App: React.FC = () => {
                 activeCity={activeCity}
                 onSelectDay={(day) => setOpenDay(day)}
                 onSelectCity={handleCityChange}
+                itineraryData={itineraryData}
+                tipsList={tipsList}
               />
           </div>
         </div>
