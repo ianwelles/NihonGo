@@ -7,11 +7,19 @@ interface CityTabsProps {
   isMobile: boolean;
   onToggleSidebar: () => void;
   fullItineraryDays: DayItinerary[];
+  cityColors?: Record<string, string>;
 }
 
-export const CityTabs: React.FC<CityTabsProps> = ({ activeCity, setActiveCity, isMobile, onToggleSidebar, fullItineraryDays }) => {
-  const cities: CityName[] = ['Tokyo', 'Kyoto', 'Osaka', 'Shanghai'];
-  const emojis = ["🗼", "⛩️", "🐙", "🥟"];
+export const CityTabs: React.FC<CityTabsProps> = ({ activeCity, setActiveCity, isMobile, onToggleSidebar, fullItineraryDays, cityColors = {} }) => {
+  // Derive unique cities from itinerary data to ensure we use loaded data
+  const cities = Array.from(new Set(fullItineraryDays.map(d => d.city))) as CityName[];
+  
+  const cityEmojiMap: Record<string, string> = {
+    'Tokyo': '🗼',
+    'Kyoto': '⛩️',
+    'Osaka': '🐙',
+    'Shanghai': '🥟'
+  };
 
   const getCityDateRange = (city: CityName) => {
     const cityDays = fullItineraryDays.filter(d => d.city === city);
@@ -29,10 +37,12 @@ export const CityTabs: React.FC<CityTabsProps> = ({ activeCity, setActiveCity, i
     return `${startDay}–${endDay} ${month}`;
   };
 
+  const activeCityColor = activeCity ? (cityColors[activeCity] || '#FF1744') : '#FF1744';
+
   return (
     <div className="mb-6">
         <div className="tabs grid grid-cols-2 gap-4 mb-6">
-        {cities.map((city, index) => (
+        {cities.map((city) => (
             <button 
                 key={city}
                 onClick={() => {
@@ -41,16 +51,20 @@ export const CityTabs: React.FC<CityTabsProps> = ({ activeCity, setActiveCity, i
                 className={`
                     py-4 px-4 rounded-2xl font-bold text-lg text-center w-full transition-all duration-300 border
                     ${activeCity === city 
-                        ? 'bg-card-bg border-[#FF1744] text-white shadow-[0_0_20px_rgba(255,23,68,0.25)]' 
+                        ? 'bg-card-bg text-white' 
                         : 'bg-card-bg border-white/10 text-gray-400 hover:bg-white/5 hover:text-white'
                     }
                 `}
+                style={activeCity === city ? { borderColor: activeCityColor, boxShadow: `0 0 20px ${activeCityColor}40` } : {}}
             >
                 <div className="flex items-center justify-center gap-2 mb-1">
                     <span>{city}</span>
-                    <span className="text-lg opacity-90 filter grayscale-[0.2]">{emojis[index]}</span>
+                    <span className="text-lg opacity-90 filter grayscale-[0.2]">{cityEmojiMap[city] || '📍'}</span>
                 </div>
-                <span className={`block text-sm font-semibold ${activeCity === city ? 'text-[#FF1744]' : 'text-gray-500'}`}>
+                <span 
+                  className="block text-sm font-semibold"
+                  style={{ color: activeCity === city ? activeCityColor : '#6b7280' }}
+                >
                     {getCityDateRange(city)}
                 </span>
             </button>
@@ -59,7 +73,10 @@ export const CityTabs: React.FC<CityTabsProps> = ({ activeCity, setActiveCity, i
         
         {/* Sub-header to confirm context */}
         <div className="flex items-center gap-3 px-1 mb-4">
-            <div className="h-5 w-1.5 bg-[#FF1744] rounded-full"></div>
+            <div 
+              className="h-5 w-1.5 rounded-full"
+              style={{ backgroundColor: activeCityColor }}
+            ></div>
             <h2 className="text-base font-bold text-gray-100 uppercase tracking-widest">
                 {activeCity ? `${activeCity} Itinerary` : 'Select a City'}
             </h2>

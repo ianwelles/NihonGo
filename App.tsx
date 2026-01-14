@@ -8,6 +8,7 @@ import { TimelineView } from './components/TimelineView';
 import { Controls } from './components/Controls';
 import { downloadPlacesCSV, downloadItineraryCSV, downloadThemeCSV, downloadTipsCSV } from './utils/csvHelper';
 import { loadAppData } from './utils/dataLoader';
+import { cityThemeColors as fallbackCityColors, mapMarkerColors as fallbackMarkerColors } from './theme';
 import { LayoutPanelTop, SlidersHorizontal } from 'lucide-react';
 
 const useMediaQuery = (query: string) => {
@@ -56,6 +57,11 @@ const App: React.FC = () => {
   const [tipsList, setTipsList] = useState<any[]>([]);
   const [places, setPlaces] = useState<Record<string, Place>>({});
   const [appStartDate, setAppStartDate] = useState<Date>(new Date());
+  const [appEndDate, setAppEndDate] = useState<Date>(new Date());
+  const [theme, setTheme] = useState({
+    cityColors: fallbackCityColors,
+    markerColors: fallbackMarkerColors,
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -73,6 +79,8 @@ const App: React.FC = () => {
         setTipsList(data.tips);
         setPlaces(data.places);
         setAppStartDate(data.startDate);
+        setAppEndDate(data.endDate);
+        setTheme(data.theme);
         setIsLoading(false);
       } catch (err: any) {
         setError(err.message || 'Failed to load data');
@@ -205,11 +213,13 @@ const App: React.FC = () => {
         <div className="h-full overflow-y-auto overflow-x-hidden pb-[env(safe-area-inset-bottom)]">
           <div className="p-4 space-y-4">
             <Header
-              onDownloadPlaces={() => downloadPlacesCSV()}
-              onDownloadItinerary={() => downloadItineraryCSV()}
-              onDownloadTheme={() => downloadThemeCSV()}
-              onDownloadTips={() => downloadTipsCSV()}
+              onDownloadPlaces={() => downloadPlacesCSV(places)}
+              onDownloadItinerary={() => downloadItineraryCSV(itineraryData)}
+              onDownloadTheme={() => downloadThemeCSV(theme.cityColors, theme.markerColors)}
+              onDownloadTips={() => downloadTipsCSV(tipsList)}
               isMobile={isMobile}
+              startDate={appStartDate}
+              endDate={appEndDate}
             />
             <CityTabs
               activeCity={activeCity}
@@ -217,6 +227,7 @@ const App: React.FC = () => {
               isMobile={isMobile}
               onToggleSidebar={() => setIsSidebarOpen(prev => !prev)}
               fullItineraryDays={itineraryData}
+              cityColors={theme.cityColors}
             />
             <TimelineView 
               activeCity={activeCity}
@@ -225,6 +236,7 @@ const App: React.FC = () => {
               fullItineraryDays={itineraryData} 
               startDate={appStartDate}
               places={places}
+              cityColors={theme.cityColors}
             />
           </div>
         </div>
@@ -241,6 +253,7 @@ const App: React.FC = () => {
           isMobile={isMobile}
           itineraryData={itineraryData}
           places={places}
+          markerColors={theme.markerColors}
         />
 
         {/* Floating Toggle for Controls (when hidden) */}
@@ -293,6 +306,8 @@ const App: React.FC = () => {
                 itineraryData={itineraryData}
                 tipsList={tipsList}
                 onHide={() => setShowControls(false)}
+                cityColors={theme.cityColors}
+                markerColors={theme.markerColors}
               />
           </div>
         </div>

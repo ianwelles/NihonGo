@@ -13,9 +13,10 @@ const CONFIG = {
     transform: (rows) => {
       const places = {};
       rows.forEach(row => {
-        if (!row.id) return;
+        const id = row.id || row['id'];
+        if (!id) return;
         const place = {
-          id: row.id,
+          id: id,
           name: row.name,
           type: row.type,
           city: row.city,
@@ -33,12 +34,10 @@ const CONFIG = {
             address: row.address,
             directions: row.directions,
             neighborhoodInsights: row.neighborhoodInsights,
-            // Tags are now handled at the top level for all places.
-            // Keeping `tags` here for backward compatibility if needed, but it's redundant now.
             tags: row.tags ? row.tags.split(',').map(t => t.trim()) : [] 
           };
         }
-        places[row.id] = place;
+        places[id] = place;
       });
       return `import { Place } from './types';\n\nexport const places: Record<string, Place> = ${JSON.stringify(places, null, 2)};\n`;
     }
@@ -47,17 +46,22 @@ const CONFIG = {
     url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRniSOAatP5VkPcJar3i-lMab0sZxPd3Q5td67o9kig_Zc9ZgjR4mCWL78dWHnxy0Yr9HAHdUxskKwb/pub?gid=1332892089&single=true&output=csv',
     path: 'itinerary.ts',
     transform: (rows) => {
-      const daysMap = new Map();
+      // Group by city, then by day number within each city
+      const cityGroups = new Map(); // Map<CityName, Map<DayNum, DayItinerary>>
+
       rows.forEach(row => {
         const dayNum = parseInt(row.dayNumber);
-        if (isNaN(dayNum) || !row.city) return; // Ensure city is present
+        if (isNaN(dayNum) || !row.city) return;
 
-        const compositeKey = `${dayNum}-${row.city}`;
-
-        if (!daysMap.has(compositeKey)) {
-          daysMap.set(compositeKey, {
+        if (!cityGroups.has(row.city)) {
+          cityGroups.set(row.city, new Map());
+        }
+        
+        const cityDays = cityGroups.get(row.city);
+        if (!cityDays.has(dayNum)) {
+          cityDays.set(dayNum, {
             dayNumber: dayNum,
-            city: row.city, // Assign single city
+            city: row.city,
             theme: row.theme,
             date: row.date,
             hotelId: row.hotelId || undefined,
@@ -65,8 +69,14 @@ const CONFIG = {
           });
         }
 
+        const dayEntry = cityDays.get(dayNum);
+        // Only update metadata if provided in the current row
+        if (row.theme) dayEntry.theme = row.theme;
+        if (row.date) dayEntry.date = row.date;
+        if (row.hotelId) dayEntry.hotelId = row.hotelId;
+
         if (row.placeId) {
-          daysMap.get(compositeKey).activities.push({
+          dayEntry.activities.push({
             placeId: row.placeId,
             time: row.time,
             label: row.label || undefined,
@@ -77,12 +87,18 @@ const CONFIG = {
           });
         }
       });
-      const itinerary = Array.from(daysMap.values()).sort((a, b) => {
-        if (a.dayNumber === b.dayNumber) {
-          return a.city.localeCompare(b.city); // Sort by city for same day number
-        }
-        return a.dayNumber - b.dayNumber;
-      });
+      
+      // Determine city order by the lowest day number in each city
+      const cityOrder = Array.from(cityGroups.entries()).map(([city, cityDays]) => {
+        const minDay = Math.min(...Array.from(cityDays.keys()));
+        return { city, minDay, cityDays };
+      }).sort((a, b) => a.minDay - b.minDay);
+
+      const itinerary = [];
+      for (const group of cityOrder) {
+        const sortedDays = Array.from(group.cityDays.values()).sort((a, b) => a.dayNumber - b.dayNumber);
+        itinerary.push(...sortedDays);
+      }
       
       return `import { DayItinerary } from './types';\n\n// --- Date Configuration ---\nexport const startDate = new Date('2025-02-18');\nexport const endDate = new Date('2025-02-28');\n\n// --- Itinerary Data ---\nexport const itineraryData: DayItinerary[] = ${JSON.stringify(itinerary, null, 2)};\n`;
     }
@@ -139,30 +155,41 @@ async function sync() {
       if (fs.existsSync(item.path)) {
         const backupPath = path.join(backupDir, item.path);
         fs.copyFileSync(item.path, backupPath);
-        console.log(`  - Backed up to ${backupPath}`);
       }
 
-      console.log(`  - Fetching CSV...`);
-      const response = await fetch(item.url);
+      // Add cache buster to the URL
+      const fetchUrl = `${item.url}${item.url.includes('?') ? '&' : '?'}_t=${Date.now()}`;
+      console.log(`  - Fetching CSV: ${key}...`);
+      
+      const response = await fetch(fetchUrl);
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       const csvText = await response.text();
       
-      const parsed = Papa.parse(csvText, { header: true, skipEmptyLines: true });
+      const parsed = Papa.parse(csvText, { 
+        header: true, 
+        skipEmptyLines: true,
+        transformHeader: (header) => header.trim().replace(/^\uFEFF/, '') 
+      });
+      
       if (parsed.errors && parsed.errors.length > 0) {
         console.warn(`  - Parse warnings for ${key}:`, parsed.errors);
       }
       
+      if (!parsed.data || parsed.data.length === 0) {
+        console.warn(`  - No data found for ${key}, skipping update.`);
+        continue;
+      }
+
       const tsContent = item.transform(parsed.data);
       
       fs.writeFileSync(item.path, tsContent);
-      console.log(`  - Successfully updated ${item.path}`);
+      console.log(`  - Successfully updated ${item.path} with ${parsed.data.length} rows.`);
     } catch (error) {
       console.error(`  - Failed to sync ${key}:`, error.message);
     }
   }
   
   console.log('\nSync process complete!');
-  console.log(`Backups are stored in: ${backupDir}`);
 }
 
 sync();

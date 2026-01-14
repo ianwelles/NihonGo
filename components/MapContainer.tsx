@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { MapContainer as LeafletMap, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { mapMarkerColors as fallbackMapMarkerColors } from '../data'; // Fallbacks just in case
+import { mapMarkerColors as fallbackMapMarkerColors } from '../theme';
 import { CityName, Place, DayItinerary } from '../types';
 import { Navigation, Maximize, Minimize, Route } from 'lucide-react';
 
@@ -31,28 +31,9 @@ interface MapProps {
   isSidebarOpen?: boolean;
   isMobile?: boolean;
   itineraryData: DayItinerary[];
-  places: Record<string, Place>; // Add places to props
+  places: Record<string, Place>;
+  markerColors?: Record<string, string>;
 }
-
-// We need to access theme colors dynamically if possible, or fallback.
-// Since MapContainer doesn't receive the full AppData object, we'll use fallbacks for now 
-// or one could refactor to pass theme colors as props.
-const getIcon = (type: string) => {
-    // Ideally this should come from props or a context if colors are dynamic
-    const color = fallbackMapMarkerColors[type] || fallbackMapMarkerColors['default'] || '#3B82F6';
-    const pinSvg = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${color}" stroke="#1c1c1c" stroke-width="0.5">
-      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-      <circle cx="12" cy="9" r="2.5" fill="#1c1c1c"/>
-    </svg>`;
-    return L.divIcon({
-        className: 'custom-pin',
-        html: pinSvg,
-        iconSize: [36, 36],
-        iconAnchor: [18, 36],
-        popupAnchor: [0, -32]
-    });
-};
 
 const getUserIcon = (heading: number | null) => L.divIcon({
   className: 'user-location-marker',
@@ -98,10 +79,7 @@ const PopupManager: React.FC = () => {
     const checkPopupsVisibility = () => {
       const mapBounds = map.getBounds();
       openPopups.current.forEach(popup => {
-        // Get the coordinates of the popup's anchor
         const popupLatLng = popup.getLatLng();
-        
-        // If the popup's anchor is outside the map bounds, close it
         if (!mapBounds.contains(popupLatLng)) {
           popup.remove();
         }
@@ -110,7 +88,7 @@ const PopupManager: React.FC = () => {
 
     map.on('popupopen', handlePopupOpen);
     map.on('popupclose', handlePopupClose);
-    map.on('move', checkPopupsVisibility); // Check visibility on any map movement
+    map.on('move', checkPopupsVisibility);
 
     return () => {
       map.off('popupopen', handlePopupOpen);
@@ -128,20 +106,13 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
   const [heading, setHeading] = useState<number | null>(null);
   const [isLocating, setIsLocating] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [isPopupOpen, setIsPopupOpen] = useState(false); // New state for popup open status
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  // Effect to track popup open/close state
   useEffect(() => {
-    const handlePopupOpen = () => {
-      setIsPopupOpen(true);
-    };
-    const handlePopupClose = () => {
-      setIsPopupOpen(false);
-    };
-
+    const handlePopupOpen = () => setIsPopupOpen(true);
+    const handlePopupClose = () => setIsPopupOpen(false);
     map.on('popupopen', handlePopupOpen);
     map.on('popupclose', handlePopupClose);
-
     return () => {
       map.off('popupopen', handlePopupOpen);
       map.off('popupclose', handlePopupClose);
@@ -149,25 +120,15 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
   }, [map]);
 
   useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
+    const handleFullscreenChange = () => setIsFullscreen(!!document.fullscreenElement);
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
 
   useEffect(() => {
-    // Handle orientation
     const handleOrientation = (e: DeviceOrientationEvent) => {
       // @ts-ignore
       let compass = e.webkitCompassHeading || e.alpha;
-      
-      // On some Android devices, alpha is relative. We prefer absolute orientation if available.
-      // @ts-ignore
-      if (e.absolute === false && e.webkitCompassHeading === undefined) {
-        // Fallback or handle relative orientation if needed
-      }
-
       if (compass !== null && compass !== undefined) {
         setHeading(compass);
       }
@@ -191,29 +152,21 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
     };
 
     requestOrientationPermission();
-
-    return () => {
-      window.removeEventListener('deviceorientation', handleOrientation);
-    };
+    return () => window.removeEventListener('deviceorientation', handleOrientation);
   }, []);
 
   useEffect(() => {
-    // Attempt to get initial location
     map.locate({ watch: true, enableHighAccuracy: true });
-
     const onLocationFound = (e: L.LocationEvent) => {
       setPosition(e.latlng);
       setIsLocating(false);
     };
-
     const onLocationError = (e: L.ErrorEvent) => {
       console.warn("Geolocation error:", e.message);
       setIsLocating(false);
     };
-
     map.on('locationfound', onLocationFound);
     map.on('locationerror', onLocationError);
-
     return () => {
       map.off('locationfound', onLocationFound);
       map.off('locationerror', onLocationError);
@@ -224,12 +177,8 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
   const handleLocateClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-
     if (position) {
-      map.flyTo(position, 16, {
-        duration: 1.5,
-        easeLinearity: 0.25
-      });
+      map.flyTo(position, 16, { duration: 1.5, easeLinearity: 0.25 });
     } else {
       setIsLocating(true);
       map.locate({ setView: true, maxZoom: 16, enableHighAccuracy: true });
@@ -239,7 +188,6 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
   const toggleFullscreen = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch(err => {
         console.error(`Error attempting to enable full-screen mode: ${err.message}`);
@@ -253,20 +201,13 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
     <>
       <style>{`
         @keyframes popup-scale-in {
-            from {
-                transform: scale(0.8);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
         .leaflet-popup-content-wrapper {
             animation: popup-scale-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
       `}</style>
-
       {position && (
         <Marker position={position} icon={getUserIcon(heading)} zIndexOffset={1000}>
           <Popup keepInView={true} autoPanPadding={L.point(50, 50)}>
@@ -274,31 +215,11 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
           </Popup>
         </Marker>
       )}
-      
-      {/* Container for buttons - Vertical Stack in top right */}
-      <div 
-        className={`
-          absolute z-[1000] flex flex-col gap-3 transition-all duration-300 pointer-events-auto top-4 right-4 md:top-6 md:right-6
-          ${isPopupOpen ? 'opacity-0 pointer-events-none translate-y-4' : 'opacity-100 translate-y-0'}
-        `}
-      >
-        <button
-          onClick={toggleFullscreen}
-          className="flex items-center justify-center w-14 h-14 rounded-xl border border-white/10 bg-black/40 backdrop-blur-md text-gray-200 opacity-90 hover:opacity-100 hover:scale-[1.05] active:scale-95 cursor-pointer shadow-xl transition-all duration-300"
-          title="Toggle Fullscreen"
-        >
+      <div className={`absolute z-[1000] flex flex-col gap-3 transition-all duration-300 pointer-events-auto top-4 right-4 md:top-6 md:right-6 ${isPopupOpen ? 'opacity-0 pointer-events-none translate-y-4' : 'opacity-100 translate-y-0'}`}>
+        <button onClick={toggleFullscreen} className="flex items-center justify-center w-14 h-14 rounded-xl border border-white/10 bg-black/40 backdrop-blur-md text-gray-200 opacity-90 hover:opacity-100 hover:scale-[1.05] active:scale-95 cursor-pointer shadow-xl transition-all duration-300" title="Toggle Fullscreen">
           {isFullscreen ? <Minimize size={24} /> : <Maximize size={24} />}
         </button>
-        <button
-          onClick={handleLocateClick}
-          className={`
-            flex items-center justify-center w-14 h-14 rounded-xl border backdrop-blur-md transition-all duration-300 
-            ${isLocating ? 'animate-pulse' : ''} 
-            ${position ? 'bg-black/70 border-white/40 text-blue-400 opacity-100' : 'bg-black/40 border-white/10 text-gray-200 opacity-90'}
-            hover:opacity-100 hover:scale-[1.05] active:scale-95 cursor-pointer shadow-xl
-          `}
-          title="Center on my location"
-        >
+        <button onClick={handleLocateClick} className={`flex items-center justify-center w-14 h-14 rounded-xl border backdrop-blur-md transition-all duration-300 ${isLocating ? 'animate-pulse' : ''} ${position ? 'bg-black/70 border-white/40 text-blue-400 opacity-100' : 'bg-black/40 border-white/10 text-gray-200 opacity-90'} hover:opacity-100 hover:scale-[1.05] active:scale-95 cursor-pointer shadow-xl`} title="Center on my location">
           <Navigation size={24} className={position ? 'fill-blue-400/20' : ''} />
         </button>
       </div>
@@ -319,9 +240,7 @@ const MapController: React.FC<{
   const prevIsSidebarOpen = useRef<boolean | undefined>(isSidebarOpen);
 
   useEffect(() => {
-    if (map) {
-      setMapRef(map);
-    }
+    if (map) setMapRef(map);
   }, [map, setMapRef]);
 
   useEffect(() => {
@@ -336,55 +255,25 @@ const MapController: React.FC<{
       const markers = filteredPlaces.map(place => L.marker([place.coordinates.lat, place.coordinates.lon]));
       const group = L.featureGroup(markers);
       const isMobileView = window.innerWidth < 768;
-      const sidebarWidth = 384; // Matching max-w-sm (24rem = 384px)
+      const sidebarWidth = 384;
 
-      // Increased padding to avoid UI elements obscuring markers
-      // Top padding for status bars/header/buttons
-      // Left padding for sidebar (if open)
-      // Right padding for top-right map action buttons
-      // Bottom padding for floating controls
-      let fitBoundsOptions: L.FitBoundsOptions = {
-        maxZoom: 15,
-        animate: true
-      };
-
+      let fitBoundsOptions: L.FitBoundsOptions = { maxZoom: 15, animate: true };
       if (isMobileView) {
-        // Mobile: Large bottom padding for controls, moderate top for header
         fitBoundsOptions.paddingTopLeft = [20, 70];
         fitBoundsOptions.paddingBottomRight = [20, 200];
       } else {
-        // Desktop
-        // sidebarWidth + 60 provides ample space for the sidebar on the left
-        // 100 right padding ensures pins aren't under the top-right buttons
-        // 160 bottom padding ensures pins aren't under the floating control bar
         const leftPadding = isSidebarOpen ? sidebarWidth + 60 : 60;
-        const rightPadding = 100; 
-        const topPadding = 80;
-        const bottomPadding = 160; 
-
-        fitBoundsOptions.paddingTopLeft = [leftPadding, topPadding];
-        fitBoundsOptions.paddingBottomRight = [rightPadding, bottomPadding];
+        fitBoundsOptions.paddingTopLeft = [leftPadding, 80];
+        fitBoundsOptions.paddingBottomRight = [100, 160];
       }
 
       map.stop();
-
       if (isInitialLoad || (activeCity === null && openDay === null)) {
-        map.fitBounds(group.getBounds(), {
-          ...fitBoundsOptions,
-          maxZoom: 7,
-          duration: 1.5
-        });
+        map.fitBounds(group.getBounds(), { ...fitBoundsOptions, maxZoom: 7, duration: 1.5 });
       } else if (isCityChange || isDayChange) {
-        map.flyToBounds(group.getBounds(), {
-          ...fitBoundsOptions,
-          duration: 1.2,
-          easeLinearity: 0.25
-        });
+        map.flyToBounds(group.getBounds(), { ...fitBoundsOptions, duration: 1.2, easeLinearity: 0.25 });
       } else {
-        map.fitBounds(group.getBounds(), {
-          ...fitBoundsOptions,
-          duration: 0.6
-        });
+        map.fitBounds(group.getBounds(), { ...fitBoundsOptions, duration: 0.6 });
       }
     }
 
@@ -405,25 +294,35 @@ export const MapContainer: React.FC<MapProps> = ({
   isSidebarOpen,
   isMobile,
   itineraryData,
-  places // Destructure places prop
+  places,
+  markerColors = {}
 }) => {
+  const getIcon = useCallback((type: string) => {
+    const color = markerColors[type] || markerColors['default'] || fallbackMapMarkerColors[type] || fallbackMapMarkerColors['default'] || '#3B82F6';
+    const pinSvg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${color}" stroke="#1c1c1c" stroke-width="0.5">
+      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+      <circle cx="12" cy="9" r="2.5" fill="#1c1c1c"/>
+    </svg>`;
+    return L.divIcon({
+        className: 'custom-pin',
+        html: pinSvg,
+        iconSize: [36, 36],
+        iconAnchor: [18, 36],
+        popupAnchor: [0, -32]
+    });
+  }, [markerColors]);
+
   const filteredPlaces = useMemo(() => {
-    const allPlaces = Object.values(places); // Use the 'places' prop instead of fallbackPlaces
-    
-    // 1. Identify context (Current City and Open Day items)
+    const allPlaces = Object.values(places);
     const scheduledPlaceIds = new Set<string>();
     let currentCity: CityName | null = activeCity;
-    let currentDayNumber: number | null = null;
-
-    // Use passed itineraryData or fallback
     const currentItinerary = itineraryData || [];
 
     if (openDay !== null) {
-      // Parse day number and city from openDay string (e.g., "day8-Shanghai")
       const parts = openDay.replace('day', '').split('-');
-      currentDayNumber = parseInt(parts[0]);
-      const openDayCity = parts[1]; // This is the city from the openDay identifier
-
+      const currentDayNumber = parseInt(parts[0]);
+      const openDayCity = parts[1];
       const dayItinerary = currentItinerary.find(d => d.dayNumber === currentDayNumber && d.city === openDayCity);
       if (dayItinerary) {
         currentCity = dayItinerary.city;
@@ -434,81 +333,42 @@ export const MapContainer: React.FC<MapProps> = ({
 
     return allPlaces.filter(place => {
       const isRecommendation = ['sight_rec', 'food_rec', 'bar_rec', 'shopping'].includes(place.type);
-      
-      // Filter by category toggles
       if (place.type === 'sight_rec' && !toggles.sight_rec) return false;
       if (place.type === 'food_rec' && !toggles.food_rec) return false;
       if (place.type === 'bar_rec' && !toggles.bar_rec) return false;
       if (place.type === 'shopping' && !toggles.shopping) return false;
-
-      // If we are in a specific city (either selected or inferred from open day)
       if (currentCity) {
-        // If it's a different city, hide it
         if (place.city !== currentCity) return false;
-
-        // If a specific day is open
         if (openDay !== null) {
-          // Show scheduled items for that day
           if (scheduledPlaceIds.has(place.id)) return true;
-          // Show recommendations in this city
           return isRecommendation;
         }
-
-        // If no day is open, but a city is, show everything in this city (passed toggles)
         return true;
       }
-
-      // Default (Overview Mode): Only show hotels
       return place.type === 'hotel';
     });
-  }, [activeCity, openDay, toggles, itineraryData, places]); // Add places to dependencies
+  }, [activeCity, openDay, toggles, itineraryData, places]);
 
   if (!isAuthenticated) return <div className="h-full w-full bg-gray-900" />;
 
   return (
     <div className="h-full w-full relative">
-      <LeafletMap
-        center={[35.6895, 139.6917]}
-        zoom={12}
-        zoomControl={false}
-        attributionControl={false}
-        className="h-full w-full bg-gray-900"
-      >
-        <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-          subdomains="abcd"
-          maxZoom={19}
-        />
-        <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png"
-          subdomains="abcd"
-          maxZoom={19}
-          zIndex={650}
-        />
-        <MapController
-          activeCity={activeCity}
-          openDay={openDay}
-          isSidebarOpen={isSidebarOpen}
-          setMapRef={setMapRef}
-          filteredPlaces={filteredPlaces}
-        />
+      <LeafletMap center={[35.6895, 139.6917]} zoom={12} zoomControl={false} attributionControl={false} className="h-full w-full bg-gray-900">
+        <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png" attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>' subdomains="abcd" maxZoom={19} />
+        <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png" subdomains="abcd" maxZoom={19} zIndex={650} />
+        <MapController activeCity={activeCity} openDay={openDay} isSidebarOpen={isSidebarOpen} setMapRef={setMapRef} filteredPlaces={filteredPlaces} />
         <PopupManager />
         <UserLocationMarker filteredPlaces={filteredPlaces} isSidebarOpen={isSidebarOpen} isMobile={isMobile} />
         {filteredPlaces.map((place) => {
           const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${place.coordinates.lat},${place.coordinates.lon}&travelmode=transit`;
-          // Determine which tags to display: hotelMeta.tags if available, otherwise place.tags
           const displayTags = place.hotelMeta?.tags || place.tags;
+          const typeColor = markerColors[place.type] || markerColors['default'] || fallbackMapMarkerColors[place.type] || fallbackMapMarkerColors['default'] || '#00BCD4';
 
           return (
-            <Marker
-              key={place.id}
-              position={[place.coordinates.lat, place.coordinates.lon]}
-              icon={getIcon(place.type)}
-            >
+            <Marker key={place.id} position={[place.coordinates.lat, place.coordinates.lon]} icon={getIcon(place.type)}>
               <Popup keepInView={true} autoPanPadding={L.point(50, 100)}>
                 <div className="text-left min-w-[240px] py-1">
-                  <span className={`${place.type.includes('_rec') ? 'text-[#00BCD4]' : 'text-sub-text'} font-extrabold text-sm uppercase tracking-widest mb-2 block`}>
+                  <span className="font-extrabold text-sm uppercase tracking-widest mb-2 block" style={{ color: typeColor }}>
                     {place.type.replace(/_/g, ' ')}
                   </span>
                   {place.url ? (
@@ -516,23 +376,17 @@ export const MapContainer: React.FC<MapProps> = ({
                       {place.name}
                     </a>
                   ) : (
-                    <span className="text-2xl font-bold text-primary mb-2 leading-tight block">{place.name}</span>
+                    <span className="text-2xl font-bold text-white mb-2 leading-tight block">{place.name}</span>
                   )}
                   <span className="text-gray-100 text-base leading-relaxed mb-3 block">{place.description}</span>
                   {displayTags && displayTags.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-3 mb-5">
                       {displayTags.map((tag, idx) => (
                         <span key={idx} className="text-[9px] font-black uppercase text-white/30 tracking-widest border border-white/10 px-2 py-1 rounded">{tag}</span>
-                      ))
-                  }
-                  </div>
+                      ))}
+                    </div>
                   )}
-                  <a
-                    href={directionsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center bg-black/40 text-white uppercase font-bold text-sm px-6 py-3 rounded-lg border border-white/10 hover:bg-black/60 transition-colors shadow-lg no-underline active:scale-95"
-                  >
+                  <a href={directionsUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center bg-black/40 text-white uppercase font-bold text-sm px-6 py-3 rounded-lg border border-white/10 hover:bg-black/60 transition-colors shadow-lg no-underline active:scale-95">
                     <Route className="w-4 h-4 mr-2" /> Get Directions
                   </a>
                 </div>

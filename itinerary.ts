@@ -110,19 +110,28 @@ export const itineraryData: DayItinerary[] = [
   },
   {
     "dayNumber": 4,
+    "city": "Tokyo",
+    "theme": "Travel",
+    "date": "Sat 21 Feb",
+    "hotelId": "hilton-tokyo",
+    "activities": [
+      {
+        "placeId": "shinjuku-station",
+        "time": "Morning",
+        "label": "Travel to Kyoto",
+        "description": "Checkout. Train to Tokyo Station. Shinkansen to Kyoto (2.5 hrs).",
+        "tip": "Buy a Bento at Tokyo Station.",
+        "icon": "🚅"
+      }
+    ]
+  },
+  {
+    "dayNumber": 4,
     "city": "Kyoto",
     "theme": "Bullet Train & Gion",
     "date": "Sat 21 Feb",
     "hotelId": "doubletree-kyoto",
     "activities": [
-      {
-        "placeId": "shinjuku-station",
-        "time": "Morning",
-        "label": "Shinkansen to Kyoto",
-        "description": "Shinkansen to Kyoto (2.5 hrs). Buy an Ekiben!",
-        "tip": "Buy a \"Makunouchi\" bento at Tokyo Station's Ekibenya Matsuri before boarding.",
-        "icon": "🚅"
-      },
       {
         "placeId": "gion-district",
         "time": "Afternoon",
@@ -208,6 +217,23 @@ export const itineraryData: DayItinerary[] = [
   },
   {
     "dayNumber": 7,
+    "city": "Kyoto",
+    "theme": "Travel",
+    "date": "Tue 24 Feb",
+    "hotelId": "doubletree-kyoto",
+    "activities": [
+      {
+        "placeId": "kyoto-station",
+        "time": "Morning",
+        "label": "Travel to Osaka",
+        "description": "Checkout. Special Rapid Service to Osaka Station (30 mins).",
+        "tip": "Stand on the platform early to secure a seat.",
+        "icon": "🚆"
+      }
+    ]
+  },
+  {
+    "dayNumber": 7,
     "city": "Osaka",
     "theme": "Kitchen of Japan",
     "date": "Tue 24 Feb",
@@ -217,9 +243,9 @@ export const itineraryData: DayItinerary[] = [
         "placeId": "osaka-castle",
         "time": "Morning",
         "label": "Osaka Castle",
-        "description": "Train to Osaka (30 mins). Visit Osaka Castle.",
+        "description": "Visit Osaka Castle.",
         "tip": "Hotel is at Umeda; Castle is a short loop line ride away.",
-        "icon": "🚆"
+        "icon": "🏯"
       },
       {
         "placeId": "kushikatsu-daruma",

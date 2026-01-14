@@ -9,6 +9,7 @@ interface TimelineViewProps {
   fullItineraryDays: DayItinerary[];
   startDate: Date;
   places: Record<string, Place>;
+  cityColors?: Record<string, string>;
 }
 
 const ActivityCard: React.FC<{ activity: Activity; places: Record<string, Place> }> = ({ activity, places }) => {
@@ -35,7 +36,7 @@ const ActivityCard: React.FC<{ activity: Activity; places: Record<string, Place>
         </div>
         <h4 className="text-lg font-bold text-white leading-tight">
           {url ? (
-            <a href={url} target="_blank" rel="noreferrer" className="text-white hover:text-primary transition-colors flex items-center gap-1">
+            <a href={url} target="_blank" rel="noreferrer" className="text-white hover:text-[#FF1744] transition-colors flex items-center gap-1">
               {name}
               <ExternalLink size={14} className="opacity-50" />
             </a>
@@ -46,15 +47,17 @@ const ActivityCard: React.FC<{ activity: Activity; places: Record<string, Place>
         <p className="text-sm text-gray-300 leading-relaxed">{description}</p>
         {activity.tip && (
             <div className="flex items-start gap-2 text-xs text-amber-200 bg-amber-500/10 px-3 py-2 rounded-lg border border-amber-500/20 mt-2">
-                <Info className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                <p className="leading-relaxed"><span className="font-bold uppercase tracking-wider text-[10px] block mb-0.5">Tip:</span> {activity.tip}</p>
+                <div className="flex flex-col">
+                  <span className="font-bold uppercase tracking-wider text-[10px] block mb-0.5 text-amber-500">Tip:</span>
+                  <p className="leading-relaxed">{activity.tip}</p>
+                </div>
             </div>
         )}
     </div>
   );
 };
 
-const HotelCard: React.FC<{ place: Place }> = ({ place }) => {
+const HotelCard: React.FC<{ place: Place, activeCityColor: string }> = ({ place, activeCityColor }) => {
   if (!place.hotelMeta) return null;
 
   return (
@@ -62,21 +65,21 @@ const HotelCard: React.FC<{ place: Place }> = ({ place }) => {
       <div className="flex flex-col">
         <div className="p-6 border-b border-border">
           <div className="flex items-center gap-2 mb-4">
-            <span className="bg-primary text-white text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-widest">Base Camp</span>
+            <span className="text-white text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-widest" style={{ backgroundColor: activeCityColor }}>Base Camp</span>
             <span className="text-sub-text font-bold text-xs uppercase tracking-widest">Selected Hotel</span>
           </div>
           <h3 className="text-2xl font-black text-white mb-2 leading-none uppercase tracking-tighter">{place.name}</h3>
           <p className="text-sm text-gray-400 mb-6 leading-relaxed italic">{place.hotelMeta.address}</p>
           <div className="flex gap-3">
             {place.url && (
-              <a href={place.url} target="_blank" rel="noreferrer" className="flex-1 text-center py-3 bg-white text-black font-black text-xs rounded-lg hover:bg-accent hover:text-white transition-all uppercase tracking-widest no-underline border-none">Official Site</a>
+              <a href={place.url} target="_blank" rel="noreferrer" className="flex-1 text-center py-3 bg-white text-black font-black text-xs rounded-lg hover:bg-opacity-90 transition-all uppercase tracking-widest no-underline border-none">Official Site</a>
             )}
             <a href={place.hotelMeta.directions} target="_blank" rel="noreferrer" className="flex-1 text-center py-3 border border-white/20 text-white font-bold text-xs rounded-lg hover:bg-white/5 transition-all uppercase tracking-widest no-underline">Directions</a>
           </div>
         </div>
         <div className="p-8 bg-neutral-900/50 flex flex-col justify-center">
-          <h4 className="text-[11px] font-black text-primary uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
-            <span className="w-8 h-[1px] bg-primary"></span> Neighborhood Insights
+          <h4 className="text-[11px] font-black uppercase tracking-[0.2em] mb-3 flex items-center gap-2" style={{ color: activeCityColor }}>
+            <span className="w-8 h-[1px]" style={{ backgroundColor: activeCityColor }}></span> Neighborhood Insights
           </h4>
           <p className="text-sm text-sub-text leading-relaxed font-medium">
             {place.hotelMeta.neighborhoodInsights}
@@ -92,12 +95,12 @@ const HotelCard: React.FC<{ place: Place }> = ({ place }) => {
   );
 };
 
-export const TimelineView: React.FC<TimelineViewProps> = ({ activeCity, openDay, handleToggle, fullItineraryDays, startDate, places }) => {
+export const TimelineView: React.FC<TimelineViewProps> = ({ activeCity, openDay, handleToggle, fullItineraryDays, startDate, places, cityColors = {} }) => {
   if (!activeCity) {
     return (
       <div className="py-12 px-6 text-center bg-card-bg rounded-2xl border border-border">
-        <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-          <MapPin size={32} className="text-primary" />
+        <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
+          <MapPin size={32} className="text-gray-400" />
         </div>
         <h3 className="text-2xl font-bold text-white mb-2">Select a City</h3>
         <p className="text-gray-400 leading-relaxed">Choose a city above to view your curated itinerary and daily highlights.</p>
@@ -106,6 +109,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ activeCity, openDay,
   }
 
   const filteredItineraryDays = fullItineraryDays.filter(day => day.city === activeCity);
+  const activeCityColor = cityColors[activeCity] || '#FF1744';
 
   let currentCityHotelId: string | undefined;
 
@@ -120,7 +124,6 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ activeCity, openDay,
         }
 
         const nextDayInFullItinerary = fullItineraryDays[dayIndexInFullItinerary + 1];
-        // FIX: The hotel card should only appear when the city changes in the itinerary, not every day.
         const isLastDayInCity = !nextDayInFullItinerary || nextDayInFullItinerary.city !== day.city;
         const currentHotel = currentCityHotelId ? places[currentCityHotelId] : undefined;
 
@@ -137,7 +140,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ activeCity, openDay,
                   className="p-5 cursor-pointer list-none flex items-center justify-between hover:bg-white/5 transition-colors"
               >
                 <div className="flex items-center gap-4 flex-1">
-                    <span className="text-xl md:text-base font-bold text-[#FF1744] min-w-[3.5rem]">Day {day.dayNumber}</span>
+                    <span className="text-xl md:text-base font-bold min-w-[3.5rem]" style={{ color: activeCityColor }}>Day {day.dayNumber}</span>
                     <div className="flex flex-col items-start border-l border-white/10 pl-4">
                         <span className="text-lg font-bold text-white leading-tight">{day.theme}</span>
                         <span className="text-sm font-medium text-gray-400 mt-0.5">{day.date}</span>
@@ -151,7 +154,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ activeCity, openDay,
                 ))}
               </div>
             </details>
-            {isLastDayInCity && currentHotel && <HotelCard place={currentHotel} />}
+            {isLastDayInCity && currentHotel && <HotelCard place={currentHotel} activeCityColor={activeCityColor} />}
           </React.Fragment>
         );
       })}

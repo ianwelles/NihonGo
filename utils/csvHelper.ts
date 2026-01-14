@@ -61,19 +61,13 @@ export const downloadItineraryCSV = (currentItinerary: DayItinerary[] = fallback
   currentItinerary.forEach(day => {
     const common = [
         escapeCSV(day.dayNumber.toString()),
-        escapeCSV(day.city.join(', ')),
+        escapeCSV(day.city),
         escapeCSV(day.theme),
         escapeCSV(day.date),
         escapeCSV(day.hotelId)
     ];
 
     if (day.activities.length === 0) {
-        // Ensure at least one row per day if no activities, though schema implies rows are activities.
-        // If strict parsing is needed, we might just skip or output a row with empty activity fields.
-        // But for "downloading static data", let's include all activities.
-        // If a day has NO activities, we might want to output just the day info?
-        // The loader iterates activities. Let's output a row with empty activity fields if needed or just skip.
-        // However, usually we want to preserve the day structure.
         rows.push([...common, "", "", "", "", "", "", ""]);
     } else {
         day.activities.forEach(act => {
@@ -95,15 +89,15 @@ export const downloadItineraryCSV = (currentItinerary: DayItinerary[] = fallback
 };
 
 // 3. THEME CSV STRUCTURE: category, key, value
-export const downloadThemeCSV = () => {
+export const downloadThemeCSV = (currentCityColors: Record<string, string> = cityThemeColors, currentMarkerColors: Record<string, string> = mapMarkerColors) => {
   const headers = ["category", "key", "value"];
   const rows: string[][] = [];
 
-  Object.entries(cityThemeColors).forEach(([key, value]) => {
+  Object.entries(currentCityColors).forEach(([key, value]) => {
       rows.push([escapeCSV("city"), escapeCSV(key), escapeCSV(value)]);
   });
 
-  Object.entries(mapMarkerColors).forEach(([key, value]) => {
+  Object.entries(currentMarkerColors).forEach(([key, value]) => {
       rows.push([escapeCSV("marker"), escapeCSV(key), escapeCSV(value)]);
   });
 
