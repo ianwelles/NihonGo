@@ -36,7 +36,7 @@ async function hashPassword(password: string): Promise<string> {
 }
 
 const App: React.FC = () => {
-  const isMobile = useMediaQuery('(max-width: 767px)');
+  const isSmallScreen = useMediaQuery('(max-width: 1023px)'); // Covers mobile and tablet
   const [activeCity, setActiveCity] = useState<CityName | null>(null); 
   const [openDay, setOpenDay] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => !window.matchMedia('(max-width: 767px)').matches);
@@ -199,7 +199,7 @@ const App: React.FC = () => {
       {/* Backdrop for mobile drawer */}
       {isSidebarOpen && (
         <div 
-          className={`fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm ${isMobile ? '' : 'md:hidden'}`}
+          className={`fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm ${isSmallScreen ? '' : 'md:hidden'}`}
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
@@ -213,14 +213,14 @@ const App: React.FC = () => {
         <div className="h-full overflow-y-auto overflow-x-hidden pb-[env(safe-area-inset-bottom)]">
           <div className="p-4 space-y-4">
             <Header
-              isMobile={isMobile}
+              isMobile={isSmallScreen} // Use isSmallScreen here, though it's not directly used inside Header for rendering buttons anymore
               startDate={appStartDate}
               endDate={appEndDate}
             />
             <CityTabs
               activeCity={activeCity}
               setActiveCity={handleCityChange}
-              isMobile={isMobile}
+              isMobile={isSmallScreen}
               onToggleSidebar={() => setIsSidebarOpen(prev => !prev)}
               fullItineraryDays={itineraryData}
               cityColors={theme.cityColors}
@@ -235,8 +235,8 @@ const App: React.FC = () => {
               cityColors={theme.cityColors}
             />
 
-            {/* Download buttons moved here for desktop */}
-            {!isMobile && (
+            {/* Download buttons moved here for desktop (and now hidden on tablet as well) */}
+            {!isSmallScreen && (
               <div className="flex flex-col gap-3 w-full mt-8 pb-4">
                 <div className="grid grid-cols-2 gap-3">
                   <button 
@@ -287,7 +287,7 @@ const App: React.FC = () => {
           toggles={toggles}
           setMapRef={setMapRef}
           isSidebarOpen={isSidebarOpen}
-          isMobile={isMobile}
+          isMobile={isSmallScreen}
           itineraryData={itineraryData}
           places={places}
           markerColors={theme.markerColors}
@@ -296,7 +296,7 @@ const App: React.FC = () => {
         {/* Floating Toggle for Controls (when hidden) */}
         <div
           className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[10000] transition-all duration-500 pointer-events-none mb-[env(safe-area-inset-bottom)]
-            ${!isMobile && isSidebarOpen ? 'md:left-[calc(50%+192px)]' : ''}
+            ${!isSmallScreen && isSidebarOpen ? 'md:left-[calc(50%+192px)]' : ''}
             ${!showControls ? 'translate-y-0 opacity-100' : 'translate-y-[150%] opacity-0'}`}
         >
           <button
@@ -325,7 +325,7 @@ const App: React.FC = () => {
         {/* Floating Controls Overlay */}
         <div 
           className={`fixed bottom-8 md:bottom-8 left-1/2 -translate-x-1/2 w-full max-w-sm px-4 transition-all duration-500 pointer-events-none z-[9999] mb-[env(safe-area-inset-bottom)] 
-            ${!isMobile && isSidebarOpen ? 'md:left-[calc(50%+192px)]' : ''}
+            ${!isSmallScreen && isSidebarOpen ? 'md:left-[calc(50%+192px)]' : ''}
             ${showControls ? 'translate-y-0 opacity-100' : 'translate-y-[120%] opacity-0'}
             `}
         >
@@ -335,8 +335,8 @@ const App: React.FC = () => {
                 toggleCategory={toggleCategory}
                 openDay={openDay}
                 isSidebarOpen={isSidebarOpen}
+                isMobile={isSmallScreen}
                 onToggleSidebar={() => setIsSidebarOpen(prev => !prev)}
-                isMobile={isMobile}
                 activeCity={activeCity}
                 onSelectDay={(dayIdentifier) => setOpenDay(dayIdentifier)}
                 onSelectCity={handleCityChange}
