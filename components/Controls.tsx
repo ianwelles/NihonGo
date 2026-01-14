@@ -32,12 +32,12 @@ export const Controls: React.FC<ControlsProps> = ({
   isSidebarOpen,
   onToggleSidebar,
   activeCity,
-  onSelectDay,
   onSelectCity,
   itineraryData,
   tipsList,
   onHide,
-  isMobile
+  isMobile,
+  onSelectDay
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isTipsOpen, setIsTipsOpen] = useState(false);
@@ -52,14 +52,15 @@ export const Controls: React.FC<ControlsProps> = ({
   // Group days by city using itineraryData (Source of Truth)
   const cityGroups = currentItinerary.reduce((acc, day) => {
     const city = day.city;
-    const dayLabel = `Day ${day.dayNumber}`;
+    // Ensure unique keys for each day by combining dayNumber and city
+    const dayIdentifier = `day${day.dayNumber}-${day.city}`;
 
     if (!acc[city]) {
       acc[city] = [];
     }
-    acc[city].push(dayLabel);
+    acc[city].push({ label: `Day ${day.dayNumber}`, identifier: dayIdentifier });
     return acc;
-  }, {} as Record<CityName, string[]>);
+  }, {} as Record<CityName, { label: string; identifier: string }[]>);
 
   // Unified styling class for all buttons
   const buttonBaseClass = "flex items-center justify-center gap-3 px-4 h-14 rounded-xl border backdrop-blur-md transition-all duration-300 text-xs font-black uppercase tracking-widest hover:opacity-100 hover:scale-[1.02] active:scale-95";
@@ -107,11 +108,16 @@ export const Controls: React.FC<ControlsProps> = ({
     }
   };
 
-  const getDayId = (dayStr: string) => dayStr.toLowerCase().replace(' ', '');
+  // The `getDayId` function is no longer needed as dayIdentifier is directly stored.
+  // const getDayId = (dayStr: string) => dayStr.toLowerCase().replace(' ', '');
 
   const displayTitle = () => {
     if (openDay) {
-      return `Day ${openDay.replace('day', '')}`;
+      // Parse day number and city from openDay string (e.g., "day8-Shanghai")
+      const parts = openDay.replace('day', '').split('-');
+      const dayNum = parts[0];
+      const city = parts[1];
+      return `Day ${dayNum} (${city})`;
     }
     if (activeCity) {
       return activeCity;
@@ -193,15 +199,14 @@ export const Controls: React.FC<ControlsProps> = ({
                     {expandedCity === city && (
                       <div className="bg-white/[0.02] border-y border-white/5 grid grid-cols-2 gap-2 p-3">
                         {cityGroups[city].map((day) => {
-                          const dayId = getDayId(day);
-                          const isActive = openDay === dayId;
+                          const isActive = openDay === day.identifier;
                           return (
                             <button
-                              key={day}
+                              key={day.identifier}
                               onClick={(e) => {
                                 e.stopPropagation();
                                 onSelectCity?.(city);
-                                onSelectDay?.(dayId);
+                                onSelectDay?.(day.identifier);
                                 setIsMenuOpen(false);
                               }}
                               className={`px-3 py-3 text-xs font-bold rounded-lg transition-all text-center
@@ -210,7 +215,7 @@ export const Controls: React.FC<ControlsProps> = ({
                                   : 'bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white'}
                               `}
                             >
-                              {day}
+                              {day.label}
                             </button>
                           );
                         })}

@@ -117,9 +117,9 @@ const App: React.FC = () => {
     }
   }, [openDay, activeCity]);
 
-  const handleToggle = (e: React.MouseEvent, dayId: string) => {
+  const handleToggle = (e: React.MouseEvent, dayIdentifier: string) => {
     e.preventDefault();
-    setOpenDay(prev => (prev === dayId ? null : dayId));
+    setOpenDay(prev => (prev === dayIdentifier ? null : dayIdentifier));
   };
 
   const toggleCategory = (key: keyof typeof toggles) => {
@@ -288,7 +288,7 @@ const App: React.FC = () => {
                 onToggleSidebar={() => setIsSidebarOpen(prev => !prev)}
                 isMobile={isMobile}
                 activeCity={activeCity}
-                onSelectDay={(day) => setOpenDay(day)}
+                onSelectDay={(dayIdentifier) => setOpenDay(dayIdentifier)}
                 onSelectCity={handleCityChange}
                 itineraryData={itineraryData}
                 tipsList={tipsList}

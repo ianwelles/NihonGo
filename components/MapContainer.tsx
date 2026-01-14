@@ -413,13 +413,18 @@ export const MapContainer: React.FC<MapProps> = ({
     // 1. Identify context (Current City and Open Day items)
     const scheduledPlaceIds = new Set<string>();
     let currentCity: CityName | null = activeCity;
+    let currentDayNumber: number | null = null;
 
     // Use passed itineraryData or fallback
     const currentItinerary = itineraryData || [];
 
     if (openDay !== null) {
-      const dayNum = parseInt(openDay.replace('day', ''));
-      const dayItinerary = currentItinerary.find(d => d.dayNumber === dayNum);
+      // Parse day number and city from openDay string (e.g., "day8-Shanghai")
+      const parts = openDay.replace('day', '').split('-');
+      currentDayNumber = parseInt(parts[0]);
+      const openDayCity = parts[1]; // This is the city from the openDay identifier
+
+      const dayItinerary = currentItinerary.find(d => d.dayNumber === currentDayNumber && d.city === openDayCity);
       if (dayItinerary) {
         currentCity = dayItinerary.city;
         dayItinerary.activities.forEach(act => scheduledPlaceIds.add(act.placeId));
@@ -518,8 +523,9 @@ export const MapContainer: React.FC<MapProps> = ({
                     <div className="flex flex-wrap gap-2 mt-3 mb-5">
                       {displayTags.map((tag, idx) => (
                         <span key={idx} className="text-[9px] font-black uppercase text-white/30 tracking-widest border border-white/10 px-2 py-1 rounded">{tag}</span>
-                      ))}
-                    </div>
+                      ))
+                  }
+                  </div>
                   )}
                   <a
                     href={directionsUrl}

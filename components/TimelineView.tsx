@@ -112,7 +112,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ activeCity, openDay,
   return (
     <div className="w-full pb-24">
       {filteredItineraryDays.map((day, index) => {
-        const dayIndexInFullItinerary = fullItineraryDays.findIndex(d => d.dayNumber === day.dayNumber);
+        const dayIndexInFullItinerary = fullItineraryDays.findIndex(d => d.dayNumber === day.dayNumber && d.city === day.city);
 
         // Track the hotel for the current city
         if (day.hotelId) {
@@ -120,17 +120,20 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ activeCity, openDay,
         }
 
         const nextDayInFullItinerary = fullItineraryDays[dayIndexInFullItinerary + 1];
+        // FIX: The hotel card should only appear when the city changes in the itinerary, not every day.
         const isLastDayInCity = !nextDayInFullItinerary || nextDayInFullItinerary.city !== day.city;
         const currentHotel = currentCityHotelId ? places[currentCityHotelId] : undefined;
 
+        const dayIdentifier = `day${day.dayNumber}-${day.city}`;
+
         return (
-          <React.Fragment key={day.dayNumber}>
+          <React.Fragment key={dayIdentifier}>
             <details 
-                open={openDay === `day${day.dayNumber}`}
+                open={openDay === dayIdentifier}
                 className="group bg-card-bg rounded-2xl border border-border overflow-hidden transition-all duration-300 mb-4"
             >
               <summary 
-                  onClick={(e) => handleToggle(e, `day${day.dayNumber}`)}
+                  onClick={(e) => handleToggle(e, dayIdentifier)}
                   className="p-5 cursor-pointer list-none flex items-center justify-between hover:bg-white/5 transition-colors"
               >
                 <div className="flex items-center gap-4 flex-1">
@@ -140,7 +143,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ activeCity, openDay,
                         <span className="text-sm font-medium text-gray-400 mt-0.5">{day.date}</span>
                     </div>
                 </div>
-                <Plus className={`text-gray-400 transition-transform duration-300 ${openDay === `day${day.dayNumber}` ? 'rotate-45' : ''}`} />
+                <Plus className={`text-gray-400 transition-transform duration-300 ${openDay === dayIdentifier ? 'rotate-45' : ''}`} />
               </summary>
               <div className="day-content p-5 pt-0 text-gray-200 border-t border-white/5 flex flex-col gap-4">
                 {day.activities.map((activity, activityIndex) => (
