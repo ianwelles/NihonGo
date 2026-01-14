@@ -1,5 +1,5 @@
 import React from 'react';
-import { ItineraryResponse, DayItinerary, Activity, Hotel, Place } from '../types';
+import { ItineraryResponse, DayItinerary, Activity, Place } from '../types';
 import { MapPin, Info, ExternalLink, Home } from 'lucide-react';
 import { places } from '../data';
 
@@ -155,17 +155,23 @@ export const ItineraryDisplay: React.FC<ItineraryDisplayProps> = ({ data, onRese
       <div className="px-2">
         {data.days.map((day, index) => {
           // If this is the first day of the trip or a new city, update the current hotel.
-          if (index === 0 || day.city !== data.days[index - 1].city) {
+          const previousDay = index > 0 ? data.days[index - 1] : undefined;
+          const previousDayCity = previousDay?.city;
+          const currentDayCity = day.city;
+
+          const cityChanged = index === 0 || currentDayCity !== previousDayCity;
+
+          if (cityChanged) {
             currentCityHotelPlace = day.hotelId ? places[day.hotelId] : undefined;
           }
 
           const nextDay = data.days[index + 1];
-          const isLastDayInCity = !nextDay || nextDay.city !== day.city;
+          const isLastEntryForCity = !nextDay || nextDay.city !== currentDayCity || nextDay.dayNumber !== day.dayNumber;
 
           return (
-            <React.Fragment key={day.dayNumber}>
+            <React.Fragment key={`${day.dayNumber}-${day.city}`}>
               <DaySection day={day} />
-              {isLastDayInCity && currentCityHotelPlace && <HotelCard place={currentCityHotelPlace} />}
+              {isLastEntryForCity && currentCityHotelPlace && <HotelCard place={currentCityHotelPlace} />}
             </React.Fragment>
           );
         })}

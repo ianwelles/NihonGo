@@ -135,16 +135,18 @@ export const loadAppData = async (): Promise<AppData> => {
   if (ITINERARY_CSV_URL) {
     try {
       const rows = await fetchCSV(ITINERARY_CSV_URL);
-      const daysMap = new Map<number, DayItinerary>();
+      const daysMap = new Map<string, DayItinerary>(); // Use string for composite key
 
       rows.forEach((row: any) => {
         const dayNum = parseInt(row.dayNumber);
-        if (isNaN(dayNum)) return;
+        if (isNaN(dayNum) || !row.city) return; // Ensure city is present
 
-        if (!daysMap.has(dayNum)) {
-          daysMap.set(dayNum, {
+        const compositeKey = `${dayNum}-${row.city}`;
+
+        if (!daysMap.has(compositeKey)) {
+          daysMap.set(compositeKey, {
             dayNumber: dayNum,
-            city: row.city as CityName,
+            city: row.city as CityName, // Assign single city
             theme: row.theme,
             date: row.date,
             hotelId: row.hotelId || undefined,
@@ -152,7 +154,7 @@ export const loadAppData = async (): Promise<AppData> => {
           });
         }
 
-        const day = daysMap.get(dayNum)!;
+        const day = daysMap.get(compositeKey)!;
         if (row.placeId) {
             const activity: Activity = {
                 placeId: row.placeId,
@@ -167,7 +169,12 @@ export const loadAppData = async (): Promise<AppData> => {
         }
       });
 
-      const newItinerary = Array.from(daysMap.values()).sort((a, b) => a.dayNumber - b.dayNumber);
+      const newItinerary = Array.from(daysMap.values()).sort((a, b) => {
+        if (a.dayNumber === b.dayNumber) {
+          return a.city.localeCompare(b.city); // Sort by city for same day number
+        }
+        return a.dayNumber - b.dayNumber;
+      });
       
       if (newItinerary.length > 0) {
         data.itinerary = newItinerary;

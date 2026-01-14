@@ -1239,18 +1239,18 @@ export const places: Record<string, Place> = {
   },
   "pudong-airport": {
     "id": "pudong-airport",
-    "name": "Pudong Airport (PVG)",
+    "name": "Shanghai Pudong Int. Airport",
     "type": "travel",
     "city": "Shanghai",
     "coordinates": {
       "lat": 31.1443,
       "lon": 121.8083
     },
-    "description": "Arrival/Departure",
+    "description": "Main international airport.",
     "url": "https://www.shanghaiairport.com/en/",
     "tags": [
-      "International Hub",
-      "Far from City"
+      "Airport",
+      "Travel"
     ]
   },
   "maglev-station": {
@@ -1387,10 +1387,10 @@ export const places: Record<string, Place> = {
     "type": "food",
     "city": "Shanghai",
     "coordinates": {
-      "lat": 31.1443,
-      "lon": 121.8083
+      "lat": 31.148,
+      "lon": 121.81
     },
-    "description": "Famous Sheng Jian Bao chain (PVG Airport).",
+    "description": "Famous Sheng Jian Bao chain (PVG Terminal 2).",
     "tags": [
       "Sheng Jian Bao",
       "Pan-Fried"
@@ -1441,6 +1441,53 @@ export const places: Record<string, Place> = {
     "tags": [
       "Gay Bar",
       "Cozy"
+    ]
+  },
+  "shanghai-tower": {
+    "id": "shanghai-tower",
+    "name": "Shanghai Tower",
+    "type": "sight",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.233,
+      "lon": 121.505
+    },
+    "description": "China's tallest building and world's second-tallest.",
+    "url": "http://www.shanghaitower.com.cn/",
+    "tags": [
+      "Skyline",
+      "Views"
+    ]
+  },
+  "osaka-station": {
+    "id": "osaka-station",
+    "name": "Osaka Station",
+    "type": "travel",
+    "city": "Osaka",
+    "coordinates": {
+      "lat": 34.7025,
+      "lon": 135.496
+    },
+    "description": "Major transport hub in Umeda.",
+    "url": "https://www.westjr.co.jp/global/en/",
+    "tags": [
+      "Transport"
+    ]
+  },
+  "kansai-airport": {
+    "id": "kansai-airport",
+    "name": "Kansai Intl Airport (KIX)",
+    "type": "travel",
+    "city": "Osaka",
+    "coordinates": {
+      "lat": 34.4325,
+      "lon": 135.2304
+    },
+    "description": "International airport on an artificial island.",
+    "url": "https://www.kansai-airport.or.jp/en/",
+    "tags": [
+      "Airport",
+      "Departure"
     ]
   }
 };

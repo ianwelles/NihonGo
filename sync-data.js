@@ -50,12 +50,14 @@ const CONFIG = {
       const daysMap = new Map();
       rows.forEach(row => {
         const dayNum = parseInt(row.dayNumber);
-        if (isNaN(dayNum)) return;
+        if (isNaN(dayNum) || !row.city) return; // Ensure city is present
 
-        if (!daysMap.has(dayNum)) {
-          daysMap.set(dayNum, {
+        const compositeKey = `${dayNum}-${row.city}`;
+
+        if (!daysMap.has(compositeKey)) {
+          daysMap.set(compositeKey, {
             dayNumber: dayNum,
-            city: row.city,
+            city: row.city, // Assign single city
             theme: row.theme,
             date: row.date,
             hotelId: row.hotelId || undefined,
@@ -64,7 +66,7 @@ const CONFIG = {
         }
 
         if (row.placeId) {
-          daysMap.get(dayNum).activities.push({
+          daysMap.get(compositeKey).activities.push({
             placeId: row.placeId,
             time: row.time,
             label: row.label || undefined,
@@ -75,7 +77,12 @@ const CONFIG = {
           });
         }
       });
-      const itinerary = Array.from(daysMap.values()).sort((a, b) => a.dayNumber - b.dayNumber);
+      const itinerary = Array.from(daysMap.values()).sort((a, b) => {
+        if (a.dayNumber === b.dayNumber) {
+          return a.city.localeCompare(b.city); // Sort by city for same day number
+        }
+        return a.dayNumber - b.dayNumber;
+      });
       
       return `import { DayItinerary } from './types';\n\n// --- Date Configuration ---\nexport const startDate = new Date('2025-02-18');\nexport const endDate = new Date('2025-02-28');\n\n// --- Itinerary Data ---\nexport const itineraryData: DayItinerary[] = ${JSON.stringify(itinerary, null, 2)};\n`;
     }

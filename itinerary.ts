@@ -249,18 +249,35 @@ export const itineraryData: DayItinerary[] = [
   },
   {
     "dayNumber": 8,
+    "city": "Osaka",
+    "theme": "Travel",
+    "date": "Wed 25 Feb",
+    "hotelId": "hilton-osaka",
+    "activities": [
+      {
+        "placeId": "kansai-airport",
+        "time": "Morning",
+        "label": "Travel to KIX & Fly",
+        "description": "Train/Bus to Kansai Airport. Flight to Shanghai (PVG).",
+        "tip": "Allow 60-75 mins for transit to KIX.",
+        "icon": "🛫"
+      }
+    ]
+  },
+  {
+    "dayNumber": 8,
     "city": "Shanghai",
-    "theme": "Arrival & Maglev",
+    "theme": "Travel",
     "date": "Wed 25 Feb",
     "hotelId": "hilton-shanghai",
     "activities": [
       {
-        "placeId": "pudong-airport",
-        "time": "Travel",
-        "label": "Fly KIX to PVG",
-        "description": "Fly KIX to PVG. Ride the MAGLEV (430km/h).",
-        "tip": "Maglev closes at 23:40.",
-        "icon": "🛫"
+        "placeId": "maglev-station",
+        "time": "Afternoon",
+        "label": "Arrival & Maglev",
+        "description": "Land at PVG. Maglev to Longyang Rd; Metro to Hotel.",
+        "tip": "Maglev top speed (430km/h) usually 9:00-10:45 & 15:00-15:45.",
+        "icon": "🚄"
       }
     ]
   },
@@ -318,6 +335,14 @@ export const itineraryData: DayItinerary[] = [
         "icon": "🥟"
       },
       {
+        "placeId": "shanghai-tower",
+        "time": "Afternoon",
+        "label": "Shanghai Tower",
+        "description": "Visit the observation deck of China's tallest building.",
+        "tip": "Book tickets in advance to skip the queue.",
+        "icon": "🏙️"
+      },
+      {
         "placeId": "the-bund",
         "time": "Evening",
         "label": "The Bund",
@@ -356,6 +381,14 @@ export const itineraryData: DayItinerary[] = [
         "description": "Yang's Dumplings inside airport.",
         "tip": "Bite a small hole in the Sheng Jian Bao first to vent the steam!",
         "icon": "🥟"
+      },
+      {
+        "placeId": "pudong-airport",
+        "time": "10:55",
+        "label": "Return Flight",
+        "description": "British Airways BA0168 to London (LHR).",
+        "tip": "Departs Terminal 2",
+        "icon": "🛫"
       }
     ]
   }

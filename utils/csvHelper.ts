@@ -61,7 +61,7 @@ export const downloadItineraryCSV = (currentItinerary: DayItinerary[] = fallback
   currentItinerary.forEach(day => {
     const common = [
         escapeCSV(day.dayNumber.toString()),
-        escapeCSV(day.city),
+        escapeCSV(day.city.join(', ')),
         escapeCSV(day.theme),
         escapeCSV(day.date),
         escapeCSV(day.hotelId)
