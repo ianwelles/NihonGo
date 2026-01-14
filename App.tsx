@@ -9,7 +9,7 @@ import { Controls } from './components/Controls';
 import { downloadPlacesCSV, downloadItineraryCSV, downloadThemeCSV, downloadTipsCSV } from './utils/csvHelper';
 import { loadAppData } from './utils/dataLoader';
 import { cityThemeColors as fallbackCityColors, mapMarkerColors as fallbackMarkerColors } from './theme';
-import { LayoutPanelTop, SlidersHorizontal } from 'lucide-react';
+import { LayoutPanelTop, SlidersHorizontal, Download } from 'lucide-react';
 
 const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
@@ -213,10 +213,6 @@ const App: React.FC = () => {
         <div className="h-full overflow-y-auto overflow-x-hidden pb-[env(safe-area-inset-bottom)]">
           <div className="p-4 space-y-4">
             <Header
-              onDownloadPlaces={() => downloadPlacesCSV(places)}
-              onDownloadItinerary={() => downloadItineraryCSV(itineraryData)}
-              onDownloadTheme={() => downloadThemeCSV(theme.cityColors, theme.markerColors)}
-              onDownloadTips={() => downloadTipsCSV(tipsList)}
               isMobile={isMobile}
               startDate={appStartDate}
               endDate={appEndDate}
@@ -238,6 +234,47 @@ const App: React.FC = () => {
               places={places}
               cityColors={theme.cityColors}
             />
+
+            {/* Download buttons moved here for desktop */}
+            {!isMobile && (
+              <div className="flex flex-col gap-3 w-full mt-8 pb-4">
+                <div className="grid grid-cols-2 gap-3">
+                  <button 
+                    onClick={() => downloadPlacesCSV(places)}
+                    className="flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-xs font-bold text-gray-300 hover:text-white hover:border-white/30 w-full"
+                  >
+                    <Download size={14} />
+                    <span>Places</span>
+                  </button>
+                  
+                  <button 
+                    onClick={() => downloadItineraryCSV(itineraryData)}
+                    className="flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-xs font-bold text-gray-300 hover:text-white hover:border-white/30 w-full"
+                  >
+                    <Download size={14} />
+                    <span>Itinerary</span>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <button 
+                    onClick={() => downloadThemeCSV(theme.cityColors, theme.markerColors)}
+                    className="flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-xs font-bold text-gray-300 hover:text-white hover:border-white/30 w-full"
+                  >
+                    <Download size={14} />
+                    <span>Theme</span>
+                  </button>
+
+                  <button 
+                    onClick={() => downloadTipsCSV(tipsList)}
+                    className="flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-xs font-bold text-gray-300 hover:text-white hover:border-white/30 w-full"
+                  >
+                    <Download size={14} />
+                    <span>Tips</span>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </aside>
