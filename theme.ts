@@ -1,10 +1,14 @@
 import { CityName } from './types';
 
 export const cityThemeColors: { [key in CityName]: string } = {
-  "Tokyo": "#FF1744",
-  "Kyoto": "#00B0FF",
-  "Osaka": "#FFEA00",
-  "Shanghai": "#76FF03"
+  "Tokyo2": "#FF1744",
+  "Kyoto2": "#00B0FF",
+  "Osaka2": "#FFEA00",
+  "Shanghai2": "#76FF03",
+  "Tokyo": "#C2185B",
+  "Kyoto": "#558B2F",
+  "Osaka": "#E65100",
+  "Shanghai": "#0097A7"
 };
 
 export const mapMarkerColors: Record<string, string> = {

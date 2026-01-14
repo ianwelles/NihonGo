@@ -9,7 +9,7 @@ export const itineraryData: DayItinerary[] = [
   {
     "dayNumber": 1,
     "city": "Tokyo",
-    "theme": "Arrival & Local Life",
+    "theme": "Neon Lights & First Bites",
     "date": "Wed 18 Feb",
     "hotelId": "hilton-tokyo",
     "activities": [
@@ -25,7 +25,7 @@ export const itineraryData: DayItinerary[] = [
         "label": "Shinjuku & Garden",
         "description": "Transfer to Shinjuku (Hotel Shuttle). Lunch at Sobahouse Konjiki Hototogisu. Walk through Shinjuku Gyoen National Garden.",
         "tip": "Konjiki Hototogisu holds a Michelin Star for their clam-broth ramen. Arrive early for a ticket!",
-        "icon": "🚅"
+        "icon": "🌳"
       },
       {
         "placeId": "torikizoku",
@@ -40,7 +40,7 @@ export const itineraryData: DayItinerary[] = [
   {
     "dayNumber": 2,
     "city": "Tokyo",
-    "theme": "Old Tokyo & Culture",
+    "theme": "Temples, Tuna & Two-Chōme",
     "date": "Thu 19 Feb",
     "hotelId": "hilton-tokyo",
     "activities": [
@@ -72,7 +72,7 @@ export const itineraryData: DayItinerary[] = [
   {
     "dayNumber": 3,
     "city": "Tokyo",
-    "theme": "Modern Icons",
+    "theme": "Scrambles, Skylines & Sushi",
     "date": "Fri 20 Feb",
     "hotelId": "hilton-tokyo",
     "activities": [
@@ -111,7 +111,7 @@ export const itineraryData: DayItinerary[] = [
   {
     "dayNumber": 4,
     "city": "Tokyo",
-    "theme": "Travel",
+    "theme": "The Shinkansen Sprint",
     "date": "Sat 21 Feb",
     "hotelId": "hilton-tokyo",
     "activities": [
@@ -128,7 +128,7 @@ export const itineraryData: DayItinerary[] = [
   {
     "dayNumber": 4,
     "city": "Kyoto",
-    "theme": "Bullet Train & Gion",
+    "theme": "Geisha Streets & Kaiseki Eats",
     "date": "Sat 21 Feb",
     "hotelId": "doubletree-kyoto",
     "activities": [
@@ -152,7 +152,7 @@ export const itineraryData: DayItinerary[] = [
   {
     "dayNumber": 5,
     "city": "Kyoto",
-    "theme": "Shrines & Deer",
+    "theme": "Torii Gates & Deer Dates",
     "date": "Sun 22 Feb",
     "hotelId": "doubletree-kyoto",
     "activities": [
@@ -185,7 +185,7 @@ export const itineraryData: DayItinerary[] = [
   {
     "dayNumber": 6,
     "city": "Kyoto",
-    "theme": "Bamboo & Temples",
+    "theme": "Bamboo Groves & Market Troves",
     "date": "Mon 23 Feb",
     "hotelId": "doubletree-kyoto",
     "activities": [
@@ -203,7 +203,7 @@ export const itineraryData: DayItinerary[] = [
         "label": "Nishiki Market",
         "description": "Return to central Kyoto for lunch at Nishiki Market.",
         "tip": "Try the Tako Tamago (red baby octopus with a quail egg inside).",
-        "icon": "🥒"
+        "icon": "🐙"
       },
       {
         "placeId": "kiyomizu-dera",
@@ -218,7 +218,7 @@ export const itineraryData: DayItinerary[] = [
   {
     "dayNumber": 7,
     "city": "Kyoto",
-    "theme": "Travel",
+    "theme": "Bound for the Kitchen",
     "date": "Tue 24 Feb",
     "hotelId": "doubletree-kyoto",
     "activities": [
@@ -235,10 +235,18 @@ export const itineraryData: DayItinerary[] = [
   {
     "dayNumber": 7,
     "city": "Osaka",
-    "theme": "Kitchen of Japan",
+    "theme": "Castles, Crabs & Doyama Nights",
     "date": "Tue 24 Feb",
     "hotelId": "hilton-osaka",
     "activities": [
+      {
+        "placeId": "osaka-station",
+        "time": "Morning",
+        "label": "Arrival",
+        "description": "Arrive at Osaka Station. Drop bags at Hilton Osaka.",
+        "tip": "Hotel is directly across from the Central South Exit.",
+        "icon": "📍"
+      },
       {
         "placeId": "osaka-castle",
         "time": "Morning",
@@ -276,7 +284,7 @@ export const itineraryData: DayItinerary[] = [
   {
     "dayNumber": 8,
     "city": "Osaka",
-    "theme": "Travel",
+    "theme": "Wings to China",
     "date": "Wed 25 Feb",
     "hotelId": "hilton-osaka",
     "activities": [
@@ -293,7 +301,7 @@ export const itineraryData: DayItinerary[] = [
   {
     "dayNumber": 8,
     "city": "Shanghai",
-    "theme": "Travel",
+    "theme": "Maglev Speed & Metropolis",
     "date": "Wed 25 Feb",
     "hotelId": "hilton-shanghai",
     "activities": [
@@ -310,7 +318,7 @@ export const itineraryData: DayItinerary[] = [
   {
     "dayNumber": 9,
     "city": "Shanghai",
-    "theme": "Birthday Celebration 🎂",
+    "theme": "Beto's Birthday Bash 🎂",
     "date": "Thu 26 Feb",
     "hotelId": "hilton-shanghai",
     "activities": [
@@ -343,7 +351,7 @@ export const itineraryData: DayItinerary[] = [
   {
     "dayNumber": 10,
     "city": "Shanghai",
-    "theme": "History & Skylines",
+    "theme": "Gardens, Giants & The Bund",
     "date": "Fri 27 Feb",
     "hotelId": "hilton-shanghai",
     "activities": [
@@ -374,7 +382,7 @@ export const itineraryData: DayItinerary[] = [
         "label": "The Bund",
         "description": "Walk The Bund.",
         "tip": "Best views are just after sunset when the lights turn on.",
-        "icon": "🏙️"
+        "icon": "🌃"
       },
       {
         "placeId": "old-jesse",
@@ -389,7 +397,7 @@ export const itineraryData: DayItinerary[] = [
   {
     "dayNumber": 11,
     "city": "Shanghai",
-    "theme": "Departure",
+    "theme": "Dumplings & Departure",
     "date": "Sat 28 Feb",
     "hotelId": "hilton-shanghai",
     "activities": [
@@ -398,7 +406,7 @@ export const itineraryData: DayItinerary[] = [
         "time": "Morning",
         "label": "MAGLEV to PVG",
         "description": "Ride MAGLEV to PVG. Access First Class Lounge.",
-        "icon": "🛫"
+        "icon": "🚄"
       },
       {
         "placeId": "yangs-dumplings",
@@ -413,7 +421,7 @@ export const itineraryData: DayItinerary[] = [
         "time": "10:55",
         "label": "Return Flight",
         "description": "British Airways BA0168 to London (LHR).",
-        "tip": "Departs Terminal 2",
+        "tip": "Departs Terminal 2.",
         "icon": "🛫"
       }
     ]

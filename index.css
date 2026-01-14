@@ -28,6 +28,11 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 /* Apply to the scrollable div inside the aside drawer */
+aside > div {
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+}
+
 aside > div::-webkit-scrollbar {
   width: 8px;
 }

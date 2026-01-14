@@ -547,22 +547,6 @@ export const places: Record<string, Place> = {
       ]
     }
   },
-  "kyoto-station": {
-    "id": "kyoto-station",
-    "name": "Kyoto Station",
-    "type": "travel",
-    "city": "Kyoto",
-    "coordinates": {
-      "lat": 34.9858,
-      "lon": 135.7588
-    },
-    "description": "Shinkansen Hub",
-    "url": "https://www.japan-guide.com/e/e2018.html",
-    "tags": [
-      "Modern Architecture",
-      "Transport Hub"
-    ]
-  },
   "gion-district": {
     "id": "gion-district",
     "name": "Gion District",
@@ -1488,6 +1472,22 @@ export const places: Record<string, Place> = {
     "tags": [
       "Airport",
       "Departure"
+    ]
+  },
+  "kyoto-station": {
+    "id": "kyoto-station",
+    "name": "Kyoto Station",
+    "type": "travel",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 34.9858,
+      "lon": 135.7588
+    },
+    "description": "Major transport hub and architectural landmark.",
+    "url": "https://www.kyotostation.com/",
+    "tags": [
+      "Transport",
+      "Architecture"
     ]
   }
 };
