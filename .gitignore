@@ -1,5 +1,17 @@
-node_modules
-dist
+# Dependencies
+node_modules/
+
+# Build Output
+dist/
+build/
+
+# Local & System
 .DS_Store
 backups/
-.idx/
+.env
+.env.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
