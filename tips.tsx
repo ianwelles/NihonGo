@@ -2,7 +2,7 @@ import { TipCategory } from './types';
 
 export const tipsList: TipCategory[] = [
   {
-    "title": "Drugstores (Matsumoto Kiyoshi / Welcia)",
+    "title": "🇯🇵 Drugstores (Matsumoto Kiyoshi / Welcia)",
     "items": [
       {
         "name": "Lululun Face Masks",
@@ -69,6 +69,27 @@ export const tipsList: TipCategory[] = [
       {
         "name": "Daruma Doll",
         "notes": "Traditional hollow, round, Japanese doll (good luck charm)."
+      }
+    ]
+  },
+  {
+    "title": "Travel",
+    "items": [
+      {
+        "name": "Tokyo Transport",
+        "notes": "Purchase a Suica or Pasmo IC card immediately for seamless travel on all metro and JR lines."
+      },
+      {
+        "name": "Kyoto Logistics",
+        "notes": "City buses are frequently gridlocked; prioritise the subway and JR lines for Arashiyama and Fushimi Inari."
+      },
+      {
+        "name": "Osaka Navigation",
+        "notes": "The Midosuji Line is the primary north-south artery connecting Umeda and Namba; avoid surface transit."
+      },
+      {
+        "name": "Shanghai Metro",
+        "notes": "Link an international card to Alipay or WeChat Pay to generate transport QR codes; physical tickets are obsolete."
       }
     ]
   }

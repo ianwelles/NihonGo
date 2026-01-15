@@ -133,10 +133,19 @@ export const itineraryData: DayItinerary[] = [
     "hotelId": "doubletree-kyoto",
     "activities": [
       {
+        "placeId": "kyoto-station",
+        "time": "Morning",
+        "label": "Arrival",
+        "description": "Arrive at Kyoto Station. Drop bags at DoubleTree.",
+        "tip": "Hotel is located directly across from the Station (Hachijo Exit).",
+        "icon": "📍"
+      },
+      {
         "placeId": "gion-district",
         "time": "Afternoon",
         "label": "Gion District",
-        "description": "Check in (Hotel is opposite Station). Explore Gion District and Pontocho Alley.",
+        "description": "Explore Gion District and Pontocho Alley.",
+        "tip": "Walk from Shijo-dori across the river to Pontocho.",
         "icon": "🍵"
       },
       {

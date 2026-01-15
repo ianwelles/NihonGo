@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { MapContainer as LeafletMap, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
+import { createRoot } from 'react-dom/client'; // Import createRoot
 import 'leaflet/dist/leaflet.css';
 import { mapMarkerColors as fallbackMapMarkerColors } from '../theme';
 import { CityName, Place, DayItinerary } from '../types';
@@ -100,6 +101,36 @@ const PopupManager: React.FC = () => {
   return null;
 };
 
+interface MapControlsProps {
+  position: L.LatLng | null;
+  isLocating: boolean;
+  isFullscreen: boolean;
+  isPopupOpen: boolean;
+  handleLocateClick: (e: React.MouseEvent) => void;
+  toggleFullscreen: (e: React.MouseEvent) => void;
+}
+
+const MapControls: React.FC<MapControlsProps> = ({
+  position,
+  isLocating,
+  isFullscreen,
+  isPopupOpen,
+  handleLocateClick,
+  toggleFullscreen,
+}) => {
+  return (
+    <div className={`flex flex-col gap-3 transition-all duration-300 pointer-events-auto ${isPopupOpen ? 'opacity-0 pointer-events-none translate-y-4' : 'opacity-100 translate-y-0'}`}>
+      <button onClick={toggleFullscreen} className="flex items-center justify-center w-14 h-14 rounded-xl border border-white/10 bg-black/40 backdrop-blur-md text-gray-200 opacity-90 hover:opacity-100 hover:scale-[1.05] active:scale-95 cursor-pointer shadow-xl transition-all duration-300" title="Toggle Fullscreen">
+        {isFullscreen ? <Minimize size={24} /> : <Maximize size={24} />}
+      </button>
+      <button onClick={handleLocateClick} className={`flex items-center justify-center w-14 h-14 rounded-xl border backdrop-blur-md transition-all duration-300 ${isLocating ? 'animate-pulse' : ''} ${position ? 'bg-black/70 border-white/40 text-blue-400 opacity-100' : 'bg-black/40 border-white/10 text-gray-200 opacity-90'} hover:opacity-100 hover:scale-[1.05] active:scale-95 cursor-pointer shadow-xl`} title="Center on my location">
+        <Navigation size={24} className={position ? 'fill-blue-400/20' : ''} />
+      </button>
+    </div>
+  );
+};
+
+
 const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: boolean; isMobile?: boolean }> = ({ filteredPlaces, isSidebarOpen, isMobile }) => {
   const map = useMap();
   const [position, setPosition] = useState<L.LatLng | null>(null);
@@ -107,6 +138,9 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
   const [isLocating, setIsLocating] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const controlRef = useRef<L.Control | null>(null);
+  const controlDivRef = useRef<HTMLDivElement | null>(null);
+  const reactRootRef = useRef<any>(null); // Ref for the React root
 
   useEffect(() => {
     const handlePopupOpen = () => setIsPopupOpen(true);
@@ -174,7 +208,7 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
     };
   }, [map]);
 
-  const handleLocateClick = (e: React.MouseEvent) => {
+  const handleLocateClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (position) {
@@ -183,9 +217,9 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
       setIsLocating(true);
       map.locate({ setView: true, maxZoom: 16, enableHighAccuracy: true });
     }
-  };
+  }, [map, position]);
 
-  const toggleFullscreen = (e: React.MouseEvent) => {
+  const toggleFullscreen = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (!document.fullscreenElement) {
@@ -195,7 +229,57 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
     } else {
       document.exitFullscreen();
     }
-  };
+  }, []);
+
+
+  useEffect(() => {
+    if (!map) return;
+
+    if (!controlRef.current) {
+      const CustomControl = L.Control.extend({
+        onAdd: function(map: L.Map) {
+          controlDivRef.current = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+          controlDivRef.current.style.backgroundColor = 'transparent';
+          controlDivRef.current.style.backgroundImage = 'none';
+          controlDivRef.current.style.width = 'auto';
+          controlDivRef.current.style.height = 'auto';
+          controlDivRef.current.style.border = 'none';
+          controlDivRef.current.style.boxShadow = 'none';
+          controlDivRef.current.style.opacity = '1';
+          // Create a React root
+          reactRootRef.current = createRoot(controlDivRef.current);
+          return controlDivRef.current;
+        },
+        onRemove: function(map: L.Map) {
+          if (reactRootRef.current) {
+            reactRootRef.current.unmount(); // Unmount the React root
+          }
+        },
+      });
+      controlRef.current = new CustomControl({ position: 'topright' });
+      map.addControl(controlRef.current);
+    }
+
+    if (reactRootRef.current) {
+      reactRootRef.current.render(
+        <MapControls
+          position={position}
+          isLocating={isLocating}
+          isFullscreen={isFullscreen}
+          isPopupOpen={isPopupOpen}
+          handleLocateClick={handleLocateClick}
+          toggleFullscreen={toggleFullscreen}
+        />
+      );
+    }
+
+    return () => {
+      if (map && controlRef.current) {
+        map.removeControl(controlRef.current);
+        controlRef.current = null;
+      }
+    };
+  }, [map, position, isLocating, isFullscreen, isPopupOpen, handleLocateClick, toggleFullscreen]);
 
   return (
     <>
@@ -207,6 +291,17 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
         .leaflet-popup-content-wrapper {
             animation: popup-scale-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
+        /* Custom styles for Leaflet control to match original spacing */
+        .leaflet-top .leaflet-control-custom {
+          margin-top: 16px; /* top-4 */
+          margin-right: 16px; /* right-4 */
+        }
+        @media (min-width: 768px) { /* md breakpoint */
+          .leaflet-top .leaflet-control-custom {
+            margin-top: 24px; /* md:top-6 */
+            margin-right: 24px; /* md:right-6 */
+          }
+        }
       `}</style>
       {position && (
         <Marker position={position} icon={getUserIcon(heading)} zIndexOffset={1000}>
@@ -215,14 +310,6 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
           </Popup>
         </Marker>
       )}
-      <div className={`absolute z-[1000] flex flex-col gap-3 transition-all duration-300 pointer-events-auto top-4 right-4 md:top-6 md:right-6 ${isPopupOpen ? 'opacity-0 pointer-events-none translate-y-4' : 'opacity-100 translate-y-0'}`}>
-        <button onClick={toggleFullscreen} className="flex items-center justify-center w-14 h-14 rounded-xl border border-white/10 bg-black/40 backdrop-blur-md text-gray-200 opacity-90 hover:opacity-100 hover:scale-[1.05] active:scale-95 cursor-pointer shadow-xl transition-all duration-300" title="Toggle Fullscreen">
-          {isFullscreen ? <Minimize size={24} /> : <Maximize size={24} />}
-        </button>
-        <button onClick={handleLocateClick} className={`flex items-center justify-center w-14 h-14 rounded-xl border backdrop-blur-md transition-all duration-300 ${isLocating ? 'animate-pulse' : ''} ${position ? 'bg-black/70 border-white/40 text-blue-400 opacity-100' : 'bg-black/40 border-white/10 text-gray-200 opacity-90'} hover:opacity-100 hover:scale-[1.05] active:scale-95 cursor-pointer shadow-xl`} title="Center on my location">
-          <Navigation size={24} className={position ? 'fill-blue-400/20' : ''} />
-        </button>
-      </div>
     </>
   );
 };
