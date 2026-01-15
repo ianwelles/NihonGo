@@ -251,9 +251,7 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
           return controlDivRef.current;
         },
         onRemove: function(map: L.Map) {
-          if (reactRootRef.current) {
-            reactRootRef.current.unmount(); // Unmount the React root
-          }
+          // No-op: actual unmount handled in useEffect cleanup
         },
       });
       controlRef.current = new CustomControl({ position: 'topright' });
@@ -277,6 +275,13 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
       if (map && controlRef.current) {
         map.removeControl(controlRef.current);
         controlRef.current = null;
+      }
+      if (reactRootRef.current) {
+        const root = reactRootRef.current;
+        setTimeout(() => {
+          root.unmount();
+        }, 0);
+        reactRootRef.current = null;
       }
     };
   }, [map, position, isLocating, isFullscreen, isPopupOpen, handleLocateClick, toggleFullscreen]);
