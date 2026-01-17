@@ -1,4 +1,4 @@
-export type PlaceCategory = 'hotel' | 'food' | 'sight' | 'travel' | 'shopping' | 'suggestion' | 'sight_rec' | 'food_rec';
+export type PlaceCategory = 'hotel' | 'food' | 'sight' | 'travel' | 'shopping' | 'suggestion' | 'sight_rec' | 'food_rec' | 'bar' | 'bar_rec';
 
 export type CityName = 'Tokyo' | 'Kyoto' | 'Osaka' | 'Shanghai';
 
@@ -54,4 +54,16 @@ export interface TipCategory {
 export interface ItineraryResponse {
   days: DayItinerary[];
   tipsList: TipCategory[];
+}
+
+export interface AppData {
+  places: Record<string, Place>;
+  itinerary: DayItinerary[];
+  startDate: Date;
+  endDate: Date;
+  theme: {
+    cityColors: Record<string, string>;
+    markerColors: Record<string, string>;
+  };
+  tips: TipCategory[];
 }

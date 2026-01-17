@@ -32,3 +32,15 @@ You are a Senior React Engineer. You prioritise maintainability, type safety, an
 ## Code Style
 * **TypeScript:** Strict usage. Define interfaces for all CSV data structures.
 * **Tailwind:** Use utility classes.
+
+## Optimization & Review Protocol (Context-Aware)
+When performing a code review or optimization task, follow these steps to prevent context window overload:
+
+1.  **Discovery:** Request a `tree` of the relevant subdirectory and the `package.json` to map dependencies.
+2.  **Modular Analysis:** Review one component or hook at a time. Do not suggest changes across more than 3 files in a single response.
+3.  **React 19 Performance:** * **Actions:** Replace `useEffect`-based mutations with Actions/Transitions.
+    * **Hydration:** Optimize for the React 19 concurrent renderer.
+4.  **Specialised Review:**
+    * **Geospatial:** Check `react-leaflet` for unnecessary layer re-renders. Ensure complex geometries are memoized.
+    * **Parsing:** Verify `PapaParse` is offloading to a Worker. Check for memory leaks in large CSV state storage.
+5.  **Output Format:** Provide a "Performance Diff" showing exactly what was changed and why (e.g., "Reduced re-renders by 40% by memoizing the Leaflet LatLng array").

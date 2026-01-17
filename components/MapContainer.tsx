@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { MapContainer as LeafletMap, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { createRoot } from 'react-dom/client'; // Import createRoot
+import { createRoot } from 'react-dom/client';
 import 'leaflet/dist/leaflet.css';
 import { mapMarkerColors as fallbackMapMarkerColors } from '../theme';
 import { CityName, Place, DayItinerary } from '../types';
@@ -377,18 +377,8 @@ const MapController: React.FC<{
   return null;
 };
 
-export const MapContainer: React.FC<MapProps> = ({
-  activeCity,
-  openDay,
-  isAuthenticated,
-  toggles,
-  setMapRef,
-  isSidebarOpen,
-  isMobile,
-  itineraryData,
-  places,
-  markerColors = {}
-}) => {
+// Extracted PlaceMarkers component for optimization
+const PlaceMarkers = React.memo(({ places, markerColors }: { places: Place[], markerColors: Record<string, string> }) => {
   const getIcon = useCallback((type: string) => {
     const color = markerColors[type] || markerColors['default'] || fallbackMapMarkerColors[type] || fallbackMapMarkerColors['default'] || '#3B82F6';
     const pinSvg = `
@@ -405,6 +395,59 @@ export const MapContainer: React.FC<MapProps> = ({
     });
   }, [markerColors]);
 
+  return (
+    <>
+      {places.map((place) => {
+        const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${place.coordinates.lat},${place.coordinates.lon}&travelmode=transit`;
+        const displayTags = place.hotelMeta?.tags || place.tags;
+        const typeColor = markerColors[place.type] || markerColors['default'] || fallbackMapMarkerColors[place.type] || fallbackMapMarkerColors['default'] || '#00BCD4';
+
+        return (
+          <Marker key={place.id} position={[place.coordinates.lat, place.coordinates.lon]} icon={getIcon(place.type)}>
+            <Popup keepInView={true} autoPanPadding={L.point(50, 100)}>
+              <div className="text-left min-w-[240px] py-1">
+                <span className="font-extrabold text-sm uppercase tracking-widest mb-2 block" style={{ color: typeColor }}>
+                  {place.type.replace(/_/g, ' ')}
+                </span>
+                {place.url ? (
+                  <a href={place.url} target="_blank" rel="noopener noreferrer" className="text-2xl font-bold !text-white mb-2 leading-tight inline-block border-b-2 border-white/30 hover:!text-white hover:border-transparent transition-colors duration-200">
+                    {place.name}
+                  </a>
+                ) : (
+                  <span className="text-2xl font-bold text-white mb-2 leading-tight block">{place.name}</span>
+                )}
+                <span className="text-gray-100 text-base leading-relaxed mb-3 block">{place.description}</span>
+                {displayTags && displayTags.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-3 mb-5">
+                    {displayTags.map((tag, idx) => (
+                      <span key={idx} className="text-[9px] font-black uppercase text-white/30 tracking-widest border border-white/10 px-2 py-1 rounded">{tag}</span>
+                    ))}
+                  </div>
+                )}
+                <a href={directionsUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center bg-black/40 text-white uppercase font-bold text-sm px-6 py-3 rounded-lg border border-white/10 hover:bg-black/60 transition-colors shadow-lg no-underline active:scale-95">
+                  <Route className="w-4 h-4 mr-2" /> Get Directions
+                </a>
+              </div>
+            </Popup>
+          </Marker>
+        );
+      })}
+    </>
+  );
+});
+
+export const MapContainer: React.FC<MapProps> = ({
+  activeCity,
+  openDay,
+  isAuthenticated,
+  toggles,
+  setMapRef,
+  isSidebarOpen,
+  isMobile,
+  itineraryData,
+  places,
+  markerColors = {}
+}) => {
   const filteredPlaces = useMemo(() => {
     const allPlaces = Object.values(places);
     const scheduledPlaceIds = new Set<string>();
@@ -451,41 +494,7 @@ export const MapContainer: React.FC<MapProps> = ({
         <MapController activeCity={activeCity} openDay={openDay} isSidebarOpen={isSidebarOpen} setMapRef={setMapRef} filteredPlaces={filteredPlaces} />
         <PopupManager />
         <UserLocationMarker filteredPlaces={filteredPlaces} isSidebarOpen={isSidebarOpen} isMobile={isMobile} />
-        {filteredPlaces.map((place) => {
-          const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${place.coordinates.lat},${place.coordinates.lon}&travelmode=transit`;
-          const displayTags = place.hotelMeta?.tags || place.tags;
-          const typeColor = markerColors[place.type] || markerColors['default'] || fallbackMapMarkerColors[place.type] || fallbackMapMarkerColors['default'] || '#00BCD4';
-
-          return (
-            <Marker key={place.id} position={[place.coordinates.lat, place.coordinates.lon]} icon={getIcon(place.type)}>
-              <Popup keepInView={true} autoPanPadding={L.point(50, 100)}>
-                <div className="text-left min-w-[240px] py-1">
-                  <span className="font-extrabold text-sm uppercase tracking-widest mb-2 block" style={{ color: typeColor }}>
-                    {place.type.replace(/_/g, ' ')}
-                  </span>
-                  {place.url ? (
-                    <a href={place.url} target="_blank" rel="noopener noreferrer" className="text-2xl font-bold !text-white mb-2 leading-tight inline-block border-b-2 border-white/30 hover:!text-white hover:border-transparent transition-colors duration-200">
-                      {place.name}
-                    </a>
-                  ) : (
-                    <span className="text-2xl font-bold text-white mb-2 leading-tight block">{place.name}</span>
-                  )}
-                  <span className="text-gray-100 text-base leading-relaxed mb-3 block">{place.description}</span>
-                  {displayTags && displayTags.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-3 mb-5">
-                      {displayTags.map((tag, idx) => (
-                        <span key={idx} className="text-[9px] font-black uppercase text-white/30 tracking-widest border border-white/10 px-2 py-1 rounded">{tag}</span>
-                      ))}
-                    </div>
-                  )}
-                  <a href={directionsUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center bg-black/40 text-white uppercase font-bold text-sm px-6 py-3 rounded-lg border border-white/10 hover:bg-black/60 transition-colors shadow-lg no-underline active:scale-95">
-                    <Route className="w-4 h-4 mr-2" /> Get Directions
-                  </a>
-                </div>
-              </Popup>
-            </Marker>
-          );
-        })}
+        <PlaceMarkers places={filteredPlaces} markerColors={markerColors} />
       </LeafletMap>
     </div>
   );
