@@ -1,14 +1,7 @@
-# 1. Feature Clean-up (Merge & Delete)
-**Goal:** Merge 'header' into 'main' and remove 'header'.
+Analyse the changes in this workspace and generate a concise commit message. Provide a single sequence of terminal commands to:
 
-**Phase 1 (Merge):**
-> "Generate the terminal commands to switch to the 'main' branch, merge the 'dev' branch into it."
-
-**Phase 2 (Delete - only after success):**
-> "Generate the terminal commands to delete the 'header' branch locally
-
-## 2. AI Commit & Push
-**Goal:** Stage all changes, generate a commit message using AI, and push.
-
-**Prompt:**
-> "Analyse the file changes in this workspace. Generate a concise commit message summarising these modifications, then provide the terminal commands to stage all changes, commit using that generated message, and push to origin."
+1. Stage and commit all changes to the current local branch.
+2. Store the current branch name, then switch to the 'main' branch.
+3. Merge the feature branch into 'main'.
+4. Push 'main' to origin.
+5. Delete the local feature branch.

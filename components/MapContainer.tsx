@@ -23,6 +23,7 @@ interface Toggles {
   food_rec: boolean;
   bar_rec: boolean;
   shopping: boolean;
+  hotel: boolean;
 }
 
 interface MapProps {
@@ -69,7 +70,7 @@ const getUserIcon = (heading: number | null) => L.divIcon({
 /**
  * Manages map popups, closing them if they scroll off-screen.
  */
-const PopupManager: React.FC = () => {
+const PopupManager: React.FC<{ isMapAnimating: boolean }> = ({ isMapAnimating }) => {
   const map = useMap();
   const openPopups = useRef<Set<L.Popup>>(new Set());
 
@@ -83,6 +84,8 @@ const PopupManager: React.FC = () => {
     };
 
     const checkPopupsVisibility = () => {
+      if (isMapAnimating) return; // Don't close popups if map is animating
+
       const mapBounds = map.getBounds();
       openPopups.current.forEach(popup => {
         const popupLatLng = popup.getLatLng();
@@ -101,7 +104,7 @@ const PopupManager: React.FC = () => {
       map.off('popupclose', handlePopupClose);
       map.off('move', checkPopupsVisibility);
     };
-  }, [map]);
+  }, [map, isMapAnimating]);
 
   return null;
 };
@@ -136,7 +139,7 @@ const MapControls: React.FC<MapControlsProps> = ({
 };
 
 
-const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: boolean; isMobile?: boolean }> = ({ filteredPlaces, isSidebarOpen, isMobile }) => {
+const UserLocationMarker: React.FC<{ isSidebarOpen?: boolean; isMobile?: boolean }> = ({ isSidebarOpen, isMobile }) => {
   const map = useMap();
   const [position, setPosition] = useState<L.LatLng | null>(null);
   const [heading, setHeading] = useState<number | null>(null);
@@ -342,7 +345,8 @@ const MapController: React.FC<{
   isSidebarOpen?: boolean;
   setMapRef: (map: L.Map) => void;
   filteredPlaces: Place[];
-}> = ({ activeCity, openDay, isSidebarOpen, setMapRef, filteredPlaces }) => {
+  setIsMapAnimating: React.Dispatch<React.SetStateAction<boolean>>; // New prop
+}> = ({ activeCity, openDay, isSidebarOpen, setMapRef, filteredPlaces, setIsMapAnimating }) => {
   const map = useMap();
   const prevActiveCity = useRef<CityName | null | undefined>(undefined);
   const prevOpenDay = useRef<string | null>(null);
@@ -376,6 +380,13 @@ const MapController: React.FC<{
         fitBoundsOptions.paddingBottomRight = [100, 160];
       }
 
+      setIsMapAnimating(true); // Set animating to true before map movement
+      const handleMoveEnd = () => {
+        setIsMapAnimating(false); // Set animating to false after map movement
+        map.off('moveend', handleMoveEnd);
+      };
+      map.on('moveend', handleMoveEnd);
+
       map.stop();
       if (isInitialLoad || (activeCity === null && openDay === null)) {
         map.fitBounds(group.getBounds(), { ...fitBoundsOptions, maxZoom: 7, duration: 1.5 });
@@ -392,7 +403,7 @@ const MapController: React.FC<{
     prevActiveCity.current = activeCity;
     prevOpenDay.current = openDay;
     prevIsSidebarOpen.current = isSidebarOpen;
-  }, [map, activeCity, openDay, isSidebarOpen, filteredPlaces]);
+  }, [map, activeCity, openDay, isSidebarOpen, filteredPlaces, setIsMapAnimating]);
 
   return null;
 };
@@ -523,41 +534,66 @@ export const MapContainer: React.FC<MapProps> = ({
   onPopupOpen,
   onPopupClose
 }) => {
-  const filteredPlaces = useMemo(() => {
-    const allPlaces = Object.values(places);
-    const scheduledPlaceIds = new Set<string>();
-    let currentCity: CityName | null = activeCity;
-    const currentItinerary = itineraryData || [];
+  const [isMapAnimating, setIsMapAnimating] = useState(false);
 
-    if (openDay !== null) {
-      const parts = openDay.replace('day', '').split('-');
-      const currentDayNumber = parseInt(parts[0]);
-      const openDayCity = parts[1];
-      const dayItinerary = currentItinerary.find(d => d.dayNumber === currentDayNumber && d.city === openDayCity);
-      if (dayItinerary) {
-        currentCity = dayItinerary.city;
-        dayItinerary.activities.forEach(act => scheduledPlaceIds.add(act.placeId));
-        if (dayItinerary.hotelIds) dayItinerary.hotelIds.forEach(id => scheduledPlaceIds.add(id));
-      }
+  const filteredPlaces = useMemo(() => {
+    let currentPlaces: Place[] = Object.values(places);
+
+    // On initial load (no active city or open day), show only hotels
+    if (!activeCity && !openDay) {
+      return currentPlaces.filter(place => place.type === 'hotel');
     }
 
-    return allPlaces.filter(place => {
-      const isRecommendation = ['sight_rec', 'food_rec', 'bar_rec', 'shopping'].includes(place.type);
-      if (place.type === 'sight_rec' && !toggles.sight_rec) return false;
-      if (place.type === 'food_rec' && !toggles.food_rec) return false;
-      if (place.type === 'bar_rec' && !toggles.bar_rec) return false;
-      if (place.type === 'shopping' && !toggles.shopping) return false;
-      if (currentCity) {
-        if (place.city !== currentCity) return false;
-        if (openDay !== null) {
-          if (scheduledPlaceIds.has(place.id)) return true;
-          return isRecommendation;
-        }
-        return true;
+    if (openDay) {
+      // If a specific day is open, show only places for that day AND hotels in the active city
+      const dayItinerary = itineraryData.find(day => day.dayIdentifier === openDay);
+      let dayPlaces: Place[] = [];
+      if (dayItinerary) {
+        dayPlaces = dayItinerary.activities.map(activity => places[activity.placeId]).filter(Boolean) as Place[];
       }
-      return place.type === 'hotel';
-    });
-  }, [activeCity, openDay, toggles, itineraryData, places]);
+
+      const hotelsInActiveCity = activeCity
+        ? Object.values(places).filter(place => place.city === activeCity && place.type === 'hotel')
+        : [];
+
+      // Combine day-specific places and hotels, ensuring uniqueness
+      const combinedPlaces = [...dayPlaces, ...hotelsInActiveCity];
+      const uniquePlaceIds = new Set<string>();
+      currentPlaces = combinedPlaces.filter(place => {
+        if (uniquePlaceIds.has(place.id)) {
+          return false;
+        }
+        uniquePlaceIds.add(place.id);
+        return true;
+      });
+
+    } else if (activeCity) {
+      // If only a city is active, show all places for that city, ensuring hotels are always visible
+      currentPlaces = Object.values(places).filter(place => {
+        const matchesCity = place.city === activeCity;
+        const matchesToggle = 
+          (toggles.sight_rec && place.type === 'sight_rec') ||
+          (toggles.food_rec && place.type === 'food_rec') ||
+          (toggles.bar_rec && place.type === 'bar_rec') ||
+          (toggles.shopping && place.type === 'shopping') ||
+          place.type === 'hotel'; // ALWAYS include hotel if activeCity is set
+        return matchesCity && matchesToggle;
+      });
+    } else {
+      // If no city or day is active, show all places filtered by toggles globally
+      currentPlaces = Object.values(places).filter(place => {
+        const matchesToggle = 
+          (toggles.sight_rec && place.type === 'sight_rec') ||
+          (toggles.food_rec && place.type === 'food_rec') ||
+          (toggles.bar_rec && place.type === 'bar_rec') ||
+          (toggles.shopping && place.type === 'shopping') ||
+          (toggles.hotel && place.type === 'hotel'); // Include hotel toggle
+        return matchesToggle;
+      });
+    }
+    return currentPlaces;
+  }, [activeCity, openDay, places, itineraryData, toggles]);
+
 
   if (!isAuthenticated) return <div className="h-full w-full bg-gray-900" />;
 
@@ -566,9 +602,9 @@ export const MapContainer: React.FC<MapProps> = ({
       <LeafletMap center={[35.6895, 139.6917]} zoom={12} zoomControl={false} attributionControl={false} className="h-full w-full bg-gray-900">
         <VectorTileLayer />
         
-        <MapController activeCity={activeCity} openDay={openDay} isSidebarOpen={isSidebarOpen} setMapRef={setMapRef} filteredPlaces={filteredPlaces} />
-        <PopupManager />
-        <UserLocationMarker filteredPlaces={filteredPlaces} isSidebarOpen={isSidebarOpen} isMobile={isMobile} />
+        <MapController activeCity={activeCity} openDay={openDay} isSidebarOpen={isSidebarOpen} setMapRef={setMapRef} filteredPlaces={filteredPlaces} setIsMapAnimating={setIsMapAnimating} />
+        <PopupManager isMapAnimating={isMapAnimating} />
+        <UserLocationMarker isSidebarOpen={isSidebarOpen} isMobile={isMobile} />
         <PlaceMarkers places={filteredPlaces} markerColors={markerColors} isSidebarOpen={isSidebarOpen} openPlaceId={openPlaceId} onPopupOpen={onPopupOpen} onPopupClose={onPopupClose} />
       </LeafletMap>
     </div>

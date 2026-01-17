@@ -180,7 +180,7 @@ export const places: Record<string, Place> = {
       "lon": 139.6995
     },
     "description": "Atmospheric Memory Lane (Yakitori)",
-    "url": "http://shinjuku-omoide.com/english/",
+    "url": "https://en.shinjuku-omoide.com/",
     "tags": [
       "Nostalgic Alley",
       "Yakitori"
@@ -260,7 +260,7 @@ export const places: Record<string, Place> = {
       "lon": 139.7032
     },
     "description": "The ultimate solo dining experience. Customize your Tonkotsu ramen.",
-    "url": "https://www.instagram.com/ichiran_jp",
+    "url": "https://en.ichiran.com/shop/tokyo/shinjuku-chuo-higashiguchi/",
     "tags": [
       "Tonkotsu Ramen",
       "Solo Booths"
@@ -467,7 +467,7 @@ export const places: Record<string, Place> = {
       "lat": 35.6465,
       "lon": 139.7879
     },
-    "description": "Fresh sushi (Toyosu Market location).",
+    "description": "Fresh sushi (Toyosu Market location). Tsukiji Fresh Sushi Breakfast",
     "url": "https://www.sushiyamato-toyosu.com/",
     "tags": [
       "Tsukiji Fresh",
@@ -820,7 +820,7 @@ export const places: Record<string, Place> = {
       "lon": 135.778
     },
     "description": "Famous charcoal grilled hamburger steaks.",
-    "url": "https://www.instagram.com/hikiniku.to.come/",
+    "url": "https://hikinikutocome.com/en/",
     "tags": [
       "Hamburger Steak",
       "Charcoal Grilled"
@@ -939,7 +939,7 @@ export const places: Record<string, Place> = {
     ],
     "hotelMeta": {
       "address": "1-8-8, Umeda, Kita-ku, Osaka 530-0001, Japan",
-      "directions": "https://www.google.com/maps/dir/?api=1&destination=34.7003,135.4955&travelmode=transit",
+      "directions": "https://www.google.com/maps/dir/?api=1&destination=34.7003,135.4955&travelmode=transit,Umeda",
       "neighborhoodInsights": "Umeda is Osaka's glittering northern hub. It's a vertical city of giant department stores and high-end dining.",
       "tags": [
         "Umeda Location",
@@ -1204,8 +1204,8 @@ export const places: Record<string, Place> = {
     ],
     "hotelMeta": {
       "address": "No. 488 West Yan'an Road, Shanghai, 200050, China",
-      "directions": "https://www.google.com/maps/dir/?api=1&destination=31.2185,121.4332&travelmode=transit",
-      "neighborhoodInsights": "Located near the edge of the historic Former French Concession. It provides a more localized and authentic 'Old Shanghai' feel.",
+      "directions": "https://www.google.com/maps/dir/?api=1&destination=31.2185,121.4332&travelmode=transit,Located",
+      "neighborhoodInsights": "Near the edge of the historic Former French Concession. It provides a more localized and authentic 'Old Shanghai' feel.",
       "tags": [
         "Central Location",
         "Business"
@@ -1214,18 +1214,18 @@ export const places: Record<string, Place> = {
   },
   "pudong-airport": {
     "id": "pudong-airport",
-    "name": "Shanghai Pudong Int. Airport",
+    "name": "Pudong Airport (PVG)",
     "type": "travel",
     "city": "Shanghai",
     "coordinates": {
       "lat": 31.1443,
       "lon": 121.8083
     },
-    "description": "Main international airport.",
+    "description": "Arrival/Departure",
     "url": "https://www.shanghaiairport.com/en/",
     "tags": [
-      "Airport",
-      "Travel"
+      "International Hub",
+      "Far from City"
     ]
   },
   "maglev-station": {
@@ -1238,7 +1238,7 @@ export const places: Record<string, Place> = {
       "lon": 121.558
     },
     "description": "High Speed Train Station",
-    "url": "https://www.meet-in-shanghai.net/traffic/maglev",
+    "url": "https://www.smtdc.com/en/",
     "tags": [
       "High Speed Train",
       "Airport Link"
@@ -1254,7 +1254,7 @@ export const places: Record<string, Place> = {
       "lon": 121.4556
     },
     "description": "Historic Walking Area",
-    "url": "https://www.smartshanghai.com/articles/tourist/the-former-french-concession",
+    "url": "https://www.smartshanghai.com/articles/tourist/the-former-french-concession/",
     "tags": [
       "Tree-lined Streets",
       "European Vibe"
@@ -1366,7 +1366,11 @@ export const places: Record<string, Place> = {
       "lon": 121.81
     },
     "description": "Famous Sheng Jian Bao chain (PVG Terminal 2).",
-    "tags": []
+    "url": "https://www.smartshanghai.com/venue/2945/yang_s_fry-dumpling",
+    "tags": [
+      "Sheng Jian Bao",
+      "Pan-Fried"
+    ]
   },
   "hunt-bar": {
     "id": "hunt-bar",
@@ -1378,7 +1382,11 @@ export const places: Record<string, Place> = {
       "lon": 121.4336
     },
     "description": "Popular Gay Bar/Club (Bear Friendly)",
-    "tags": []
+    "url": "https://www.travelgay.com/venue/hunt-shanghai",
+    "tags": [
+      "Gay Bar",
+      "Social Hub"
+    ]
   },
   "nara-park": {
     "id": "nara-park",
@@ -1396,22 +1404,6 @@ export const places: Record<string, Place> = {
       "Temple Grounds"
     ]
   },
-  "asia-blue": {
-    "id": "asia-blue",
-    "name": "Asia Blue",
-    "type": "bar",
-    "city": "Shanghai",
-    "coordinates": {
-      "lat": 31.203857,
-      "lon": 121.430064
-    },
-    "description": "Shanghai's oldest gay bar and pioneer of LGBTQ+ nightlife.",
-    "url": "https://www.smartshanghai.com/venue/20153/asia_blue_panyu_lu",
-    "tags": [
-      "Gay Bar",
-      "Cozy"
-    ]
-  },
   "shanghai-tower": {
     "id": "shanghai-tower",
     "name": "Shanghai Tower",
@@ -1422,10 +1414,26 @@ export const places: Record<string, Place> = {
       "lon": 121.505
     },
     "description": "China's tallest building and world's second-tallest.",
-    "url": "http://www.shanghaitower.com.cn/",
+    "url": "https://en.shanghaitower.com/",
     "tags": [
       "Skyline",
       "Views"
+    ]
+  },
+  "pudong-airport-int": {
+    "id": "pudong-airport-int",
+    "name": "Shanghai Pudong Int. Airport",
+    "type": "travel",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.1443,
+      "lon": 121.8083
+    },
+    "description": "Main international airport.",
+    "url": "https://www.shanghaiairport.com/en/",
+    "tags": [
+      "Airport",
+      "Travel"
     ]
   },
   "osaka-station": {
@@ -1439,7 +1447,9 @@ export const places: Record<string, Place> = {
     },
     "description": "Major transport hub in Umeda.",
     "url": "https://www.westjr.co.jp/global/en/",
-    "tags": []
+    "tags": [
+      "Transport"
+    ]
   },
   "kansai-airport": {
     "id": "kansai-airport",
@@ -1529,7 +1539,7 @@ export const places: Record<string, Place> = {
       "lon": 121.4921
     },
     "description": "Famous soup dumplings inside Yu Garden.",
-    "url": "https://www.meet-in-shanghai.net/scenic-spots/yu-garden",
+    "url": "https://guide.michelin.com/en/shanghai-municipality/shanghai/restaurant/nanxiang-steamed-bun-city-god-temple",
     "tags": [
       "Old City",
       "Touristy but iconic"
@@ -1686,6 +1696,38 @@ export const places: Record<string, Place> = {
       "Shopping",
       "Artsy",
       "Crowded"
+    ]
+  },
+  "lollipop-shanghai": {
+    "id": "lollipop-shanghai",
+    "name": "Lollipop Bar & Lounge",
+    "type": "bar",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.2076,
+      "lon": 121.4422
+    },
+    "description": "Sleek, modern cocktail bar with a conversation-oriented layout.",
+    "url": "https://www.smartshanghai.com/venue/14749/lollipop",
+    "tags": [
+      "Cocktails",
+      "Modern"
+    ]
+  },
+  "rice-bar": {
+    "id": "rice-bar",
+    "name": "Rice Bar",
+    "type": "bar_rec",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.2031,
+      "lon": 121.4256
+    },
+    "description": "Intimate, Japanese-themed lounge with a relaxed atmosphere.",
+    "url": "https://www.smartshanghai.com/venue/5856/rice_bar",
+    "tags": [
+      "Lounge",
+      "Friendly"
     ]
   }
 };

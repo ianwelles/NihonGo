@@ -358,12 +358,12 @@ export const itineraryData: DayItinerary[] = [
         "icon": "🥢"
       },
       {
-        "placeId": "asia-blue",
-        "time": "Drinks",
-        "label": "HUNT or Asia Blue",
-        "description": "Drinks at HUNT (Bear friendly) or Asia Blue (Relaxed).",
-        "tip": "HUNT is busy and energetic; Asia Blue is quieter for conversation.",
-        "icon": "🍸"
+        "placeId": "lollipop-shanghai",
+        "time": "Evening",
+        "label": "Lollipop & HUNT",
+        "description": "Cocktails at Lollipop Bar & Lounge followed by dancing at HUNT.",
+        "tip": "Lollipop offers a sleek atmosphere for pre-drinks; HUNT is the primary destination for high-energy dancing. Both are located within the French Concession.",
+        "icon": "🍸🕺"
       }
     ]
   },
