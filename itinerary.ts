@@ -11,7 +11,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Tokyo",
     "theme": "Neon Lights & First Bites",
     "date": "Wed 18 Feb",
-    "hotelIds": ["hilton-tokyo"],
+    "hotelId": "hilton-tokyo",
     "activities": [
       {
         "placeId": "haneda-airport",
@@ -23,8 +23,8 @@ export const itineraryData: DayItinerary[] = [
         "placeId": "shinjuku-gyoen",
         "time": "Day",
         "label": "Shinjuku & Garden",
-        "description": "Transfer to Shinjuku (Hotel Shuttle). Lunch at Sobahouse Konjiki Hototogisu. Walk through Shinjuku Gyoen National Garden.",
-        "tip": "Konjiki Hototogisu holds a Michelin Star for their clam-broth ramen. Arrive early for a ticket!",
+        "description": "Transfer to Shinjuku (Hotel Shuttle). Lunch at Sobahouse Konjiki Hototogisu. (Backup: Ramen Tatsunoya). Walk through Shinjuku Gyoen.",
+        "tip": "Konjiki Hototogisu holds a Michelin Star. If the queue is too long Tatsunoya is a high-quality nearby alternative.",
         "icon": "🌳"
       },
       {
@@ -42,7 +42,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Tokyo",
     "theme": "Temples, Tuna & Two-Chōme",
     "date": "Thu 19 Feb",
-    "hotelIds": ["hilton-tokyo"],
+    "hotelId": "hilton-tokyo",
     "activities": [
       {
         "placeId": "senso-ji",
@@ -52,12 +52,12 @@ export const itineraryData: DayItinerary[] = [
         "icon": "⛩️"
       },
       {
-        "placeId": "imperial-palace-east",
-        "time": "Day",
-        "label": "Imperial Palace & Tsukiji",
-        "description": "Walk the Imperial Palace East Gardens. Lunch at Tsukiji Outer Market.",
+        "placeId": "tsukiji-market",
+        "time": "Lunch",
+        "label": "Tsukiji & Palace",
+        "description": "Lunch at Tsukiji Outer Market (closes 2pm). Then walk it off at Imperial Palace East Gardens.",
         "tip": "At Tsukiji, look for the queues at Sushizanmai for reliable quality.",
-        "icon": "🏯"
+        "icon": "🍣"
       },
       {
         "placeId": "shinjuku-nichome",
@@ -74,37 +74,39 @@ export const itineraryData: DayItinerary[] = [
     "city": "Tokyo",
     "theme": "Scrambles, Skylines & Sushi",
     "date": "Fri 20 Feb",
-    "hotelIds": ["hilton-tokyo"],
+    "hotelId": "hilton-tokyo",
     "activities": [
       {
-        "placeId": "shibuya-crossing",
-        "time": "Morning",
-        "label": "Shibuya Crossing",
-        "icon": "📸"
-      },
-      {
         "placeId": "tokyo-metro-gov",
-        "time": "Day",
+        "time": "Morning",
         "label": "Tokyo Metro Gov. Building",
-        "description": "Views from Tokyo Metro Gov. Building. Walk Takeshita Street (Harajuku).",
+        "description": "Views from Tokyo Metro Gov. Building (Shinjuku).",
         "tip": "The South Observatory is often less crowded than the North one.",
         "icon": "🏙️"
       },
       {
-        "placeId": "sushi-kunimitsu",
+        "placeId": "fuunji",
         "time": "Lunch",
+        "label": "Fuunji",
+        "description": "Lunch at Fuunji (Shinjuku).",
+        "tip": "Known for the best Tsukemen (dipping noodles) in Tokyo. Expect a line, but it moves fast!",
+        "icon": "🍜"
+      },
+      {
+        "placeId": "shibuya-crossing",
+        "time": "Afternoon",
+        "label": "Harajuku & Shibuya",
+        "description": "Walk Takeshita Street (Harajuku). End at Shibuya Crossing/Shibuya Sky for sunset.",
+        "tip": "Shibuya Sky (rooftop) offers the best views of the crossing but requires booking ~2 weeks in advance.",
+        "icon": "📸"
+      },
+      {
+        "placeId": "sushi-kunimitsu",
+        "time": "Dinner",
         "label": "Sushi",
         "description": "Authentic sushi at Sushi Kunimitsu or Osushiya Taiki.",
         "tip": "Kunimitsu is highly rated (4.7★) for its Omakase course. Booking essential.",
         "icon": "🍣"
-      },
-      {
-        "placeId": "fuunji",
-        "time": "Dinner",
-        "label": "Fuunji",
-        "description": "Fuunji (Shinjuku).",
-        "tip": "Known for the best Tsukemen (dipping noodles) in Tokyo. Expect a line, but it moves fast!",
-        "icon": "🍜"
       }
     ]
   },
@@ -113,7 +115,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Tokyo",
     "theme": "The Shinkansen Sprint",
     "date": "Sat 21 Feb",
-    "hotelIds": ["hilton-tokyo"],
+    "hotelId": "hilton-tokyo",
     "activities": [
       {
         "placeId": "shinjuku-station",
@@ -130,14 +132,14 @@ export const itineraryData: DayItinerary[] = [
     "city": "Kyoto",
     "theme": "Geisha Streets & Kaiseki Eats",
     "date": "Sat 21 Feb",
-    "hotelIds": ["doubletree-kyoto"],
+    "hotelId": "ishibekoji-muan",
     "activities": [
       {
         "placeId": "kyoto-station",
         "time": "Morning",
         "label": "Arrival",
-        "description": "Arrive at Kyoto Station. Drop bags at DoubleTree.",
-        "tip": "Hotel is located directly across from the Station (Hachijo Exit).",
+        "description": "Arrive at Kyoto Station. Taxi to Ishibekoji Muan (approx. 20 mins).",
+        "tip": "Muan is in a pedestrian-only historic zone; taxi drops you at the entrance of Ishibe-koji lane.",
         "icon": "📍"
       },
       {
@@ -163,7 +165,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Kyoto",
     "theme": "Torii Gates & Deer Dates",
     "date": "Sun 22 Feb",
-    "hotelIds": ["doubletree-kyoto"],
+    "hotelId": "ishibekoji-muan",
     "activities": [
       {
         "placeId": "fushimi-inari",
@@ -174,7 +176,7 @@ export const itineraryData: DayItinerary[] = [
         "icon": "⛩️"
       },
       {
-        "placeId": "nara-park",
+        "placeId": "todai-ji",
         "time": "Day",
         "label": "Nara Deer Park",
         "description": "Feed the deer at Nara Park and visit Todai-ji Temple. Return to Kyoto.",
@@ -196,7 +198,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Kyoto",
     "theme": "Bamboo Groves & Market Troves",
     "date": "Mon 23 Feb",
-    "hotelIds": ["doubletree-kyoto"],
+    "hotelId": "ishibekoji-muan",
     "activities": [
       {
         "placeId": "arashiyama",
@@ -229,7 +231,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Kyoto",
     "theme": "Bound for the Kitchen",
     "date": "Tue 24 Feb",
-    "hotelIds": ["doubletree-kyoto"],
+    "hotelId": "ishibekoji-muan",
     "activities": [
       {
         "placeId": "kyoto-station",
@@ -246,14 +248,14 @@ export const itineraryData: DayItinerary[] = [
     "city": "Osaka",
     "theme": "Castles, Crabs & Doyama Nights",
     "date": "Tue 24 Feb",
-    "hotelIds": ["hilton-osaka"],
+    "hotelId": "hilton-osaka",
     "activities": [
       {
         "placeId": "osaka-station",
         "time": "Morning",
         "label": "Arrival",
         "description": "Arrive at Osaka Station. Drop bags at Hilton Osaka.",
-        "tip": "Hotel is directly across from the Central South Exit.",
+        "tip": "Hotel is located across from the Central North (Sakurabashi) Exit.",
         "icon": "📍"
       },
       {
@@ -295,7 +297,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Osaka",
     "theme": "Wings to China",
     "date": "Wed 25 Feb",
-    "hotelIds": ["hilton-osaka"],
+    "hotelId": "hilton-osaka",
     "activities": [
       {
         "placeId": "kansai-airport",
@@ -312,7 +314,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Shanghai",
     "theme": "Maglev Speed & Metropolis",
     "date": "Wed 25 Feb",
-    "hotelIds": ["hilton-shanghai"],
+    "hotelId": "hilton-shanghai",
     "activities": [
       {
         "placeId": "maglev-station",
@@ -329,15 +331,23 @@ export const itineraryData: DayItinerary[] = [
     "city": "Shanghai",
     "theme": "Beto's Birthday Bash 🎂",
     "date": "Thu 26 Feb",
-    "hotelIds": ["hilton-shanghai"],
+    "hotelId": "hilton-shanghai",
     "activities": [
       {
-        "placeId": "french-concession",
-        "time": "Day",
+        "placeId": "tianzifang",
+        "time": "Morning",
         "label": "French Concession",
-        "description": "Walk the French Concession. Shopping and cafe hopping.",
-        "tip": "Hotel is located near the French Concession border.",
+        "description": "Walk the French Concession. Explore Tianzifang.",
+        "tip": "Tianzifang is a maze of shikumen lanes filled with arts, crafts, and cafes.",
         "icon": "🌳"
+      },
+      {
+        "placeId": "jianguo-328",
+        "time": "Lunch",
+        "label": "Jianguo 328",
+        "description": "Lunch at Jianguo 328 (French Concession).",
+        "tip": "Bib Gourmand favorite for MSG-free home-style cooking.",
+        "icon": "🥟"
       },
       {
         "placeId": "fu-1039",
@@ -362,19 +372,21 @@ export const itineraryData: DayItinerary[] = [
     "city": "Shanghai",
     "theme": "Gardens, Giants & The Bund",
     "date": "Fri 27 Feb",
-    "hotelIds": ["hilton-shanghai"],
+    "hotelId": "hilton-shanghai",
     "activities": [
       {
         "placeId": "yu-garden",
         "time": "Morning",
         "label": "Yu Garden & Bazaar",
+        "description": "Explore Yu Garden and the Old City Bazaar.",
         "icon": "🏮"
       },
       {
-        "placeId": "jianguo-328",
+        "placeId": "nanxiang-bun",
         "time": "Lunch",
-        "label": "Jianguo 328",
-        "tip": "Bib Gourmand favorite for MSG-free home-style cooking.",
+        "label": "Nanxiang Steamed Bun",
+        "description": "Lunch at Nanxiang Steamed Bun Restaurant inside Yu Garden.",
+        "tip": "Famous for Xiao Long Bao. Takeaway line is long; upstairs seating is faster.",
         "icon": "🥟"
       },
       {
@@ -408,13 +420,14 @@ export const itineraryData: DayItinerary[] = [
     "city": "Shanghai",
     "theme": "Dumplings & Departure",
     "date": "Sat 28 Feb",
-    "hotelIds": ["hilton-shanghai"],
+    "hotelId": "hilton-shanghai",
     "activities": [
       {
         "placeId": "maglev-station",
         "time": "Morning",
         "label": "MAGLEV to PVG",
         "description": "Ride MAGLEV to PVG. Access First Class Lounge.",
+        "tip": "Morning trains run at 300km/h. The 430km/h service starts at 09:00 (too late for 10:55 flight).",
         "icon": "🚄"
       },
       {

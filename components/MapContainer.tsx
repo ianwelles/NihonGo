@@ -6,6 +6,8 @@ import 'leaflet/dist/leaflet.css';
 import { mapMarkerColors as fallbackMapMarkerColors } from '../theme';
 import { CityName, Place, DayItinerary } from '../types';
 import { Navigation, Maximize, Minimize, Route } from 'lucide-react';
+import maplibregl from 'maplibre-gl';
+import '@maplibre/maplibre-gl-leaflet';
 
 // Standard Leaflet icon fix for default markers
 // @ts-ignore
@@ -460,6 +462,26 @@ const PlaceMarkers = React.memo(({ places, markerColors, isSidebarOpen }: { plac
   );
 });
 
+const VectorTileLayer = () => {
+  const map = useMap();
+
+  useEffect(() => {
+    // @ts-ignore
+    const glLayer = L.maplibreGL({
+      style: '/map-style.json', // Loads the custom style from public folder
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+    });
+
+    glLayer.addTo(map);
+
+    return () => {
+      map.removeLayer(glLayer);
+    };
+  }, [map]);
+
+  return null;
+};
+
 export const MapContainer: React.FC<MapProps> = ({
   activeCity,
   openDay,
@@ -513,8 +535,7 @@ export const MapContainer: React.FC<MapProps> = ({
   return (
     <div className="h-full w-full relative">
       <LeafletMap center={[35.6895, 139.6917]} zoom={12} zoomControl={false} attributionControl={false} className="h-full w-full bg-gray-900">
-        <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png" attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>' subdomains="abcd" maxZoom={19} />
-        <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png" subdomains="abcd" maxZoom={19} zIndex={650} />
+        <VectorTileLayer />
         <MapController activeCity={activeCity} openDay={openDay} isSidebarOpen={isSidebarOpen} setMapRef={setMapRef} filteredPlaces={filteredPlaces} />
         <PopupManager />
         <UserLocationMarker filteredPlaces={filteredPlaces} isSidebarOpen={isSidebarOpen} isMobile={isMobile} />

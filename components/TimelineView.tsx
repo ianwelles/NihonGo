@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { CityName, DayItinerary, Activity, Place } from '../types';
 import { Plus, Info, MapPin, Clock, ExternalLink } from 'lucide-react';
 
@@ -111,6 +111,14 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ activeCity, openDay,
   const filteredItineraryDays = fullItineraryDays.filter(day => day.city === activeCity);
   const activeCityColor = cityColors[activeCity] || '#FF1744';
 
+  const detailsRefs = useRef<Record<string, HTMLDetailsElement | null>>({});
+
+  useEffect(() => {
+    if (openDay && detailsRefs.current[openDay]) {
+      detailsRefs.current[openDay]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [openDay]);
+
   return (
     <div className="w-full pb-24">
       {filteredItineraryDays.map((day, index) => {
@@ -135,11 +143,12 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ activeCity, openDay,
 
         return (
           <React.Fragment key={dayIdentifier}>
-            <details 
+            <details
+                ref={(el) => (detailsRefs.current[dayIdentifier] = el)}
                 open={openDay === dayIdentifier}
                 className="group bg-card-bg rounded-2xl border border-border overflow-hidden transition-all duration-300 mb-4"
             >
-              <summary 
+              <summary
                   onClick={(e) => handleToggle(e, dayIdentifier)}
                   className="p-5 cursor-pointer list-none flex items-center justify-between hover:bg-white/5 transition-colors"
               >

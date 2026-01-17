@@ -18,7 +18,7 @@ export const places: Record<string, Place> = {
     ],
     "hotelMeta": {
       "address": "6-6-2 Nishi-Shinjuku, Shinjuku-ku, Tokyo 160-0023, Japan",
-      "directions": "https://www.google.com/maps/dir/?api=1&destination=35.6925,139.6921",
+      "directions": "https://www.google.com/maps/dir/?api=1&destination=35.6925,139.6921&travelmode=transit",
       "neighborhoodInsights": "Nishi-Shinjuku is Tokyo's premier skyscraper district. It offers a sophisticated, professional atmosphere a short walk from the neon-lit 'Golden Gai'.",
       "tags": [
         "City Views",
@@ -93,7 +93,7 @@ export const places: Record<string, Place> = {
   "imperial-palace-east": {
     "id": "imperial-palace-east",
     "name": "Imperial Palace East Gardens",
-    "type": "sight",
+    "type": "sight_rec",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6852,
@@ -189,7 +189,7 @@ export const places: Record<string, Place> = {
   "tsukiji-market": {
     "id": "tsukiji-market",
     "name": "Tsukiji Outer Market",
-    "type": "food_rec",
+    "type": "food",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6655,
@@ -272,14 +272,30 @@ export const places: Record<string, Place> = {
     "type": "food",
     "city": "Tokyo",
     "coordinates": {
-      "lat": 35.6896,
-      "lon": 139.6921
+      "lat": 35.7061,
+      "lon": 139.6839
     },
-    "description": "Authentic Omakese Sushi.",
-    "url": "https://japan-food.guide/en/restaurants/962",
+    "description": "Kunimitsu is highly rated (4.7★) for its Omakase course. Booking essential.",
+    "url": "https://www.instagram.com/sushi_kunimitsu/",
     "tags": [
       "Omakase",
       "Intimate"
+    ]
+  },
+  "osushiya-taiki": {
+    "id": "osushiya-taiki",
+    "name": "Osushiya Taiki",
+    "type": "food_rec",
+    "city": "Tokyo",
+    "coordinates": {
+      "lat": 35.7135,
+      "lon": 139.704
+    },
+    "description": "Intimate counter sushi in Takadanobaba.",
+    "url": "https://tabelog.com/en/tokyo/A1305/A130503/13247065/",
+    "tags": [
+      "Sushi",
+      "Counter Seating"
     ]
   },
   "ginza-district": {
@@ -521,31 +537,6 @@ export const places: Record<string, Place> = {
       "Otaku Goods",
       "Gadgets"
     ]
-  },
-  "doubletree-kyoto": {
-    "id": "doubletree-kyoto",
-    "name": "DoubleTree by Hilton Kyoto Station",
-    "type": "hotel",
-    "city": "Kyoto",
-    "coordinates": {
-      "lat": 34.9825,
-      "lon": 135.7621
-    },
-    "description": "Top Pick Hotel - 15 Higashi Kujo Nishi Iwamotocho.",
-    "url": "https://www.hilton.com/en/hotels/itmksdi-doubletree-kyoto-station/",
-    "tags": [
-      "Station Access",
-      "Modern Comfort"
-    ],
-    "hotelMeta": {
-      "address": "15 Higashi Kujo Nishi Iwamotocho, Minami-ku, Kyoto, 601-8005, Japan",
-      "directions": "https://www.google.com/maps/dir/?api=1&destination=34.9825,135.7621",
-      "neighborhoodInsights": "The south side of Kyoto Station is a modern gateway to the city. It offers the quickest rail access to Fushimi Inari and Nara.",
-      "tags": [
-        "Station Access",
-        "Modern Comfort"
-      ]
-    }
   },
   "gion-district": {
     "id": "gion-district",
@@ -948,7 +939,7 @@ export const places: Record<string, Place> = {
     ],
     "hotelMeta": {
       "address": "1-8-8, Umeda, Kita-ku, Osaka 530-0001, Japan",
-      "directions": "https://www.google.com/maps/dir/?api=1&destination=34.7003,135.4955",
+      "directions": "https://www.google.com/maps/dir/?api=1&destination=34.7003,135.4955&travelmode=transit",
       "neighborhoodInsights": "Umeda is Osaka's glittering northern hub. It's a vertical city of giant department stores and high-end dining.",
       "tags": [
         "Umeda Location",
@@ -1213,7 +1204,7 @@ export const places: Record<string, Place> = {
     ],
     "hotelMeta": {
       "address": "No. 488 West Yan'an Road, Shanghai, 200050, China",
-      "directions": "https://www.google.com/maps/dir/?api=1&destination=31.2185,121.4332",
+      "directions": "https://www.google.com/maps/dir/?api=1&destination=31.2185,121.4332&travelmode=transit",
       "neighborhoodInsights": "Located near the edge of the historic Former French Concession. It provides a more localized and authentic 'Old Shanghai' feel.",
       "tags": [
         "Central Location",
@@ -1256,7 +1247,7 @@ export const places: Record<string, Place> = {
   "french-concession": {
     "id": "french-concession",
     "name": "French Concession",
-    "type": "sight",
+    "type": "sight_rec",
     "city": "Shanghai",
     "coordinates": {
       "lat": 31.2155,
@@ -1375,10 +1366,7 @@ export const places: Record<string, Place> = {
       "lon": 121.81
     },
     "description": "Famous Sheng Jian Bao chain (PVG Terminal 2).",
-    "tags": [
-      "Sheng Jian Bao",
-      "Pan-Fried"
-    ]
+    "tags": []
   },
   "hunt-bar": {
     "id": "hunt-bar",
@@ -1390,15 +1378,12 @@ export const places: Record<string, Place> = {
       "lon": 121.4336
     },
     "description": "Popular Gay Bar/Club (Bear Friendly)",
-    "tags": [
-      "Gay Bar",
-      "Social Hub"
-    ]
+    "tags": []
   },
   "nara-park": {
     "id": "nara-park",
     "name": "Nara Deer Park",
-    "type": "sight",
+    "type": "sight_rec",
     "city": "Kyoto",
     "coordinates": {
       "lat": 34.685,
@@ -1454,9 +1439,7 @@ export const places: Record<string, Place> = {
     },
     "description": "Major transport hub in Umeda.",
     "url": "https://www.westjr.co.jp/global/en/",
-    "tags": [
-      "Transport"
-    ]
+    "tags": []
   },
   "kansai-airport": {
     "id": "kansai-airport",
@@ -1505,6 +1488,204 @@ export const places: Record<string, Place> = {
       "Ramen",
       "Tsukemen",
       "Lunch"
+    ]
+  },
+  "ishibekoji-muan": {
+    "id": "ishibekoji-muan",
+    "name": "Ishibekoji Muan",
+    "type": "hotel",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 35.0003,
+      "lon": 135.7797
+    },
+    "description": "Intimate 5-star ryokan with three rooms, blending traditional Japanese aesthetics (tatami, futons) with modern luxury (Dyson, Aesop). Features private hinoki cypress baths.",
+    "url": "https://www.ishibekojimuan.com/",
+    "tags": [
+      "Ryokan",
+      "Luxury",
+      "Historic",
+      "Hinoki Bath"
+    ],
+    "hotelMeta": {
+      "address": "463-10 Shimokawara-cho, Higashiyama-ku, Kyoto 605-0825, Japan",
+      "directions": "https://www.google.com/maps/dir/?api=1&destination=35.0003,135.7797&travelmode=transit",
+      "neighborhoodInsights": "Located in Southern Higashiyama on Ishibe-koji, Kyoto's most atmospheric stone-paved lane. It is a quiet 'inner sanctum' steps away from Gion, Yasaka Shrine, and Kodai-ji.",
+      "tags": [
+        "Ryokan",
+        "Luxury",
+        "Historic",
+        "Hinoki Bath"
+      ]
+    }
+  },
+  "nanxiang-bun": {
+    "id": "nanxiang-bun",
+    "name": "Nanxiang Steamed Bun",
+    "type": "food",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.2272,
+      "lon": 121.4921
+    },
+    "description": "Famous soup dumplings inside Yu Garden.",
+    "url": "https://www.meet-in-shanghai.net/scenic-spots/yu-garden",
+    "tags": [
+      "Old City",
+      "Touristy but iconic"
+    ]
+  },
+  "teamlab-planets": {
+    "id": "teamlab-planets",
+    "name": "TeamLab Planets",
+    "type": "sight_rec",
+    "city": "Tokyo",
+    "coordinates": {
+      "lat": 35.6457,
+      "lon": 139.7892
+    },
+    "description": "Immersive digital art museum. Book in advance.",
+    "url": "https://planets.teamlab.art/tokyo/",
+    "tags": [
+      "Art",
+      "Interactive",
+      "Indoor"
+    ]
+  },
+  "shibuya-sky": {
+    "id": "shibuya-sky",
+    "name": "Shibuya Sky",
+    "type": "sight_rec",
+    "city": "Tokyo",
+    "coordinates": {
+      "lat": 35.6585,
+      "lon": 139.7023
+    },
+    "description": "Open-air observation deck above Shibuya Scramble.",
+    "url": "https://www.shibuya-scramble-square.com/sky/",
+    "tags": [
+      "Views",
+      "Rooftop",
+      "Sunset"
+    ]
+  },
+  "nezu-museum": {
+    "id": "nezu-museum",
+    "name": "Nezu Museum",
+    "type": "sight_rec",
+    "city": "Tokyo",
+    "coordinates": {
+      "lat": 35.6622,
+      "lon": 139.7188
+    },
+    "description": "Private art collection with a stunning Japanese garden.",
+    "url": "https://www.nezu-muse.or.jp/en/",
+    "tags": [
+      "Garden",
+      "Architecture",
+      "Art"
+    ]
+  },
+  "pontocho-alley": {
+    "id": "pontocho-alley",
+    "name": "Pontocho Alley",
+    "type": "sight_rec",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 35.0049,
+      "lon": 135.7712
+    },
+    "description": "Atmospheric narrow alley for evening dining.",
+    "url": "https://www.japan-guide.com/e/e3921.html",
+    "tags": [
+      "Dining",
+      "Atmospheric",
+      "Night"
+    ]
+  },
+  "todai-ji": {
+    "id": "todai-ji",
+    "name": "Todai-ji Temple",
+    "type": "sight",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 34.689,
+      "lon": 135.8398
+    },
+    "description": "Home of the Great Buddha (Daibutsu).",
+    "url": "https://www.todaiji.or.jp/en/",
+    "tags": [
+      "Great Buddha",
+      "Historic",
+      "Temple"
+    ]
+  },
+  "umeda-sky": {
+    "id": "umeda-sky",
+    "name": "Umeda Sky Building",
+    "type": "sight_rec",
+    "city": "Osaka",
+    "coordinates": {
+      "lat": 34.7053,
+      "lon": 135.4897
+    },
+    "description": "Futuristic building with a floating garden observatory.",
+    "url": "https://www.skybldg.co.jp/en/",
+    "tags": [
+      "Architecture",
+      "Views",
+      "Sunset"
+    ]
+  },
+  "kuromon-market": {
+    "id": "kuromon-market",
+    "name": "Kuromon Market",
+    "type": "food_rec",
+    "city": "Osaka",
+    "coordinates": {
+      "lat": 34.6653,
+      "lon": 135.5074
+    },
+    "description": "Osaka's Kitchen - fresh seafood and street food.",
+    "url": "https://kuromon.com/en/",
+    "tags": [
+      "Seafood",
+      "Street Food",
+      "Market"
+    ]
+  },
+  "jingan-temple": {
+    "id": "jingan-temple",
+    "name": "Jing'an Temple",
+    "type": "sight_rec",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.223,
+      "lon": 121.446
+    },
+    "description": "Ancient temple surrounded by modern malls.",
+    "url": "https://www.meet-in-shanghai.net/scenic-spots/jingan-temple",
+    "tags": [
+      "Temple",
+      "Gold",
+      "Architecture"
+    ]
+  },
+  "tianzifang": {
+    "id": "tianzifang",
+    "name": "Tianzifang",
+    "type": "sight",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.209,
+      "lon": 121.464
+    },
+    "description": "Arts and crafts in Shikumen alleyways.",
+    "url": "https://www.meet-in-shanghai.net/scenic-spots/tianzifang",
+    "tags": [
+      "Shopping",
+      "Artsy",
+      "Crowded"
     ]
   }
 };
