@@ -1489,5 +1489,22 @@ export const places: Record<string, Place> = {
       "Transport",
       "Architecture"
     ]
+  },
+  "ramen-tatsunoya": {
+    "id": "ramen-tatsunoya",
+    "name": "Ramen Tatsunoya",
+    "type": "food_rec",
+    "city": "Tokyo",
+    "coordinates": {
+      "lat": 35.6946,
+      "lon": 139.6993
+    },
+    "description": "A popular tonkotsu ramen shop famous for its 'Tsukemen Motsu' (dipping noodles with offal).",
+    "url": "http://www.tatsunoya.net/",
+    "tags": [
+      "Ramen",
+      "Tsukemen",
+      "Lunch"
+    ]
   }
 };

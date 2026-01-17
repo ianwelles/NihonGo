@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @config "./tailwind.config.js";
 
+:root {
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
 /* Custom Scrollbar Styles for Webkit browsers (Chrome, Safari) */
 
 /* Apply to main scrollbar (body/html) */
@@ -75,7 +79,7 @@ aside > div::-webkit-scrollbar-thumb:hover {
 }
 
 .leaflet-popup-tip {
-  background-color: theme('colors.popup-bg') !important; /* Dark fill for the tip interior */
+  background-color: theme('colors.popup-bg') !apply !important; /* Dark fill for the tip interior */
   border-bottom: 2px solid theme('colors.primary') !important; /* Outer border */
   border-right: 2px solid theme('colors.primary') !important; /* Outer border */
   border-top: none !important;
@@ -90,4 +94,50 @@ aside > div::-webkit-scrollbar-thumb:hover {
 
 .safe-mb {
   margin-bottom: env(safe-area-inset-bottom);
+}
+
+.header-logo-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  justify-content: center;
+}
+
+.birthday-logo {
+  height: 40px;
+  width: auto;
+  filter: drop-shadow(0 0 5px rgba(255, 23, 68, 0.4));
+}
+
+.logo-text-sub {
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  display: flex;
+  flex-direction: column;
+  line-height: 0.9;
+  text-align: left;
+}
+
+.logo-text-sub .highlight {
+  color: #76FF03;
+  font-size: 0.8rem;
+  margin: 2px 0;
+}
+
+/* Scrollbar Utility for custom components */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
 }

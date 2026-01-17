@@ -31,7 +31,7 @@ export const tipsList: TipCategory[] = [
     ]
   },
   {
-    "title": "Convenience Stores (7-Eleven / Lawson)",
+    "title": "🇯🇵 Convenience Stores (7-Eleven / Lawson)",
     "items": [
       {
         "name": "Onigiri",
@@ -48,7 +48,7 @@ export const tipsList: TipCategory[] = [
     ]
   },
   {
-    "title": "Japanese Souvenirs & Brands",
+    "title": "🇯🇵 Souvenirs & Brands",
     "items": [
       {
         "name": "Matcha Kit",
