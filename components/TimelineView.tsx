@@ -111,21 +111,25 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ activeCity, openDay,
   const filteredItineraryDays = fullItineraryDays.filter(day => day.city === activeCity);
   const activeCityColor = cityColors[activeCity] || '#FF1744';
 
-  let currentCityHotelId: string | undefined;
-
   return (
     <div className="w-full pb-24">
       {filteredItineraryDays.map((day, index) => {
         const dayIndexInFullItinerary = fullItineraryDays.findIndex(d => d.dayNumber === day.dayNumber && d.city === day.city);
 
-        // Track the hotel for the current city
-        if (day.hotelId) {
-            currentCityHotelId = day.hotelId;
-        }
-
         const nextDayInFullItinerary = fullItineraryDays[dayIndexInFullItinerary + 1];
         const isLastDayInCity = !nextDayInFullItinerary || nextDayInFullItinerary.city !== day.city;
-        const currentHotel = currentCityHotelId ? places[currentCityHotelId] : undefined;
+
+        let cityHotels: Place[] = [];
+        if (isLastDayInCity) {
+            const cityDays = fullItineraryDays.filter(d => d.city === day.city);
+            const hotelIds = new Set<string>();
+            cityDays.forEach(d => {
+                if (d.hotelIds) {
+                    d.hotelIds.forEach(id => hotelIds.add(id));
+                }
+            });
+            cityHotels = Array.from(hotelIds).map(id => places[id]).filter(Boolean);
+        }
 
         const dayIdentifier = `day${day.dayNumber}-${day.city}`;
 
@@ -154,7 +158,9 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ activeCity, openDay,
                 ))}
               </div>
             </details>
-            {isLastDayInCity && currentHotel && <HotelCard place={currentHotel} activeCityColor={activeCityColor} />}
+            {isLastDayInCity && cityHotels.map(hotel => (
+                <HotelCard key={hotel.id} place={hotel} activeCityColor={activeCityColor} />
+            ))}
           </React.Fragment>
         );
       })}

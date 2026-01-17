@@ -105,7 +105,7 @@ self.onmessage = async () => {
                 city: row.city as CityName,
                 theme: row.theme,
                 date: row.date,
-                hotelId: row.hotelId || undefined,
+                hotelIds: row.hotelId ? [row.hotelId] : [],
                 activities: []
             });
             }
@@ -113,7 +113,13 @@ self.onmessage = async () => {
             const dayEntry = cityDays.get(dayNum)!;
             if (row.theme) dayEntry.theme = row.theme;
             if (row.date) dayEntry.date = row.date;
-            if (row.hotelId) dayEntry.hotelId = row.hotelId;
+            
+            if (row.hotelId) {
+                if (!dayEntry.hotelIds) dayEntry.hotelIds = [];
+                if (!dayEntry.hotelIds.includes(row.hotelId)) {
+                    dayEntry.hotelIds.push(row.hotelId);
+                }
+            }
 
             if (row.placeId) {
                 const activity: Activity = {

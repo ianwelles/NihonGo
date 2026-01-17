@@ -462,7 +462,7 @@ export const MapContainer: React.FC<MapProps> = ({
       if (dayItinerary) {
         currentCity = dayItinerary.city;
         dayItinerary.activities.forEach(act => scheduledPlaceIds.add(act.placeId));
-        if (dayItinerary.hotelId) scheduledPlaceIds.add(dayItinerary.hotelId);
+        if (dayItinerary.hotelIds) dayItinerary.hotelIds.forEach(id => scheduledPlaceIds.add(id));
       }
     }
 

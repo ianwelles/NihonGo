@@ -37,7 +37,7 @@ export interface DayItinerary {
   city: CityName;
   date: string; 
   theme: string;
-  hotelId?: string; 
+  hotelIds?: string[]; // Changed from hotelId to hotelIds to support multiple hotels
   activities: Activity[];
 }
 
