@@ -63,7 +63,8 @@ aside > div::-webkit-scrollbar-thumb:hover {
 }
 
 .leaflet-popup-content-wrapper {
-  @apply bg-popup-bg text-text rounded-lg shadow-xl border-primary border-2; 
+  @apply text-text rounded-lg shadow-xl border-primary border-2; 
+  background-color: theme('colors.popup-bg') !important;
   padding: 0 !important;
 }
 
