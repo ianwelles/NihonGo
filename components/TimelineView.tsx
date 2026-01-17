@@ -10,9 +10,10 @@ interface TimelineViewProps {
   startDate: Date;
   places: Record<string, Place>;
   cityColors?: Record<string, string>;
+  onActivityClick: (placeId: string) => void;
 }
 
-const ActivityCard: React.FC<{ activity: Activity; places: Record<string, Place> }> = ({ activity, places }) => {
+const ActivityCard: React.FC<{ activity: Activity; places: Record<string, Place>; onActivityClick: (placeId: string) => void }> = ({ activity, places, onActivityClick }) => {
   const place = places[activity.placeId];
 
   if (!place) {
@@ -28,7 +29,10 @@ const ActivityCard: React.FC<{ activity: Activity; places: Record<string, Place>
   const url = activity.link || place.url;
 
   return (
-    <div className="flex flex-col gap-2 p-4 bg-black/30 rounded-lg border border-white/10">
+    <div 
+      className="flex flex-col gap-2 p-4 bg-black/30 rounded-lg border border-white/10 cursor-pointer hover:bg-black/50 transition-colors duration-200"
+      onClick={() => onActivityClick(place.id)}
+    >
         <div className="flex items-center gap-2 text-sm font-bold text-white">
             {activity.icon && <span className="text-lg">{activity.icon}</span>}
             <Clock size={14} className="text-gray-400" />
@@ -95,7 +99,7 @@ const HotelCard: React.FC<{ place: Place, activeCityColor: string }> = ({ place,
   );
 };
 
-export const TimelineView: React.FC<TimelineViewProps> = ({ activeCity, openDay, handleToggle, fullItineraryDays, startDate, places, cityColors = {} }) => {
+export const TimelineView: React.FC<TimelineViewProps> = ({ activeCity, openDay, handleToggle, fullItineraryDays, startDate, places, cityColors = {}, onActivityClick }) => {
   if (!activeCity) {
     return (
       <div className="py-12 px-6 text-center bg-card-bg rounded-2xl border border-border">
@@ -163,7 +167,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ activeCity, openDay,
               </summary>
               <div className="day-content p-5 pt-0 text-gray-200 border-t border-white/5 flex flex-col gap-4">
                 {day.activities.map((activity, activityIndex) => (
-                  <ActivityCard key={activityIndex} activity={activity} places={places} />
+                  <ActivityCard key={activityIndex} activity={activity} places={places} onActivityClick={onActivityClick} />
                 ))}
               </div>
             </details>

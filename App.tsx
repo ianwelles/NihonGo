@@ -48,6 +48,7 @@ const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => localStorage.getItem('trip_auth') === 'true');
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState(false);
+  const [openPlaceId, setOpenPlaceId] = useState<string | null>(null);
 
   const [toggles, setToggles] = useState({
     sight_rec: true,
@@ -110,6 +111,7 @@ const App: React.FC = () => {
   const handleCityChange = useCallback((city: CityName | null) => {
     setActiveCity(city);
     setOpenDay(null);
+    setOpenPlaceId(null);
   }, []);
 
   useEffect(() => {
@@ -133,7 +135,20 @@ const App: React.FC = () => {
   const handleToggle = (e: React.MouseEvent, dayIdentifier: string) => {
     e.preventDefault();
     setOpenDay(prev => (prev === dayIdentifier ? null : dayIdentifier));
+    setOpenPlaceId(null);
   };
+
+  const handleActivityClick = useCallback((placeId: string) => {
+    setOpenPlaceId(placeId);
+  }, []);
+
+  const handlePopupOpen = useCallback((placeId: string) => {
+    setOpenPlaceId(placeId);
+  }, []);
+
+  const handlePopupClose = useCallback(() => {
+    setOpenPlaceId(null);
+  }, []);
 
   const toggleCategory = (key: keyof typeof toggles) => {
     setToggles(prev => ({ ...prev, [key]: !prev[key] }));
@@ -211,6 +226,7 @@ const App: React.FC = () => {
                 startDate={appStartDate}
                 places={places}
                 cityColors={theme.cityColors}
+                onActivityClick={handleActivityClick}
               />
 
               <div className="mt-8 pb-4">
@@ -261,6 +277,9 @@ const App: React.FC = () => {
             itineraryData={itineraryData}
             places={places}
             markerColors={theme.markerColors}
+            openPlaceId={openPlaceId}
+            onPopupOpen={handlePopupOpen}
+            onPopupClose={handlePopupClose}
           />
 
           <div

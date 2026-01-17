@@ -36,6 +36,9 @@ interface MapProps {
   itineraryData: DayItinerary[];
   places: Record<string, Place>;
   markerColors?: Record<string, string>;
+  openPlaceId: string | null;
+  onPopupOpen: (placeId: string) => void;
+  onPopupClose: () => void;
 }
 
 const getUserIcon = (heading: number | null) => L.divIcon({
@@ -392,7 +395,10 @@ const MapController: React.FC<{
 };
 
 // Extracted PlaceMarkers component for optimization
-const PlaceMarkers = React.memo(({ places, markerColors, isSidebarOpen }: { places: Place[], markerColors: Record<string, string>, isSidebarOpen?: boolean }) => {
+const PlaceMarkers = React.memo(({ places, markerColors, isSidebarOpen, openPlaceId, onPopupOpen, onPopupClose }: { places: Place[], markerColors: Record<string, string>, isSidebarOpen?: boolean, openPlaceId: string | null, onPopupOpen: (placeId: string) => void, onPopupClose: () => void }) => {
+  const markerRefs = useRef<Record<string, L.Marker>>({});
+  const map = useMap();
+
   const getIcon = useCallback((type: string) => {
     const color = markerColors[type] || markerColors['default'] || fallbackMapMarkerColors[type] || fallbackMapMarkerColors['default'] || '#3B82F6';
     const pinSvg = `
@@ -421,6 +427,15 @@ const PlaceMarkers = React.memo(({ places, markerColors, isSidebarOpen }: { plac
     }
   }, [isSidebarOpen]);
 
+  useEffect(() => {
+    if (openPlaceId && markerRefs.current[openPlaceId]) {
+      markerRefs.current[openPlaceId].openPopup();
+      map.flyTo(markerRefs.current[openPlaceId].getLatLng(), map.getZoom(), { duration: 1.0 });
+      onPopupOpen(openPlaceId); // Notify parent that popup is open
+    }
+  }, [openPlaceId, map, onPopupOpen]);
+
+
   return (
     <>
       {places.map((place) => {
@@ -429,7 +444,15 @@ const PlaceMarkers = React.memo(({ places, markerColors, isSidebarOpen }: { plac
         const typeColor = markerColors[place.type] || markerColors['default'] || fallbackMapMarkerColors[place.type] || fallbackMapMarkerColors['default'] || '#00BCD4';
 
         return (
-          <Marker key={place.id} position={[place.coordinates.lat, place.coordinates.lon]} icon={getIcon(place.type)}>
+          <Marker
+            key={place.id}
+            position={[place.coordinates.lat, place.coordinates.lon]}
+            icon={getIcon(place.type)}
+            ref={el => { if (el) markerRefs.current[place.id] = el; }}
+            eventHandlers={{
+              popupclose: () => onPopupClose(), // Notify parent that popup is closed
+            }}
+          >
             <Popup keepInView={true} autoPanPadding={popupPadding}>
               <div className="text-left min-w-[240px] py-1">
                 <span className="font-extrabold text-sm uppercase tracking-widest mb-2 block" style={{ color: typeColor }}>
@@ -492,7 +515,10 @@ export const MapContainer: React.FC<MapProps> = ({
   isMobile,
   itineraryData,
   places,
-  markerColors = {}
+  markerColors = {},
+  openPlaceId,
+  onPopupOpen,
+  onPopupClose
 }) => {
   const filteredPlaces = useMemo(() => {
     const allPlaces = Object.values(places);
@@ -536,10 +562,11 @@ export const MapContainer: React.FC<MapProps> = ({
     <div className="h-full w-full relative">
       <LeafletMap center={[35.6895, 139.6917]} zoom={12} zoomControl={false} attributionControl={false} className="h-full w-full bg-gray-900">
         <VectorTileLayer />
+        
         <MapController activeCity={activeCity} openDay={openDay} isSidebarOpen={isSidebarOpen} setMapRef={setMapRef} filteredPlaces={filteredPlaces} />
         <PopupManager />
         <UserLocationMarker filteredPlaces={filteredPlaces} isSidebarOpen={isSidebarOpen} isMobile={isMobile} />
-        <PlaceMarkers places={filteredPlaces} markerColors={markerColors} isSidebarOpen={isSidebarOpen} />
+        <PlaceMarkers places={filteredPlaces} markerColors={markerColors} isSidebarOpen={isSidebarOpen} openPlaceId={openPlaceId} onPopupOpen={onPopupOpen} onPopupClose={onPopupClose} />
       </LeafletMap>
     </div>
   );
