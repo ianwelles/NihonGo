@@ -286,6 +286,18 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
     };
   }, [map, position, isLocating, isFullscreen, isPopupOpen, handleLocateClick, toggleFullscreen]);
 
+  const popupPadding = useMemo(() => {
+    const isMobileView = window.innerWidth < 768;
+    const sidebarWidth = 384;
+    if (isMobileView) {
+      return L.point(50, 100);
+    } else {
+      // Adjust padding for desktop when sidebar is open
+      const leftPadding = isSidebarOpen ? sidebarWidth + 20 : 50; // Increased padding to account for sidebar
+      return L.point(leftPadding, 100);
+    }
+  }, [isSidebarOpen]);
+
   return (
     <>
       <style>{`
@@ -310,7 +322,7 @@ const UserLocationMarker: React.FC<{ filteredPlaces: Place[]; isSidebarOpen?: bo
       `}</style>
       {position && (
         <Marker position={position} icon={getUserIcon(heading)} zIndexOffset={1000}>
-          <Popup keepInView={true} autoPanPadding={L.point(50, 50)}>
+          <Popup keepInView={true} autoPanPadding={popupPadding}>
             <div className="text-base font-bold text-gray-900">You are here</div>
           </Popup>
         </Marker>
@@ -378,7 +390,7 @@ const MapController: React.FC<{
 };
 
 // Extracted PlaceMarkers component for optimization
-const PlaceMarkers = React.memo(({ places, markerColors }: { places: Place[], markerColors: Record<string, string> }) => {
+const PlaceMarkers = React.memo(({ places, markerColors, isSidebarOpen }: { places: Place[], markerColors: Record<string, string>, isSidebarOpen?: boolean }) => {
   const getIcon = useCallback((type: string) => {
     const color = markerColors[type] || markerColors['default'] || fallbackMapMarkerColors[type] || fallbackMapMarkerColors['default'] || '#3B82F6';
     const pinSvg = `
@@ -395,6 +407,18 @@ const PlaceMarkers = React.memo(({ places, markerColors }: { places: Place[], ma
     });
   }, [markerColors]);
 
+  const popupPadding = useMemo(() => {
+    const isMobileView = window.innerWidth < 768;
+    const sidebarWidth = 384;
+    if (isMobileView) {
+      return L.point(50, 100);
+    } else {
+      // Adjust padding for desktop when sidebar is open
+      const leftPadding = isSidebarOpen ? sidebarWidth + 20 : 50; // Increased padding to account for sidebar
+      return L.point(leftPadding, 100);
+    }
+  }, [isSidebarOpen]);
+
   return (
     <>
       {places.map((place) => {
@@ -404,7 +428,7 @@ const PlaceMarkers = React.memo(({ places, markerColors }: { places: Place[], ma
 
         return (
           <Marker key={place.id} position={[place.coordinates.lat, place.coordinates.lon]} icon={getIcon(place.type)}>
-            <Popup keepInView={true} autoPanPadding={L.point(50, 100)}>
+            <Popup keepInView={true} autoPanPadding={popupPadding}>
               <div className="text-left min-w-[240px] py-1">
                 <span className="font-extrabold text-sm uppercase tracking-widest mb-2 block" style={{ color: typeColor }}>
                   {place.type.replace(/_/g, ' ')}
@@ -494,7 +518,7 @@ export const MapContainer: React.FC<MapProps> = ({
         <MapController activeCity={activeCity} openDay={openDay} isSidebarOpen={isSidebarOpen} setMapRef={setMapRef} filteredPlaces={filteredPlaces} />
         <PopupManager />
         <UserLocationMarker filteredPlaces={filteredPlaces} isSidebarOpen={isSidebarOpen} isMobile={isMobile} />
-        <PlaceMarkers places={filteredPlaces} markerColors={markerColors} />
+        <PlaceMarkers places={filteredPlaces} markerColors={markerColors} isSidebarOpen={isSidebarOpen} />
       </LeafletMap>
     </div>
   );
