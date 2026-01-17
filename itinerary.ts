@@ -11,7 +11,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Tokyo",
     "theme": "Neon Lights & First Bites",
     "date": "Wed 18 Feb",
-    "hotelId": "hilton-tokyo",
+    "hotelIds": ["hilton-tokyo"],
     "activities": [
       {
         "placeId": "haneda-airport",
@@ -42,7 +42,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Tokyo",
     "theme": "Temples, Tuna & Two-Chōme",
     "date": "Thu 19 Feb",
-    "hotelId": "hilton-tokyo",
+    "hotelIds": ["hilton-tokyo"],
     "activities": [
       {
         "placeId": "senso-ji",
@@ -74,7 +74,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Tokyo",
     "theme": "Scrambles, Skylines & Sushi",
     "date": "Fri 20 Feb",
-    "hotelId": "hilton-tokyo",
+    "hotelIds": ["hilton-tokyo"],
     "activities": [
       {
         "placeId": "tokyo-metro-gov",
@@ -115,7 +115,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Tokyo",
     "theme": "The Shinkansen Sprint",
     "date": "Sat 21 Feb",
-    "hotelId": "hilton-tokyo",
+    "hotelIds": ["hilton-tokyo"],
     "activities": [
       {
         "placeId": "shinjuku-station",
@@ -132,7 +132,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Kyoto",
     "theme": "Geisha Streets & Kaiseki Eats",
     "date": "Sat 21 Feb",
-    "hotelId": "ishibekoji-muan",
+    "hotelIds": ["ishibekoji-muan"],
     "activities": [
       {
         "placeId": "kyoto-station",
@@ -165,7 +165,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Kyoto",
     "theme": "Torii Gates & Deer Dates",
     "date": "Sun 22 Feb",
-    "hotelId": "ishibekoji-muan",
+    "hotelIds": ["ishibekoji-muan"],
     "activities": [
       {
         "placeId": "fushimi-inari",
@@ -198,7 +198,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Kyoto",
     "theme": "Bamboo Groves & Market Troves",
     "date": "Mon 23 Feb",
-    "hotelId": "ishibekoji-muan",
+    "hotelIds": ["ishibekoji-muan"],
     "activities": [
       {
         "placeId": "arashiyama",
@@ -231,7 +231,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Kyoto",
     "theme": "Bound for the Kitchen",
     "date": "Tue 24 Feb",
-    "hotelId": "ishibekoji-muan",
+    "hotelIds": ["ishibekoji-muan"],
     "activities": [
       {
         "placeId": "kyoto-station",
@@ -248,7 +248,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Osaka",
     "theme": "Castles, Crabs & Doyama Nights",
     "date": "Tue 24 Feb",
-    "hotelId": "hilton-osaka",
+    "hotelIds": ["hilton-osaka"],
     "activities": [
       {
         "placeId": "osaka-station",
@@ -297,7 +297,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Osaka",
     "theme": "Wings to China",
     "date": "Wed 25 Feb",
-    "hotelId": "hilton-osaka",
+    "hotelIds": ["hilton-osaka"],
     "activities": [
       {
         "placeId": "kansai-airport",
@@ -314,7 +314,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Shanghai",
     "theme": "Maglev Speed & Metropolis",
     "date": "Wed 25 Feb",
-    "hotelId": "hilton-shanghai",
+    "hotelIds": ["hilton-shanghai"],
     "activities": [
       {
         "placeId": "maglev-station",
@@ -331,7 +331,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Shanghai",
     "theme": "Beto's Birthday Bash 🎂",
     "date": "Thu 26 Feb",
-    "hotelId": "hilton-shanghai",
+    "hotelIds": ["hilton-shanghai"],
     "activities": [
       {
         "placeId": "tianzifang",
@@ -372,7 +372,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Shanghai",
     "theme": "Gardens, Giants & The Bund",
     "date": "Fri 27 Feb",
-    "hotelId": "hilton-shanghai",
+    "hotelIds": ["hilton-shanghai"],
     "activities": [
       {
         "placeId": "yu-garden",
@@ -420,7 +420,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Shanghai",
     "theme": "Dumplings & Departure",
     "date": "Sat 28 Feb",
-    "hotelId": "hilton-shanghai",
+    "hotelIds": ["hilton-shanghai"],
     "activities": [
       {
         "placeId": "maglev-station",

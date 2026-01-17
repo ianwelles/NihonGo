@@ -129,7 +129,7 @@ const MapControls: React.FC<MapControlsProps> = ({
   return (
     <div className={`flex flex-col gap-3 transition-all duration-300 pointer-events-auto ${isPopupOpen ? 'opacity-0 pointer-events-none translate-y-4' : 'opacity-100 translate-y-0'}`}>
       <button onClick={toggleFullscreen} className="flex items-center justify-center w-14 h-14 rounded-xl border border-white/10 bg-black/40 backdrop-blur-md text-gray-200 opacity-90 hover:opacity-100 hover:scale-[1.05] active:scale-95 cursor-pointer shadow-xl transition-all duration-300" title="Toggle Fullscreen">
-        {isFullscreen ? <Minimize size={24} /> : <Maximize size={24} />}
+        {isFullscreen ? <Minimize size={24} /> : <Maximize size={24} />}\
       </button>
       <button onClick={handleLocateClick} className={`flex items-center justify-center w-14 h-14 rounded-xl border backdrop-blur-md transition-all duration-300 ${isLocating ? 'animate-pulse' : ''} ${position ? 'bg-black/70 border-white/40 text-blue-400 opacity-100' : 'bg-black/40 border-white/10 text-gray-200 opacity-90'} hover:opacity-100 hover:scale-[1.05] active:scale-95 cursor-pointer shadow-xl`} title="Center on my location">
         <Navigation size={24} className={position ? 'fill-blue-400/20' : ''} />
@@ -537,61 +537,79 @@ export const MapContainer: React.FC<MapProps> = ({
   const [isMapAnimating, setIsMapAnimating] = useState(false);
 
   const filteredPlaces = useMemo(() => {
-    let currentPlaces: Place[] = Object.values(places);
-
     // On initial load (no active city or open day), show only hotels
     if (!activeCity && !openDay) {
-      return currentPlaces.filter(place => place.type === 'hotel');
+      return Object.values(places).filter(place => place.type === 'hotel');
     }
 
     if (openDay) {
-      // If a specific day is open, show only places for that day AND hotels in the active city
-      const dayItinerary = itineraryData.find(day => day.dayIdentifier === openDay);
-      let dayPlaces: Place[] = [];
+      // If a specific day is open, show all places for that day's itinerary, including the hotel.
+      const dayItinerary = itineraryData.find(day => `day${day.dayNumber}-${day.city}` === openDay);
+
+
+
+
+
+      
       if (dayItinerary) {
-        dayPlaces = dayItinerary.activities.map(activity => places[activity.placeId]).filter(Boolean) as Place[];
-      }
+        const placeIdsForDay = new Set<string>();
 
-      const hotelsInActiveCity = activeCity
-        ? Object.values(places).filter(place => place.city === activeCity && place.type === 'hotel')
-        : [];
+        // Add activity places
+        dayItinerary.activities.forEach(activity => {
+          if (places[activity.placeId]) {
+            placeIdsForDay.add(activity.placeId);
+          }
+        });
 
-      // Combine day-specific places and hotels, ensuring uniqueness
-      const combinedPlaces = [...dayPlaces, ...hotelsInActiveCity];
-      const uniquePlaceIds = new Set<string>();
-      currentPlaces = combinedPlaces.filter(place => {
-        if (uniquePlaceIds.has(place.id)) {
-          return false;
+        // Add hotel places
+        if (dayItinerary.hotelIds) {
+          dayItinerary.hotelIds.forEach(hotelId => {
+            if (places[hotelId]) {
+              placeIdsForDay.add(hotelId);
+            }
+          });
         }
-        uniquePlaceIds.add(place.id);
-        return true;
-      });
+        
+        return Array.from(placeIdsForDay).map(id => places[id]);
+      }
+      return []; // Return empty if no matching day is found
 
     } else if (activeCity) {
-      // If only a city is active, show all places for that city, ensuring hotels are always visible
-      currentPlaces = Object.values(places).filter(place => {
+      // If only a city is active, show all places for that city based on toggles.
+      const itineraryPlaceIdsInActiveCity = new Set<string>();
+      itineraryData.forEach(day => {
+        if (day.city === activeCity) {
+          day.activities.forEach(activity => itineraryPlaceIdsInActiveCity.add(activity.placeId));
+          if (day.hotelIds) {
+            day.hotelIds.forEach(hotelId => {
+              itineraryPlaceIdsInActiveCity.add(hotelId)
+            });
+          }
+        }
+      });
+
+      return Object.values(places).filter(place => {
         const matchesCity = place.city === activeCity;
+        const isItineraryPlace = itineraryPlaceIdsInActiveCity.has(place.id);
         const matchesToggle = 
           (toggles.sight_rec && place.type === 'sight_rec') ||
           (toggles.food_rec && place.type === 'food_rec') ||
           (toggles.bar_rec && place.type === 'bar_rec') ||
           (toggles.shopping && place.type === 'shopping') ||
           place.type === 'hotel'; // ALWAYS include hotel if activeCity is set
-        return matchesCity && matchesToggle;
-      });
-    } else {
-      // If no city or day is active, show all places filtered by toggles globally
-      currentPlaces = Object.values(places).filter(place => {
-        const matchesToggle = 
-          (toggles.sight_rec && place.type === 'sight_rec') ||
-          (toggles.food_rec && place.type === 'food_rec') ||
-          (toggles.bar_rec && place.type === 'bar_rec') ||
-          (toggles.shopping && place.type === 'shopping') ||
-          (toggles.hotel && place.type === 'hotel'); // Include hotel toggle
-        return matchesToggle;
+        
+        return matchesCity && (isItineraryPlace || matchesToggle);
       });
     }
-    return currentPlaces;
+
+    // Fallback for when only toggles are used (no active city or day)
+    return Object.values(places).filter(place => {
+      return (toggles.sight_rec && place.type === 'sight_rec') ||
+             (toggles.food_rec && place.type === 'food_rec') ||
+             (toggles.bar_rec && place.type === 'bar_rec') ||
+             (toggles.shopping && place.type === 'shopping') ||
+             (toggles.hotel && place.type === 'hotel');
+    });
   }, [activeCity, openDay, places, itineraryData, toggles]);
 
 

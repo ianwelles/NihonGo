@@ -51,10 +51,10 @@ const App: React.FC = () => {
   const [openPlaceId, setOpenPlaceId] = useState<string | null>(null);
 
   const [toggles, setToggles] = useState({
-    sight_rec: true,
-    food_rec: true,
-    bar_rec: true,
-    shopping: true,
+    sight_rec: false,
+    food_rec: false,
+    bar_rec: false,
+    shopping: false,
   });
 
   const [itineraryData, setItineraryData] = useState<DayItinerary[]>([]);
