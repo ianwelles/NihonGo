@@ -129,7 +129,7 @@ const MapControls: React.FC<MapControlsProps> = ({
   return (
     <div className={`flex flex-col gap-3 transition-all duration-300 pointer-events-auto ${isPopupOpen ? 'opacity-0 pointer-events-none translate-y-4' : 'opacity-100 translate-y-0'}`}>
       <button onClick={toggleFullscreen} className="flex items-center justify-center w-14 h-14 rounded-xl border border-white/10 bg-black/40 backdrop-blur-md text-gray-200 opacity-90 hover:opacity-100 hover:scale-[1.05] active:scale-95 cursor-pointer shadow-xl transition-all duration-300" title="Toggle Fullscreen">
-        {isFullscreen ? <Minimize size={24} /> : <Maximize size={24} />}\
+        {isFullscreen ? <Minimize size={24} /> : <Maximize size={24} />}
       </button>
       <button onClick={handleLocateClick} className={`flex items-center justify-center w-14 h-14 rounded-xl border backdrop-blur-md transition-all duration-300 ${isLocating ? 'animate-pulse' : ''} ${position ? 'bg-black/70 border-white/40 text-blue-400 opacity-100' : 'bg-black/40 border-white/10 text-gray-200 opacity-90'} hover:opacity-100 hover:scale-[1.05] active:scale-95 cursor-pointer shadow-xl`} title="Center on my location">
         <Navigation size={24} className={position ? 'fill-blue-400/20' : ''} />
@@ -546,11 +546,6 @@ export const MapContainer: React.FC<MapProps> = ({
       // If a specific day is open, show all places for that day's itinerary, including the hotel.
       const dayItinerary = itineraryData.find(day => `day${day.dayNumber}-${day.city}` === openDay);
 
-
-
-
-
-      
       if (dayItinerary) {
         const placeIdsForDay = new Set<string>();
 
@@ -570,7 +565,23 @@ export const MapContainer: React.FC<MapProps> = ({
           });
         }
         
-        return Array.from(placeIdsForDay).map(id => places[id]);
+        const itineraryPlaces = Array.from(placeIdsForDay).map(id => places[id]);
+
+        // Additionally, include places in the active city that match toggles but are not in the day's itinerary
+        const toggledCityPlaces = Object.values(places).filter(place => {
+          const matchesCity = place.city === activeCity;
+          const isInItinerary = placeIdsForDay.has(place.id);
+          const matchesToggle =
+            (toggles.sight_rec && place.type === 'sight_rec') ||
+            (toggles.food_rec && place.type === 'food_rec') ||
+            (toggles.bar_rec && place.type === 'bar_rec') ||
+            (toggles.shopping && place.type === 'shopping') ||
+            (toggles.hotel && place.type === 'hotel'); // Include hotels based on toggle as well
+
+          return matchesCity && !isInItinerary && matchesToggle;
+        });
+
+        return [...itineraryPlaces, ...toggledCityPlaces];
       }
       return []; // Return empty if no matching day is found
 
