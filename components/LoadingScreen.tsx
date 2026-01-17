@@ -57,7 +57,7 @@ export const LoadingScreen: React.FC = () => {
           </div>
         </div>
 
-        <p className="text-gray-400 text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase pt-10 text-center">
+        <p className="text-gray-400 text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase pt-10 text-center pl-[0.3em]">
           Generating your custom itinerary
         </p>
       </div>

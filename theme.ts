@@ -8,15 +8,15 @@ export const cityThemeColors: { [key in CityName]: string } = {
 };
 
 export const mapMarkerColors: Record<string, string> = {
-  "hotel": "#fff9c4",
-  "food": "#ff3131",
+  "hotel": "#ff9100",
+  "food": "#ff0033",
   "sight": "#39ff14",
   "travel": "#00e5ff",
-  "suggestion": "#ff00ff",
+  "suggestion": "#bc13fe",
   "sight_rec": "#ccff00",
-  "food_rec": "#ff5e00",
-  "shopping": "#ffff00",
+  "food_rec": "#ff66cc",
+  "shopping": "#ffffff",
   "bar": "#1f51ff",
   "default": "#e0e0e0",
-  "bar_rec": "#bc13fe"
+  "bar_rec": "#7df9ff"
 };
