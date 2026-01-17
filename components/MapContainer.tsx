@@ -294,15 +294,21 @@ const UserLocationMarker: React.FC<{ isSidebarOpen?: boolean; isMobile?: boolean
     };
   }, [map, position, isLocating, isFullscreen, isPopupOpen, handleLocateClick, toggleFullscreen]);
 
-  const popupPadding = useMemo(() => {
+  const { popupPaddingTopLeft, popupPaddingBottomRight } = useMemo(() => {
     const isMobileView = window.innerWidth < 768;
     const sidebarWidth = 384;
+
     if (isMobileView) {
-      return L.point(50, 100);
+        return {
+            popupPaddingTopLeft: L.point(50, 100),
+            popupPaddingBottomRight: L.point(50, 100)
+        };
     } else {
-      // Adjust padding for desktop when sidebar is open
-      const leftPadding = isSidebarOpen ? sidebarWidth + 20 : 50; // Increased padding to account for sidebar
-      return L.point(leftPadding, 100);
+        const leftPadding = isSidebarOpen ? sidebarWidth + 60 : 50;
+        return {
+            popupPaddingTopLeft: L.point(leftPadding, 100),
+            popupPaddingBottomRight: L.point(50, 100)
+        };
     }
   }, [isSidebarOpen]);
 
@@ -330,7 +336,7 @@ const UserLocationMarker: React.FC<{ isSidebarOpen?: boolean; isMobile?: boolean
       `}</style>
       {position && (
         <Marker position={position} icon={getUserIcon(heading)} zIndexOffset={1000}>
-          <Popup keepInView={true} autoPanPadding={popupPadding}>
+          <Popup keepInView={true} autoPanPaddingTopLeft={popupPaddingTopLeft} autoPanPaddingBottomRight={popupPaddingBottomRight}>
             <div className="text-base font-bold text-gray-900">You are here</div>
           </Popup>
         </Marker>
@@ -375,7 +381,16 @@ const MapController: React.FC<{
         fitBoundsOptions.paddingTopLeft = [20, 70];
         fitBoundsOptions.paddingBottomRight = [20, 200];
       } else {
-        const leftPadding = isSidebarOpen ? sidebarWidth + 60 : 60;
+        const sidebarWidth = 384; // Ensure sidebarWidth is defined here
+        let leftPadding = 60; // Default padding for desktop
+
+        if (isSidebarOpen) {
+          // Apply larger padding only when sidebar is open and map is fitting bounds
+          // for a city change, day change, initial load, or sidebar toggle itself.
+          // This ensures the overall view respects the sidebar without being overly aggressive
+          // during individual popup interactions.
+          leftPadding = sidebarWidth + 60;
+        }
         fitBoundsOptions.paddingTopLeft = [leftPadding, 80];
         fitBoundsOptions.paddingBottomRight = [100, 160];
       }
@@ -429,15 +444,21 @@ const PlaceMarkers = React.memo(({ places, markerColors, isSidebarOpen, openPlac
     });
   }, [markerColors]);
 
-  const popupPadding = useMemo(() => {
+  const { popupPaddingTopLeft, popupPaddingBottomRight } = useMemo(() => {
     const isMobileView = window.innerWidth < 768;
     const sidebarWidth = 384;
+
     if (isMobileView) {
-      return L.point(50, 100);
+        return {
+            popupPaddingTopLeft: L.point(50, 100),
+            popupPaddingBottomRight: L.point(50, 100)
+        };
     } else {
-      // Adjust padding for desktop when sidebar is open
-      const leftPadding = isSidebarOpen ? sidebarWidth + 20 : 50; // Increased padding to account for sidebar
-      return L.point(leftPadding, 100);
+        const leftPadding = isSidebarOpen ? sidebarWidth + 60 : 50;
+        return {
+            popupPaddingTopLeft: L.point(leftPadding, 100),
+            popupPaddingBottomRight: L.point(50, 100)
+        };
     }
   }, [isSidebarOpen]);
 
@@ -467,7 +488,7 @@ const PlaceMarkers = React.memo(({ places, markerColors, isSidebarOpen, openPlac
               popupclose: () => onPopupClose(), // Notify parent that popup is closed
             }}
           >
-            <Popup keepInView={true} autoPanPadding={popupPadding}>
+            <Popup keepInView={true} autoPanPaddingTopLeft={popupPaddingTopLeft} autoPanPaddingBottomRight={popupPaddingBottomRight}>
               <div className="text-left min-w-[240px] py-1">
                 <span className="font-extrabold text-sm uppercase tracking-widest mb-2 block" style={{ color: typeColor }}>
                   {place.type.replace(/_/g, ' ')}
