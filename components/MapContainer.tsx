@@ -597,7 +597,8 @@ export const MapContainer: React.FC<MapProps> = ({
             (toggles.food_rec && place.type === 'food_rec') ||
             (toggles.bar_rec && place.type === 'bar_rec') ||
             (toggles.shopping && place.type === 'shopping') ||
-            (toggles.hotel && place.type === 'hotel'); // Include hotels based on toggle as well
+            (toggles.hotel && place.type === 'hotel') || // Include hotels based on toggle as well
+            (place.type === 'suggestion'); // Include suggestions when a day is selected
 
           return matchesCity && !isInItinerary && matchesToggle;
         });
@@ -628,7 +629,8 @@ export const MapContainer: React.FC<MapProps> = ({
           (toggles.food_rec && place.type === 'food_rec') ||
           (toggles.bar_rec && place.type === 'bar_rec') ||
           (toggles.shopping && place.type === 'shopping') ||
-          place.type === 'hotel'; // ALWAYS include hotel if activeCity is set
+          place.type === 'hotel' || // ALWAYS include hotel if activeCity is set
+          (place.type === 'suggestion'); // Include suggestions when a city is selected
         
         return matchesCity && (isItineraryPlace || matchesToggle);
       });
