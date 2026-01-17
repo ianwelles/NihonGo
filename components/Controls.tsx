@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Landmark, Utensils, Store, PanelLeftClose, Map as MapIcon, Calendar, ChevronUp, ChevronRight, Info, EyeOff } from 'lucide-react';
 import { CityName, DayItinerary, TipCategory } from '../types';
 import { itineraryData as fallbackItinerary, tipsList as fallbackTips, mapMarkerColors as fallbackMarkerColors } from '../data';
+import { sanitizeHtml } from '../utils/htmlSanitizer';
 
 interface Toggles {
   sight_rec: boolean;
@@ -198,7 +199,7 @@ export const Controls: React.FC<ControlsProps> = ({
                             <Info className="w-4 h-4 mt-0.5 flex-shrink-0 text-amber-400" />
                             <div className="flex flex-col">
                               <div className="text-xs font-black text-white uppercase tracking-wide">{item.name}</div>
-                              {item.notes && <div className="text-sm text-gray-300 mt-1 leading-relaxed">{item.notes}</div>}
+                              {item.notes && <div className="text-sm text-gray-300 mt-1 leading-relaxed" dangerouslySetInnerHTML={sanitizeHtml(item.notes)}></div>}
                             </div>
                           </div>
                         ))}
