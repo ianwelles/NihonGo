@@ -379,9 +379,12 @@ const MapController: React.FC<{
       map.stop();
       if (isInitialLoad || (activeCity === null && openDay === null)) {
         map.fitBounds(group.getBounds(), { ...fitBoundsOptions, maxZoom: 7, duration: 1.5 });
-      } else if (isCityChange || isDayChange) {
+      }
+      // Do not fly to bounds if only the sidebar is toggled or initial load without activeCity/openDay
+      else if (isCityChange || isDayChange) {
         map.flyToBounds(group.getBounds(), { ...fitBoundsOptions, duration: 1.2, easeLinearity: 0.25 });
-      } else {
+      } else if (isSidebarToggle) {
+        // Recalculate padding and refit bounds without animation for sidebar toggle
         map.fitBounds(group.getBounds(), { ...fitBoundsOptions, duration: 0.6 });
       }
     }
@@ -429,8 +432,8 @@ const PlaceMarkers = React.memo(({ places, markerColors, isSidebarOpen, openPlac
 
   useEffect(() => {
     if (openPlaceId && markerRefs.current[openPlaceId]) {
-      markerRefs.current[openPlaceId].openPopup();
-      map.flyTo(markerRefs.current[openPlaceId].getLatLng(), map.getZoom(), { duration: 1.0 });
+      const marker = markerRefs.current[openPlaceId];
+      marker.openPopup();
       onPopupOpen(openPlaceId); // Notify parent that popup is open
     }
   }, [openPlaceId, map, onPopupOpen]);

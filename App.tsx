@@ -111,7 +111,7 @@ const App: React.FC = () => {
   const handleCityChange = useCallback((city: CityName | null) => {
     setActiveCity(city);
     setOpenDay(null);
-    setOpenPlaceId(null);
+    setOpenPlaceId(null); // Close any open popup
   }, []);
 
   useEffect(() => {
@@ -135,7 +135,7 @@ const App: React.FC = () => {
   const handleToggle = (e: React.MouseEvent, dayIdentifier: string) => {
     e.preventDefault();
     setOpenDay(prev => (prev === dayIdentifier ? null : dayIdentifier));
-    setOpenPlaceId(null);
+    setOpenPlaceId(null); // Close any open popup
   };
 
   const handleActivityClick = useCallback((placeId: string) => {
