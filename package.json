@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview --host true --port 8080",
-    "start": "vite preview --host 0.0.0.0 --port 8080",
+    "start": "serve -s dist -l 8080",
     "sync": "node sync-data.js"
   },
   "dependencies": {
@@ -23,7 +23,8 @@
     "papaparse": "^5.5.3",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "react-leaflet": "^5.0.0"
+    "react-leaflet": "^5.0.0",
+    "serve": "^14.2.3"
   },
   "devDependencies": {
     "@types/leaflet": "^1.9.21",
