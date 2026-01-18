@@ -10,7 +10,7 @@ runConfig:
       timeoutSeconds: 5
 env:
     - variable: NEXT_PUBLIC_FIREBASE_API_KEY
-      value: AIzaSyBYr1IZCXsKZkQ1R9oMlnCquzYtqFTr8pc
+      value: YOUR_API_KEY
     - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
       value: nihongo-19169146-662e2.firebaseapp.com
     - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
