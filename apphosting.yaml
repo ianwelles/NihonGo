@@ -1,0 +1,25 @@
+runConfig:
+    minInstances: 0
+    maxInstances: 2
+    startupProbe:
+      tcpSocket:
+        port: 8080
+      initialDelaySeconds: 10
+      periodSeconds: 5
+      failureThreshold: 6
+      timeoutSeconds: 5
+env:
+    - variable: NEXT_PUBLIC_FIREBASE_API_KEY
+      value: AIzaSyBYr1IZCXsKZkQ1R9oMlnCquzYtqFTr8pc
+    - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+      value: nihongo-19169146-662e2.firebaseapp.com
+    - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+      value: nihongo-19169146-662e2
+    - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+      value: nihongo-19169146-662e2.firebasestorage.app
+    - variable: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+      value: 965068636988
+    - variable: NEXT_PUBLIC_FIREBASE_APP_ID
+      value: 1:965068636988:web:b273456070fa3c4e8a1439
+    - variable: PORT
+      value: 8080
