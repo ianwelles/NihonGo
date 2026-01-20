@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { Activity, Place } from '../types';
-import { Plus, Clock, ExternalLink, MapPin } from 'lucide-react';
+import { Plus, Clock, MapPin } from 'lucide-react';
 import { useAppStore } from '../context/AppContext';
 
 const ActivityCard: React.FC<{ activity: Activity; places: Record<string, Place>; onActivityClick: (placeId: string) => void }> = ({ activity, places, onActivityClick }) => {
@@ -46,8 +46,10 @@ const ActivityCard: React.FC<{ activity: Activity; places: Record<string, Place>
   );
 };
 
-const HotelCard: React.FC<{ place: Place, activeCityColor: string }> = ({ place, activeCityColor }) => {
+const HotelCard: React.FC<{ place: Place, activeCityColor: string, onHotelClick: (placeId: string) => void }> = ({ place, activeCityColor, onHotelClick }) => {
   if (!place.hotelMeta) return null;
+
+  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${place.name}, ${place.city}`)}`;
 
   return (
     <div className="hotel-section bg-[#121212] rounded-2xl border border-border overflow-hidden mt-10 mb-8 shadow-2xl">
@@ -57,13 +59,19 @@ const HotelCard: React.FC<{ place: Place, activeCityColor: string }> = ({ place,
             <span className="text-white text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-widest" style={{ backgroundColor: activeCityColor }}>Base Camp</span>
             <span className="text-sub-text font-bold text-xs uppercase tracking-widest">Selected Hotel</span>
           </div>
-          <h3 className="text-2xl font-black text-white mb-2 leading-none uppercase tracking-tighter">{place.name}</h3>
+          <h3 
+            className="text-2xl font-black text-white mb-2 leading-none uppercase tracking-tighter cursor-pointer hover:text-[#FF1744] transition-colors inline-flex items-center gap-2"
+            onClick={() => onHotelClick(place.id)}
+          >
+            {place.name}
+            <MapPin size={18} className="opacity-50" />
+          </h3>
           <p className="text-sm text-gray-400 mb-6 leading-relaxed italic">{place.hotelMeta.address}</p>
           <div className="flex gap-3">
             {place.url && (
               <a href={place.url} target="_blank" rel="noreferrer" className="flex-1 text-center py-3 bg-white text-black font-black text-xs rounded-lg hover:bg-opacity-90 transition-all uppercase tracking-widest no-underline border-none">Official Site</a>
             )}
-            <a href={place.hotelMeta.directions} target="_blank" rel="noreferrer" className="flex-1 text-center py-3 border border-white/20 text-white font-bold text-xs rounded-lg hover:bg-white/5 transition-all uppercase tracking-widest no-underline">Directions</a>
+            <a href={googleMapsUrl} target="_blank" rel="noreferrer" className="flex-1 text-center py-3 border border-white/20 text-white font-bold text-xs rounded-lg hover:bg-white/5 transition-all uppercase tracking-widest no-underline">Google Maps</a>
           </div>
         </div>
         <div className="p-8 bg-neutral-900/50 flex flex-col justify-center">
@@ -176,7 +184,7 @@ export const TimelineView: React.FC = () => {
               </div>
             </details>
             {isLastDayInCity && cityHotels.map(hotel => (
-                <HotelCard key={hotel.id} place={hotel} activeCityColor={activeCityColor} />
+                <HotelCard key={hotel.id} place={hotel} activeCityColor={activeCityColor} onHotelClick={handleActivityClick} />
             ))}
           </React.Fragment>
         );

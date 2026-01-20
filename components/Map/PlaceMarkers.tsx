@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 import { Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { Route } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { mapMarkerColors as fallbackMapMarkerColors } from '../../theme';
 import { Place } from '../../types';
 import { useAppStore } from '../../context/AppContext';
@@ -52,7 +52,7 @@ const PlaceMarkers = React.memo(({ places, itineraryPlaceIds }: { places: Place[
   return (
     <>
       {places.map((place) => {
-        const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${place.coordinates.lat},${place.coordinates.lon}&travelmode=transit`;
+        const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${place.name}, ${place.city}`)}`;
         const displayTags = place.hotelMeta?.tags || place.tags;
         const typeColor = markerColors[place.type] || markerColors['default'] || fallbackMapMarkerColors[place.type] || fallbackMapMarkerColors['default'] || '#00BCD4';
         const isItinerary = itineraryPlaceIds.has(place.id);
@@ -89,8 +89,8 @@ const PlaceMarkers = React.memo(({ places, itineraryPlaceIds }: { places: Place[
                     ))}
                   </div>
                 )}
-                <a href={directionsUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center bg-black/40 text-white uppercase font-bold text-sm px-6 py-3 rounded-lg border border-white/10 hover:bg-black/60 transition-colors shadow-lg no-underline active:scale-95">
-                  <Route className="w-4 h-4 mr-2" /> Get Directions
+                <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center bg-black/40 text-white uppercase font-bold text-sm px-6 py-3 rounded-lg border border-white/10 hover:bg-black/60 transition-colors shadow-lg no-underline active:scale-95">
+                  <MapPin className="w-4 h-4 mr-2" /> View on Maps
                 </a>
               </div>
             </Popup>
