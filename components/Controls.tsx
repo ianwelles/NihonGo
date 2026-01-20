@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Landmark, Utensils, Store, PanelLeftClose, Map as MapIcon, Calendar, ChevronUp, ChevronRight, Info, EyeOff } from 'lucide-react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { PanelLeftClose, Map as MapIcon, Calendar, ChevronUp, ChevronRight, Info, EyeOff, Landmark, Utensils, Store, Wine } from 'lucide-react';
 import { CityName } from '../types';
 import { useAppStore } from '../context/AppContext';
 import { sanitizeHtml } from '../utils/htmlSanitizer';
@@ -7,6 +7,24 @@ import { sanitizeHtml } from '../utils/htmlSanitizer';
 interface ControlsProps {
   onHide?: () => void;
 }
+
+const CategoryIcon: React.FC<{ type: string; size?: number; color?: string }> = ({ type, size = 18, color }) => {
+  switch (type) {
+    case 'sight_rec':
+    case 'sight':
+      return <Landmark size={size} style={{ color }} />;
+    case 'food_rec':
+    case 'food':
+      return <Utensils size={size} style={{ color }} />;
+    case 'bar_rec':
+    case 'bar':
+      return <Wine size={size} style={{ color }} />;
+    case 'shopping':
+      return <Store size={size} style={{ color }} />;
+    default:
+      return <Info size={size} style={{ color }} />;
+  }
+};
 
 export const Controls: React.FC<ControlsProps> = ({ onHide }) => {
   const {
@@ -20,6 +38,7 @@ export const Controls: React.FC<ControlsProps> = ({ onHide }) => {
     setOpenDay,
     itineraryData,
     tipsList,
+    places,
     theme,
     isMobile
   } = useAppStore();
@@ -29,6 +48,64 @@ export const Controls: React.FC<ControlsProps> = ({ onHide }) => {
   const [expandedCity, setExpandedCity] = useState<CityName | null>(activeCity || null);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Helper for mouse-wheel horizontal scrolling and drag-to-scroll
+  useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+
+    const onWheel = (e: WheelEvent) => {
+      if (e.deltaY === 0) return;
+      if (el.scrollWidth > el.clientWidth) {
+        e.preventDefault();
+        el.scrollLeft += e.deltaY;
+      }
+    };
+
+    let isDown = false;
+    let startX: number;
+    let scrollLeft: number;
+
+    const onMouseDown = (e: MouseEvent) => {
+      isDown = true;
+      el.classList.add('active');
+      startX = e.pageX - el.offsetLeft;
+      scrollLeft = el.scrollLeft;
+    };
+
+    const onMouseLeave = () => {
+      isDown = false;
+      el.classList.remove('active');
+    };
+
+    const onMouseUp = () => {
+      isDown = false;
+      el.classList.remove('active');
+    };
+
+    const onMouseMove = (e: MouseEvent) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - el.offsetLeft;
+      const walk = (x - startX) * 2; 
+      el.scrollLeft = scrollLeft - walk;
+    };
+
+    el.addEventListener('wheel', onWheel, { passive: false });
+    el.addEventListener('mousedown', onMouseDown);
+    el.addEventListener('mouseleave', onMouseLeave);
+    el.addEventListener('mouseup', onMouseUp);
+    el.addEventListener('mousemove', onMouseMove);
+
+    return () => {
+      el.removeEventListener('wheel', onWheel);
+      el.removeEventListener('mousedown', onMouseDown);
+      el.removeEventListener('mouseleave', onMouseLeave);
+      el.removeEventListener('mouseup', onMouseUp);
+      el.removeEventListener('mousemove', onMouseMove);
+    };
+  }, []);
 
   const cityGroups = itineraryData.reduce((acc, day) => {
     const city = day.city;
@@ -41,12 +118,8 @@ export const Controls: React.FC<ControlsProps> = ({ onHide }) => {
   }, {} as Record<CityName, { label: string; identifier: string }[]>);
 
   const buttonBaseClass = "flex items-center justify-center gap-3 px-4 h-14 rounded-xl border backdrop-blur-md transition-all duration-300 text-xs font-black uppercase tracking-widest hover:opacity-100 hover:scale-[1.02] active:scale-95";
-  const activeClass = "bg-black/70 border-white/50 text-white shadow-lg opacity-100";
-  const inactiveClass = "bg-black/40 border-white/10 text-gray-300 opacity-80 hover:border-white/40";
   
   const activeCityColor = activeCity ? (theme.cityColors[activeCity] || '#FF1744') : '#FF1744';
-  const navClass = `border-[${activeCityColor}] text-[${activeCityColor}] shadow-[0_0_12px_rgba(255,23,68,0.35)] hover:bg-[#FF1744]/25`;
-  const tipsClass = "bg-amber-500/15 border-amber-500/30 text-amber-200 shadow-[0_0_12px_rgba(245,158,11,0.25)] hover:bg-amber-500/25";
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -90,20 +163,54 @@ export const Controls: React.FC<ControlsProps> = ({ onHide }) => {
 
   const popupMaxHeightClass = isMobile ? "max-h-[calc(100dvh-320px)]" : "max-h-[calc(100dvh-280px)]";
 
-  const HideButton = () => (
-    <div className="flex justify-center flex-shrink-0">
-      <button 
-        onClick={(e) => { e.stopPropagation(); onHide?.(); }}
-        className="bg-black/60 backdrop-blur-md border border-white/10 text-gray-400 hover:text-white px-4 py-1.5 rounded-full flex items-center gap-2 transition-all hover:bg-black/80 group pointer-events-auto"
-        title="Hide Controls"
-      >
-        <div className="w-8 h-1 bg-[#ef4444]/60 rounded-full group-hover:bg-[#ef4444] transition-colors shadow-[0_0_8px_rgba(239,68,68,0.3)]" />
-        <EyeOff size={14} className="group-hover:text-[#ef4444] transition-colors" />
-      </button>
-    </div>
-  );
+  const HideButton = () => {
+    // Hide the button if no city is selected
+    if (!activeCity) return null;
+
+    return (
+      <div className="flex justify-center flex-shrink-0">
+        <button 
+          onClick={(e) => { e.stopPropagation(); onHide?.(); }}
+          className="bg-black/60 backdrop-blur-md border border-white/10 text-gray-400 hover:text-white px-4 py-1.5 rounded-full flex items-center gap-2 transition-all hover:bg-black/80 group pointer-events-auto"
+          title="Hide Controls"
+        >
+          <div className="w-8 h-1 bg-[#ef4444]/60 rounded-full group-hover:bg-[#ef4444] transition-colors shadow-[0_0_8px_rgba(239,68,68,0.3)]" />
+          <EyeOff size={14} className="group-hover:text-[#ef4444] transition-colors" />
+        </button>
+      </div>
+    );
+  };
 
   const getMarkerColor = (type: string) => theme.markerColors[type] || '#ffffff';
+
+  // Logic to only show toggles that have "extra" places (not in itinerary)
+  const visibleToggleKeys = useMemo(() => {
+    if (!activeCity) return []; // Hide all toggles if no city is selected
+
+    const itineraryPlaceIds = new Set<string>();
+    itineraryData.forEach(day => {
+      // If a city is active, only count its itinerary places
+      if (day.city === activeCity) {
+        day.activities.forEach(activity => itineraryPlaceIds.add(activity.placeId));
+        if (day.hotelIds) day.hotelIds.forEach(id => itineraryPlaceIds.add(id));
+      }
+    });
+
+    const extraTypes = new Set<string>();
+    Object.values(places).forEach(place => {
+      const matchesCity = place.city === activeCity;
+      const isExtra = !itineraryPlaceIds.has(place.id);
+      
+      if (matchesCity && isExtra && place.type !== 'hotel' && place.type !== 'suggestion') {
+        extraTypes.add(place.type);
+      }
+    });
+
+    // Sort the keys that have at least one extra place
+    return Object.keys(toggles)
+      .filter(key => extraTypes.has(key))
+      .sort();
+  }, [places, itineraryData, activeCity, toggles]);
 
   return (
     <div className="flex flex-col gap-3 w-full relative" ref={menuRef}>
@@ -189,27 +296,53 @@ export const Controls: React.FC<ControlsProps> = ({ onHide }) => {
         )}
       </div>
       {!isMenuOpen && !isTipsOpen && <div className="-mb-1"><HideButton /></div>}
-      <div className="grid grid-cols-2 gap-3 w-full">
-        <button onClick={() => toggleCategory('sight_rec')} className={`${buttonBaseClass} ${toggles.sight_rec ? activeClass : inactiveClass}`}>
-          <Landmark size={18} style={{ color: toggles.sight_rec ? getMarkerColor('sight_rec') : '#9ca3af' }} />
-          <span>Landmarks</span>
-        </button>
-        <button onClick={() => { toggleCategory('food_rec'); toggleCategory('bar_rec'); }} className={`${buttonBaseClass} ${(toggles.food_rec || toggles.bar_rec) ? activeClass : inactiveClass}`}>
-          <Utensils size={18} style={{ color: (toggles.food_rec || toggles.bar_rec) ? getMarkerColor('food_rec') : '#9ca3af' }} />
-          <span>Food & Drink</span>
-        </button>
-        <button onClick={() => toggleCategory('shopping')} className={`${buttonBaseClass} ${toggles.shopping ? activeClass : inactiveClass}`}>
-          <Store size={18} style={{ color: toggles.shopping ? getMarkerColor('shopping') : '#9ca3af' }} />
-          <span>Shopping</span>
-        </button>
-        <button onClick={() => setIsTipsOpen(!isTipsOpen)} className={`${buttonBaseClass} ${isTipsOpen ? 'bg-amber-500/25 border-amber-500/50 text-amber-100 shadow-[0_0_15px_rgba(245,158,11,0.35)]' : tipsClass}`}>
-          <Info size={18} />
-          <span>Tips</span>
-        </button>
-      </div>
-      <div className="grid grid-cols-2 gap-3 w-full relative">
+      
+      {/* Pattern A: Horizontal Scrollable Chips for Categories */}
+      {visibleToggleKeys.length > 0 && (
+        <div className="flex flex-col gap-2 w-full">
+          <div 
+            ref={scrollContainerRef}
+            className="relative w-screen left-1/2 -translate-x-1/2 overflow-x-auto no-scrollbar py-2 cursor-grab active:cursor-grabbing select-none"
+          >
+            <div className="flex gap-2 px-4 min-w-full justify-center">
+              {visibleToggleKeys.map((type) => {
+                const isActive = toggles[type];
+                const color = getMarkerColor(type);
+                return (
+                  <button
+                    key={type}
+                    onClick={() => toggleCategory(type)}
+                    className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full border backdrop-blur-md transition-all duration-300 text-[10px] font-black uppercase tracking-wider
+                      ${isActive 
+                        ? 'bg-black/70 text-white shadow-lg' 
+                        : 'bg-black/40 border-white/10 text-gray-400 hover:border-white/30'
+                      }`}
+                    style={isActive ? { borderColor: `${color}80`, boxShadow: `0 0 10px ${color}33` } : {}}
+                  >
+                    <CategoryIcon type={type} size={14} color={isActive ? color : '#9ca3af'} />
+                    <span>{type.replace(/_/g, ' ')}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="flex gap-3 w-full relative">
+          <button onClick={(e) => { e.stopPropagation(); toggleSidebar(); }} 
+            className={`w-14 shrink-0 px-0 ${buttonBaseClass}`}
+            style={{ 
+                backgroundColor: `${activeCityColor}26`, 
+                borderColor: activeCityColor, 
+                color: activeCityColor,
+                boxShadow: `0 0 12px ${activeCityColor}59`
+              }}
+          >
+              {isSidebarOpen ? <PanelLeftClose size={20} /> : <MapIcon size={20} />}
+          </button>
           <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(!isMenuOpen); }} 
-            className={`${buttonBaseClass} ${(openDay || activeCity) ? '' : 'bg-black/70 border-white/60 text-white'} justify-between px-5 transition-all duration-300`}
+            className={`flex-1 ${buttonBaseClass} ${(openDay || activeCity) ? '' : 'bg-black/70 border-white/60 text-white'} justify-between px-5 transition-all duration-300`}
             style={(openDay || activeCity) ? { 
                 backgroundColor: `${activeCityColor}26`, 
                 borderColor: activeCityColor, 
@@ -223,17 +356,21 @@ export const Controls: React.FC<ControlsProps> = ({ onHide }) => {
             </div>
             <ChevronUp size={16} className={`shrink-0 transition-transform duration-300 ${isMenuOpen ? 'rotate-180' : ''}`} />
           </button>
-          <button onClick={(e) => { e.stopPropagation(); toggleSidebar(); }} 
-            className={`${buttonBaseClass} px-5`}
-            style={{ 
-                backgroundColor: `${activeCityColor}26`, 
-                borderColor: activeCityColor, 
-                color: activeCityColor,
-                boxShadow: `0 0 12px ${activeCityColor}59`
+          <button 
+            onClick={() => setIsTipsOpen(!isTipsOpen)} 
+            className={`w-14 shrink-0 px-0 ${buttonBaseClass} transition-all duration-300`}
+            style={isTipsOpen ? {
+                backgroundColor: 'rgba(245, 158, 11, 0.25)',
+                borderColor: '#f59e0b',
+                color: '#fef3c7',
+                boxShadow: '0 0 15px rgba(245, 158, 11, 0.35)'
+              } : {
+                backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                borderColor: 'rgba(245, 158, 11, 0.2)',
+                color: 'rgba(254, 243, 199, 0.7)'
               }}
           >
-              {isSidebarOpen ? <PanelLeftClose size={18} /> : <MapIcon size={18} />}
-              <span className="text-sm">{isSidebarOpen ? 'Close' : 'Itinerary'}</span>
+            <Info size={20} />
           </button>
       </div>
     </div>

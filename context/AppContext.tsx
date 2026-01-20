@@ -1,14 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
-import { CityName, Place, DayItinerary, TipCategory, AppData } from '../types';
+import { CityName, Place, DayItinerary, TipCategory } from '../types';
 import { loadAppData } from '../utils/dataLoader';
 import { cityThemeColors as fallbackCityColors, mapMarkerColors as fallbackMarkerColors } from '../theme';
 
-interface Toggles {
-  sight_rec: boolean;
-  food_rec: boolean;
-  bar_rec: boolean;
-  shopping: boolean;
-}
+type Toggles = Record<string, boolean>;
 
 interface AppContextType {
   // Data
@@ -36,7 +31,7 @@ interface AppContextType {
   setActiveCity: (city: CityName | null) => void;
   setOpenDay: (dayId: string | null) => void;
   setOpenPlaceId: (placeId: string | null) => void;
-  toggleCategory: (key: keyof Toggles) => void;
+  toggleCategory: (key: string) => void;
   setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   toggleSidebar: () => void;
 }
@@ -77,12 +72,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [openDay, setOpenDay] = useState<string | null>(null);
   const [openPlaceId, setOpenPlaceId] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => !window.matchMedia('(max-width: 767px)').matches);
-  const [toggles, setToggles] = useState<Toggles>({
-    sight_rec: false,
-    food_rec: false,
-    bar_rec: false,
-    shopping: false,
-  });
+  const [toggles, setToggles] = useState<Toggles>({});
 
   // Load Data
   useEffect(() => {
@@ -95,6 +85,22 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         setStartDate(data.startDate);
         setEndDate(data.endDate);
         setTheme(data.theme);
+
+        // Discover all unique place types from the data to initialize toggles
+        const types = new Set<string>();
+        Object.values(data.places).forEach(place => {
+          // Exclude hotel as it's usually handled differently
+          if (place.type !== 'hotel' && place.type !== 'suggestion') {
+            types.add(place.type);
+          }
+        });
+
+        const initialToggles: Toggles = {};
+        types.forEach(type => {
+          initialToggles[type] = false;
+        });
+        setToggles(initialToggles);
+
         setIsLoading(false);
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : 'Failed to load data');
@@ -106,21 +112,21 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   // Manage Toggles Logic based on City/Day selection
   useEffect(() => {
-    if (activeCity !== null && openDay === null) {
-      setToggles({
-        sight_rec: true,
-        food_rec: true,
-        bar_rec: true,
-        shopping: true,
-      });
-    } else {
-      setToggles({
-        sight_rec: false,
-        food_rec: false,
-        bar_rec: false,
-        shopping: false,
-      });
-    }
+    setToggles(prev => {
+      const nextToggles = { ...prev };
+      const keys = Object.keys(nextToggles);
+      
+      if (activeCity !== null && openDay === null) {
+        keys.forEach(key => {
+          nextToggles[key] = true;
+        });
+      } else {
+        keys.forEach(key => {
+          nextToggles[key] = false;
+        });
+      }
+      return nextToggles;
+    });
   }, [openDay, activeCity]);
 
   // Actions
@@ -131,12 +137,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   }, []);
 
   const handleDayChange = useCallback((dayId: string | null) => {
-    // If clicking the same day, close it (toggle behavior handled in components usually, but explicit setter here)
     setOpenDay(prev => (prev === dayId ? null : dayId));
     setOpenPlaceId(null);
   }, []);
 
-  const toggleCategory = useCallback((key: keyof Toggles) => {
+  const toggleCategory = useCallback((key: string) => {
     setToggles(prev => ({ ...prev, [key]: !prev[key] }));
   }, []);
 

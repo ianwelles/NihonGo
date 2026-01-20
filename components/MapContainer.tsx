@@ -44,9 +44,6 @@ const getUserIcon = (heading: number | null) => L.divIcon({
   iconAnchor: [8, 8],
 });
 
-/**
- * Manages map popups, closing them if they scroll off-screen.
- */
 const PopupManager: React.FC<{ isMapAnimating: boolean }> = ({ isMapAnimating }) => {
   const map = useMap();
   const openPopups = useRef<Set<L.Popup>>(new Set());
@@ -61,7 +58,7 @@ const PopupManager: React.FC<{ isMapAnimating: boolean }> = ({ isMapAnimating })
     };
 
     const checkPopupsVisibility = () => {
-      if (isMapAnimating) return; // Don't close popups if map is animating
+      if (isMapAnimating) return; 
 
       const mapBounds = map.getBounds();
       openPopups.current.forEach(popup => {
@@ -125,7 +122,7 @@ const UserLocationMarker: React.FC<{ isSidebarOpen?: boolean; isMobile?: boolean
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const controlRef = useRef<L.Control | null>(null);
   const controlDivRef = useRef<HTMLDivElement | null>(null);
-  const reactRootRef = useRef<any>(null); // Ref for the React root
+  const reactRootRef = useRef<any>(null); 
 
   useEffect(() => {
     const handlePopupOpen = () => setIsPopupOpen(true);
@@ -231,12 +228,10 @@ const UserLocationMarker: React.FC<{ isSidebarOpen?: boolean; isMobile?: boolean
           controlDivRef.current.style.border = 'none';
           controlDivRef.current.style.boxShadow = 'none';
           controlDivRef.current.style.opacity = '1';
-          // Create a React root
           reactRootRef.current = createRoot(controlDivRef.current);
           return controlDivRef.current;
         },
         onRemove: function(map: L.Map) {
-          // No-op: actual unmount handled in useEffect cleanup
         },
       });
       controlRef.current = new CustomControl({ position: 'topright' });
@@ -299,15 +294,14 @@ const UserLocationMarker: React.FC<{ isSidebarOpen?: boolean; isMobile?: boolean
         .leaflet-popup-content-wrapper {
             animation: popup-scale-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
-        /* Custom styles for Leaflet control to match original spacing */
         .leaflet-top .leaflet-control-custom {
-          margin-top: 16px; /* top-4 */
-          margin-right: 16px; /* right-4 */
+          margin-top: 16px; 
+          margin-right: 16px; 
         }
-        @media (min-width: 768px) { /* md breakpoint */
+        @media (min-width: 768px) { 
           .leaflet-top .leaflet-control-custom {
-            margin-top: 24px; /* md:top-6 */
-            margin-right: 24px; /* md:right-6 */
+            margin-top: 24px; 
+            margin-right: 24px; 
           }
         }
       `}</style>
@@ -325,7 +319,7 @@ const UserLocationMarker: React.FC<{ isSidebarOpen?: boolean; isMobile?: boolean
 const MapController: React.FC<{
   setMapRef: (map: L.Map) => void;
   filteredPlaces: Place[];
-  setIsMapAnimating: React.Dispatch<React.SetStateAction<boolean>>; // New prop
+  setIsMapAnimating: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ setMapRef, filteredPlaces, setIsMapAnimating }) => {
   const { activeCity, openDay, isSidebarOpen } = useAppStore();
   const map = useMap();
@@ -349,30 +343,25 @@ const MapController: React.FC<{
       const markers = filteredPlaces.map(place => L.marker([place.coordinates.lat, place.coordinates.lon]));
       const group = L.featureGroup(markers);
       const isMobileView = window.innerWidth < 768;
-      const sidebarWidth = 384;
 
       let fitBoundsOptions: L.FitBoundsOptions = { maxZoom: 15, animate: true };
       if (isMobileView) {
         fitBoundsOptions.paddingTopLeft = [20, 70];
         fitBoundsOptions.paddingBottomRight = [20, 200];
       } else {
-        const sidebarWidth = 384; // Ensure sidebarWidth is defined here
-        let leftPadding = 60; // Default padding for desktop
+        const sidebarWidth = 384; 
+        let leftPadding = 60; 
 
         if (isSidebarOpen) {
-          // Apply larger padding only when sidebar is open and map is fitting bounds
-          // for a city change, day change, initial load, or sidebar toggle itself.
-          // This ensures the overall view respects the sidebar without being overly aggressive
-          // during individual popup interactions.
           leftPadding = sidebarWidth + 60;
         }
         fitBoundsOptions.paddingTopLeft = [leftPadding, 80];
         fitBoundsOptions.paddingBottomRight = [100, 160];
       }
 
-      setIsMapAnimating(true); // Set animating to true before map movement
+      setIsMapAnimating(true); 
       const handleMoveEnd = () => {
-        setIsMapAnimating(false); // Set animating to false after map movement
+        setIsMapAnimating(false); 
         map.off('moveend', handleMoveEnd);
       };
       map.on('moveend', handleMoveEnd);
@@ -381,11 +370,9 @@ const MapController: React.FC<{
       if (isInitialLoad || (activeCity === null && openDay === null)) {
         map.fitBounds(group.getBounds(), { ...fitBoundsOptions, maxZoom: 7, duration: 1.5 });
       }
-      // Do not fly to bounds if only the sidebar is toggled or initial load without activeCity/openDay
       else if (isCityChange || isDayChange) {
         map.flyToBounds(group.getBounds(), { ...fitBoundsOptions, duration: 1.2, easeLinearity: 0.25 });
       } else if (isSidebarToggle) {
-        // Recalculate padding and refit bounds without animation for sidebar toggle
         map.fitBounds(group.getBounds(), { ...fitBoundsOptions, duration: 0.6 });
       }
     }
@@ -398,7 +385,6 @@ const MapController: React.FC<{
   return null;
 };
 
-// Extracted PlaceMarkers component for optimization
 const PlaceMarkers = React.memo(({ places }: { places: Place[] }) => {
   const { openPlaceId, setOpenPlaceId, theme, isSidebarOpen } = useAppStore();
   const markerColors = theme.markerColors;
@@ -461,8 +447,8 @@ const PlaceMarkers = React.memo(({ places }: { places: Place[] }) => {
             icon={getIcon(place.type)}
             ref={el => { if (el) markerRefs.current[place.id] = el; }}
             eventHandlers={{
-              click: () => setOpenPlaceId(place.id), // Ensure state updates on click
-              popupclose: () => setOpenPlaceId(null), // Notify parent that popup is closed
+              click: () => setOpenPlaceId(place.id), 
+              popupclose: () => setOpenPlaceId(null), 
             }}
           >
             <Popup keepInView={true} autoPanPaddingTopLeft={popupPaddingTopLeft} autoPanPaddingBottomRight={popupPaddingBottomRight}>
@@ -503,7 +489,7 @@ const VectorTileLayer = () => {
   useEffect(() => {
     // @ts-ignore
     const glLayer = L.maplibreGL({
-      style: '/map-style.json', // Loads the custom style from public folder
+      style: '/map-style.json', 
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
     });
 
@@ -522,92 +508,56 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
   const [isMapAnimating, setIsMapAnimating] = useState(false);
 
   const filteredPlaces = useMemo(() => {
-    // On initial load (no active city or open day), show only hotels
     if (!activeCity && !openDay) {
       return Object.values(places).filter(place => place.type === 'hotel');
     }
 
-    if (openDay) {
-      // If a specific day is open, show all places for that day's itinerary, including the hotel.
-      const dayItinerary = itineraryData.find(day => `day${day.dayNumber}-${day.city}` === openDay);
+    const itineraryPlaceIds = new Set<string>();
+    itineraryData.forEach(day => {
+      day.activities.forEach(activity => itineraryPlaceIds.add(activity.placeId));
+      if (day.hotelIds) day.hotelIds.forEach(id => itineraryPlaceIds.add(id));
+    });
 
+    if (openDay) {
+      const dayItinerary = itineraryData.find(day => `day${day.dayNumber}-${day.city}` === openDay);
       if (dayItinerary) {
         const placeIdsForDay = new Set<string>();
-
-        // Add activity places
-        dayItinerary.activities.forEach(activity => {
-          if (places[activity.placeId]) {
-            placeIdsForDay.add(activity.placeId);
-          }
-        });
-
-        // Add hotel places
-        if (dayItinerary.hotelIds) {
-          dayItinerary.hotelIds.forEach(hotelId => {
-            if (places[hotelId]) {
-              placeIdsForDay.add(hotelId);
-            }
-          });
-        }
+        dayItinerary.activities.forEach(activity => placeIdsForDay.add(activity.placeId));
+        if (dayItinerary.hotelIds) dayItinerary.hotelIds.forEach(id => placeIdsForDay.add(id));
         
-        const itineraryPlaces = Array.from(placeIdsForDay).map(id => places[id]);
+        const itineraryPlaces = Array.from(placeIdsForDay).map(id => places[id]).filter(Boolean);
 
-        // Additionally, include places in the active city that match toggles but are not in the day's itinerary
         const toggledCityPlaces = Object.values(places).filter(place => {
           const matchesCity = place.city === activeCity;
-          const isInItinerary = placeIdsForDay.has(place.id);
-          const matchesToggle =
-            (toggles.sight_rec && place.type === 'sight_rec') ||
-            (toggles.food_rec && place.type === 'food_rec') ||
-            (toggles.bar_rec && place.type === 'bar_rec') ||
-            (toggles.shopping && place.type === 'shopping') ||
-            (toggles.hotel && place.type === 'hotel') || // Include hotels based on toggle as well
-            (place.type === 'suggestion'); // Include suggestions when a day is selected
+          const isInDayItinerary = placeIdsForDay.has(place.id);
+          const matchesToggle = toggles[place.type] || place.type === 'suggestion' || place.type === 'hotel';
 
-          return matchesCity && !isInItinerary && matchesToggle;
+          return matchesCity && !isInDayItinerary && matchesToggle;
         });
 
         return [...itineraryPlaces, ...toggledCityPlaces];
       }
-      return []; // Return empty if no matching day is found
+      return []; 
 
     } else if (activeCity) {
-      // If only a city is active, show all places for that city based on toggles.
       const itineraryPlaceIdsInActiveCity = new Set<string>();
       itineraryData.forEach(day => {
         if (day.city === activeCity) {
           day.activities.forEach(activity => itineraryPlaceIdsInActiveCity.add(activity.placeId));
-          if (day.hotelIds) {
-            day.hotelIds.forEach(hotelId => {
-              itineraryPlaceIdsInActiveCity.add(hotelId)
-            });
-          }
+          if (day.hotelIds) day.hotelIds.forEach(id => itineraryPlaceIdsInActiveCity.add(id));
         }
       });
 
       return Object.values(places).filter(place => {
         const matchesCity = place.city === activeCity;
         const isItineraryPlace = itineraryPlaceIdsInActiveCity.has(place.id);
-        const matchesToggle = 
-          (toggles.sight_rec && place.type === 'sight_rec') ||
-          (toggles.food_rec && place.type === 'food_rec') ||
-          (toggles.bar_rec && place.type === 'bar_rec') ||
-          (toggles.shopping && place.type === 'shopping') ||
-          place.type === 'hotel' || // ALWAYS include hotel if activeCity is set
-          (place.type === 'suggestion'); // Include suggestions when a city is selected
+        const matchesToggle = toggles[place.type] || place.type === 'hotel' || place.type === 'suggestion';
         
         return matchesCity && (isItineraryPlace || matchesToggle);
       });
     }
 
-    // Fallback for when only toggles are used (no active city or day)
-    return Object.values(places).filter(place => {
-      return (toggles.sight_rec && place.type === 'sight_rec') ||
-             (toggles.food_rec && place.type === 'food_rec') ||
-             (toggles.bar_rec && place.type === 'bar_rec') ||
-             (toggles.shopping && place.type === 'shopping') ||
-             (toggles.hotel && place.type === 'hotel');
-    });
+    return Object.values(places).filter(place => toggles[place.type] || place.type === 'hotel');
   }, [activeCity, openDay, places, itineraryData, toggles]);
 
 

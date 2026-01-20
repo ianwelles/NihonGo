@@ -11,7 +11,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Tokyo",
     "theme": "Neon Lights & First Bites",
     "date": "Wed 18 Feb",
-    "hotelIds": ["hilton-tokyo"],
+    "hotelId": "hilton-tokyo",
     "activities": [
       {
         "placeId": "haneda-airport",
@@ -42,7 +42,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Tokyo",
     "theme": "Temples, Tuna & Two-Chōme",
     "date": "Thu 19 Feb",
-    "hotelIds": ["hilton-tokyo"],
+    "hotelId": "hilton-tokyo",
     "activities": [
       {
         "placeId": "senso-ji",
@@ -74,7 +74,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Tokyo",
     "theme": "Scrambles, Skylines & Sushi",
     "date": "Fri 20 Feb",
-    "hotelIds": ["hilton-tokyo"],
+    "hotelId": "hilton-tokyo",
     "activities": [
       {
         "placeId": "tokyo-metro-gov",
@@ -115,7 +115,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Tokyo",
     "theme": "The Shinkansen Sprint",
     "date": "Sat 21 Feb",
-    "hotelIds": ["hilton-tokyo"],
+    "hotelId": "hilton-tokyo",
     "activities": [
       {
         "placeId": "shinjuku-station",
@@ -132,7 +132,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Kyoto",
     "theme": "Geisha Streets & Kaiseki Eats",
     "date": "Sat 21 Feb",
-    "hotelIds": ["ishibekoji-muan"],
+    "hotelId": "ishibekoji-muan",
     "activities": [
       {
         "placeId": "kyoto-station",
@@ -165,7 +165,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Kyoto",
     "theme": "Torii Gates & Deer Dates",
     "date": "Sun 22 Feb",
-    "hotelIds": ["ishibekoji-muan"],
+    "hotelId": "ishibekoji-muan",
     "activities": [
       {
         "placeId": "fushimi-inari",
@@ -179,7 +179,7 @@ export const itineraryData: DayItinerary[] = [
         "placeId": "todai-ji",
         "time": "Day",
         "label": "Nara Deer Park",
-        "description": "Feed the deer at Nara Park and visit Todai-ji Temple. Return to Kyoto.",
+        "description": "Visit Todai-ji Temple and feed the deer at Nara Park. Return to Kyoto.",
         "tip": "Don't carry open food—the deer can be aggressive!",
         "icon": "🦌"
       },
@@ -198,7 +198,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Kyoto",
     "theme": "Bamboo Groves & Market Troves",
     "date": "Mon 23 Feb",
-    "hotelIds": ["ishibekoji-muan"],
+    "hotelId": "ishibekoji-muan",
     "activities": [
       {
         "placeId": "arashiyama",
@@ -231,7 +231,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Kyoto",
     "theme": "Bound for the Kitchen",
     "date": "Tue 24 Feb",
-    "hotelIds": ["ishibekoji-muan"],
+    "hotelId": "ishibekoji-muan",
     "activities": [
       {
         "placeId": "kyoto-station",
@@ -248,7 +248,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Osaka",
     "theme": "Castles, Crabs & Doyama Nights",
     "date": "Tue 24 Feb",
-    "hotelIds": ["hilton-osaka"],
+    "hotelId": "hilton-osaka",
     "activities": [
       {
         "placeId": "osaka-station",
@@ -297,7 +297,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Osaka",
     "theme": "Wings to China",
     "date": "Wed 25 Feb",
-    "hotelIds": ["hilton-osaka"],
+    "hotelId": "hilton-osaka",
     "activities": [
       {
         "placeId": "kansai-airport",
@@ -314,7 +314,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Shanghai",
     "theme": "Maglev Speed & Metropolis",
     "date": "Wed 25 Feb",
-    "hotelIds": ["hilton-shanghai"],
+    "hotelId": "hilton-shanghai",
     "activities": [
       {
         "placeId": "maglev-station",
@@ -331,7 +331,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Shanghai",
     "theme": "Beto's Birthday Bash 🎂",
     "date": "Thu 26 Feb",
-    "hotelIds": ["hilton-shanghai"],
+    "hotelId": "hilton-shanghai",
     "activities": [
       {
         "placeId": "tianzifang",
@@ -358,11 +358,11 @@ export const itineraryData: DayItinerary[] = [
         "icon": "🥢"
       },
       {
-        "placeId": "lollipop-shanghai",
+        "placeId": "rice-bar",
         "time": "Evening",
-        "label": "Lollipop & HUNT",
-        "description": "Cocktails at Lollipop Bar & Lounge followed by dancing at HUNT.",
-        "tip": "Lollipop offers a sleek atmosphere for pre-drinks; HUNT is the primary destination for high-energy dancing. Both are located within the French Concession.",
+        "label": "Rice Bar & HUNT",
+        "description": "Relaxed pre-drinks at Rice Bar followed by dancing at HUNT.",
+        "tip": "Rice Bar is a cozy, long-standing Japanese-style gay lounge. It is very close to HUNT, making it the perfect warm-up spot.",
         "icon": "🍸🕺"
       }
     ]
@@ -372,7 +372,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Shanghai",
     "theme": "Gardens, Giants & The Bund",
     "date": "Fri 27 Feb",
-    "hotelIds": ["hilton-shanghai"],
+    "hotelId": "hilton-shanghai",
     "activities": [
       {
         "placeId": "yu-garden",
@@ -420,7 +420,7 @@ export const itineraryData: DayItinerary[] = [
     "city": "Shanghai",
     "theme": "Dumplings & Departure",
     "date": "Sat 28 Feb",
-    "hotelIds": ["hilton-shanghai"],
+    "hotelId": "hilton-shanghai",
     "activities": [
       {
         "placeId": "maglev-station",

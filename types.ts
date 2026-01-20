@@ -1,4 +1,4 @@
-export type PlaceCategory = 'hotel' | 'food' | 'sight' | 'travel' | 'shopping' | 'suggestion' | 'sight_rec' | 'food_rec' | 'bar' | 'bar_rec';
+export type PlaceCategory = 'hotel' | 'food' | 'sight' | 'travel' | 'shopping' | 'suggestion' | 'bar';
 
 export type CityName = 'Tokyo' | 'Kyoto' | 'Osaka' | 'Shanghai';
 

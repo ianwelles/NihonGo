@@ -92,5 +92,14 @@ export const tipsList: TipCategory[] = [
         "notes": "Link an international card to Alipay or WeChat Pay to generate transport QR codes; physical tickets are obsolete."
       }
     ]
+  },
+  {
+    "title": "Food Lists",
+    "items": [
+      {
+        "name": "Ceasaer's List",
+        "notes": "<a href=\"https://maps.app.goo.gl/SrgwDH11qfo9mrMM8\">Shanghai Eats</a>"
+      }
+    ]
   }
 ];

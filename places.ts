@@ -1622,7 +1622,7 @@ export const places: Record<string, Place> = {
       "lat": 34.689,
       "lon": 135.8398
     },
-    "description": "Home of the Great Buddha (Daibutsu).",
+    "description": "Home of the Great Buddha (Daibutsu) in the Nara Deer Park.",
     "url": "https://www.todaiji.or.jp/en/",
     "tags": [
       "Great Buddha",
@@ -1698,26 +1698,10 @@ export const places: Record<string, Place> = {
       "Crowded"
     ]
   },
-  "lollipop-shanghai": {
-    "id": "lollipop-shanghai",
-    "name": "Lollipop Bar & Lounge",
-    "type": "bar",
-    "city": "Shanghai",
-    "coordinates": {
-      "lat": 31.2076,
-      "lon": 121.4422
-    },
-    "description": "Sleek, modern cocktail bar with a conversation-oriented layout.",
-    "url": "https://www.smartshanghai.com/venue/14749/lollipop",
-    "tags": [
-      "Cocktails",
-      "Modern"
-    ]
-  },
   "rice-bar": {
     "id": "rice-bar",
     "name": "Rice Bar",
-    "type": "bar_rec",
+    "type": "bar",
     "city": "Shanghai",
     "coordinates": {
       "lat": 31.2031,
@@ -1728,6 +1712,23 @@ export const places: Record<string, Place> = {
     "tags": [
       "Lounge",
       "Friendly"
+    ]
+  },
+  "ren-he-guan": {
+    "id": "ren-he-guan",
+    "name": "Ren He Guan (人和馆)",
+    "type": "suggestion",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.2035,
+      "lon": 121.4565
+    },
+    "description": "Cesar: By far my favourite. Michelin star Shanghainese home cooking, no bookings, just turn up and queue. Absolutely excellent.",
+    "url": "https://guide.michelin.com/en/shanghai-municipality/shanghai/restaurant/ren-he-guan-zhaojiabang-road",
+    "tags": [
+      "Shanghainese",
+      "Michelin Star",
+      "Home Cooking"
     ]
   }
 };
