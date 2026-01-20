@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useEffect, useCallback, Rea
 import { CityName, Place, DayItinerary, TipCategory } from '../types';
 import { loadAppData } from '../utils/dataLoader';
 import { cityThemeColors as fallbackCityColors, mapMarkerColors as fallbackMarkerColors } from '../theme';
+import L from 'leaflet'; // Import Leaflet
+import { SIDEBAR_WIDTH } from '../components/Map/mapConstants'; // Import SIDEBAR_WIDTH
 
 type Toggles = Record<string, boolean>;
 
@@ -26,6 +28,8 @@ interface AppContextType {
   toggles: Toggles;
   isSidebarOpen: boolean;
   isMobile: boolean;
+  popupPaddingTopLeft: L.PointExpression;
+  popupPaddingBottomRight: L.PointExpression;
 
   // Actions
   setActiveCity: (city: CityName | null) => void;
@@ -34,6 +38,7 @@ interface AppContextType {
   toggleCategory: (key: string) => void;
   setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   toggleSidebar: () => void;
+  // No explicit setter for padding, as it's derived
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -73,6 +78,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [openPlaceId, setOpenPlaceId] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => !window.matchMedia('(max-width: 767px)').matches);
   const [toggles, setToggles] = useState<Toggles>({});
+  const [popupPaddingTopLeft, setPopupPaddingTopLeft] = useState<L.PointExpression>(L.point(50, 100));
+  const [popupPaddingBottomRight, setPopupPaddingBottomRight] = useState<L.PointExpression>(L.point(50, 100));
 
   // Load Data
   useEffect(() => {
@@ -129,6 +136,26 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     });
   }, [openDay, activeCity]);
 
+  // Calculate popup padding based on sidebar and window size
+  const calculatePopupPadding = useCallback(() => {
+    const isMobileView = window.innerWidth < 768;
+
+    if (isMobileView) {
+      setPopupPaddingTopLeft(L.point(50, 100));
+      setPopupPaddingBottomRight(L.point(50, 100));
+    } else {
+      const leftPadding = isSidebarOpen ? SIDEBAR_WIDTH + 60 : 50;
+      setPopupPaddingTopLeft(L.point(leftPadding, 100));
+      setPopupPaddingBottomRight(L.point(50, 100));
+    }
+  }, [isSidebarOpen]);
+
+  useEffect(() => {
+    calculatePopupPadding();
+    window.addEventListener('resize', calculatePopupPadding);
+    return () => window.removeEventListener('resize', calculatePopupPadding);
+  }, [calculatePopupPadding]);
+
   // Actions
   const handleCityChange = useCallback((city: CityName | null) => {
     setActiveCity(city);
@@ -164,6 +191,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     toggles,
     isSidebarOpen,
     isMobile,
+    popupPaddingTopLeft,
+    popupPaddingBottomRight,
     setActiveCity: handleCityChange,
     setOpenDay: handleDayChange,
     setOpenPlaceId,
