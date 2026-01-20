@@ -288,11 +288,18 @@ const UserLocationMarker: React.FC<{ isSidebarOpen?: boolean; isMobile?: boolean
     <>
       <style>{`
         @keyframes popup-scale-in {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+            from { transform: scale(0.8) translateY(10px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
         }
+        /* Target the wrapper specifically to prevent Leaflet transform conflicts */
         .leaflet-popup-content-wrapper {
-            animation: popup-scale-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            animation: popup-scale-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
+            transform-origin: bottom center;
+        }
+        /* Ensure the tip (tip-container) also scales with the popup */
+        .leaflet-popup-tip-container {
+            animation: popup-scale-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
+            transform-origin: top center;
         }
         .leaflet-top .leaflet-control-custom {
           margin-top: 16px; 
@@ -385,27 +392,39 @@ const MapController: React.FC<{
   return null;
 };
 
-const PlaceMarkers = React.memo(({ places }: { places: Place[] }) => {
+const PlaceMarkers = React.memo(({ places, itineraryPlaceIds }: { places: Place[], itineraryPlaceIds: Set<string> }) => {
   const { openPlaceId, setOpenPlaceId, theme, isSidebarOpen } = useAppStore();
   const markerColors = theme.markerColors;
   const markerRefs = useRef<Record<string, L.Marker>>({});
   const map = useMap();
 
-  const getIcon = useCallback((type: string) => {
+  const getIcon = useCallback((type: string, isItinerary: boolean) => {
     const color = markerColors[type] || markerColors['default'] || fallbackMapMarkerColors[type] || fallbackMapMarkerColors['default'] || '#3B82F6';
+    const opacity = isItinerary ? 1 : 0.5;
+    
+    // Scale: 36px base. isItinerary false = 25px (approx 30% reduction).
+    const size = isItinerary ? 36 : 25;
+
     const pinSvg = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${color}" stroke="#1c1c1c" stroke-width="0.5">
-      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+    <svg xmlns="http://www.w3.org/2000/svg" 
+         viewBox="0 0 24 24" 
+         width="${size}" 
+         height="${size}" 
+         style="opacity: ${opacity}; display: block;">
+      <path fill="${color}" stroke="#1c1c1c" stroke-width="0.5" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
       <circle cx="12" cy="9" r="2.5" fill="#1c1c1c"/>
     </svg>`;
+
     return L.divIcon({
         className: 'custom-pin',
         html: pinSvg,
-        iconSize: [36, 36],
-        iconAnchor: [18, 36],
-        popupAnchor: [0, -32]
+        iconSize: [size, size],
+        // The bottom tip of the pin is the anchor [center, bottom]
+        iconAnchor: [size / 2, size],
+        // Offset is relative to iconAnchor. Move up by 'size' to clear the pin.
+        popupAnchor: [0, -size]
     });
-  }, [markerColors]);
+}, [markerColors]);
 
   const { popupPaddingTopLeft, popupPaddingBottomRight } = useMemo(() => {
     const isMobileView = window.innerWidth < 768;
@@ -439,12 +458,14 @@ const PlaceMarkers = React.memo(({ places }: { places: Place[] }) => {
         const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${place.coordinates.lat},${place.coordinates.lon}&travelmode=transit`;
         const displayTags = place.hotelMeta?.tags || place.tags;
         const typeColor = markerColors[place.type] || markerColors['default'] || fallbackMapMarkerColors[place.type] || fallbackMapMarkerColors['default'] || '#00BCD4';
+        const isItinerary = itineraryPlaceIds.has(place.id);
 
         return (
           <Marker
             key={place.id}
             position={[place.coordinates.lat, place.coordinates.lon]}
-            icon={getIcon(place.type)}
+            icon={getIcon(place.type, isItinerary)}
+            zIndexOffset={isItinerary ? 100 : 0}
             ref={el => { if (el) markerRefs.current[place.id] = el; }}
             eventHandlers={{
               click: () => setOpenPlaceId(place.id), 
@@ -490,7 +511,7 @@ const VectorTileLayer = () => {
     // @ts-ignore
     const glLayer = L.maplibreGL({
       style: '/map-style.json', 
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OSM</a> © <a href="https://carto.com/attributions">CARTO</a>'
     });
 
     glLayer.addTo(map);
@@ -507,16 +528,19 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
   const { activeCity, openDay, places, itineraryData, toggles, isSidebarOpen, isMobile } = useAppStore();
   const [isMapAnimating, setIsMapAnimating] = useState(false);
 
+  const itineraryPlaceIds = useMemo(() => {
+    const ids = new Set<string>();
+    itineraryData.forEach(day => {
+      day.activities.forEach(activity => ids.add(activity.placeId));
+      if (day.hotelIds) day.hotelIds.forEach(id => ids.add(id));
+    });
+    return ids;
+  }, [itineraryData]);
+
   const filteredPlaces = useMemo(() => {
     if (!activeCity && !openDay) {
       return Object.values(places).filter(place => place.type === 'hotel');
     }
-
-    const itineraryPlaceIds = new Set<string>();
-    itineraryData.forEach(day => {
-      day.activities.forEach(activity => itineraryPlaceIds.add(activity.placeId));
-      if (day.hotelIds) day.hotelIds.forEach(id => itineraryPlaceIds.add(id));
-    });
 
     if (openDay) {
       const dayItinerary = itineraryData.find(day => `day${day.dayNumber}-${day.city}` === openDay);
@@ -571,7 +595,7 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
         <MapController setMapRef={setMapRef} filteredPlaces={filteredPlaces} setIsMapAnimating={setIsMapAnimating} />
         <PopupManager isMapAnimating={isMapAnimating} />
         <UserLocationMarker isSidebarOpen={isSidebarOpen} isMobile={isMobile} />
-        <PlaceMarkers places={filteredPlaces} />
+        <PlaceMarkers places={filteredPlaces} itineraryPlaceIds={itineraryPlaceIds} />
       </LeafletMap>
     </div>
   );

@@ -29,7 +29,6 @@ export interface Activity {
   description?: string; 
   tip?: string;
   icon?: string;
-  link?: string; 
 }
 
 export interface DayItinerary {

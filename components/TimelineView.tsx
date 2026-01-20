@@ -16,7 +16,6 @@ const ActivityCard: React.FC<{ activity: Activity; places: Record<string, Place>
 
   const name = activity.label || place.name;
   const description = activity.description || place.description;
-  const url = activity.link || place.url;
 
   return (
     <div 
@@ -29,14 +28,10 @@ const ActivityCard: React.FC<{ activity: Activity; places: Record<string, Place>
             <span>{activity.time}</span>
         </div>
         <h4 className="text-lg font-bold text-white leading-tight">
-          {url ? (
-            <a href={url} target="_blank" rel="noreferrer" className="text-white hover:text-[#FF1744] transition-colors flex items-center gap-1">
-              {name}
-              <ExternalLink size={14} className="opacity-50" />
-            </a>
-          ) : (
-            name
-          )}
+          <span className="text-white hover:text-[#FF1744] transition-colors flex items-center gap-1">
+            {name}
+            <MapPin size={14} className="opacity-50" />
+          </span>
         </h4>
         <p className="text-sm text-gray-300 leading-relaxed">{description}</p>
         {activity.tip && (
