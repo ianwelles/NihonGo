@@ -16,10 +16,10 @@ const PlaceMarkers = React.memo(({ places, itineraryPlaceIds }: { places: Place[
 
   const getIcon = useCallback((type: string, isItinerary: boolean) => {
     const color = markerColors[type] || markerColors['default'] || fallbackMapMarkerColors[type] || fallbackMapMarkerColors['default'] || '#3B82F6';
-    const opacity = isItinerary ? 1 : 0.5;
+    const opacity = isItinerary ? 1 : 0.6; // Increased from 0.5 (10% more opaque)
     
-    // Scale: 36px base. isItinerary false = 25px (approx 30% reduction).
-    const size = isItinerary ? 36 : 25;
+    // Scale: 36px base. isItinerary false = 31px (24% larger than original 25px).
+    const size = isItinerary ? 36 : 31;
 
     const pinSvg = `
     <svg xmlns="http://www.w3.org/2000/svg" 

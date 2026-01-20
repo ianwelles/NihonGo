@@ -38,10 +38,12 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
 
         const toggledCityPlaces = Object.values(places).filter(place => {
           const matchesCity = place.city === activeCity;
-          const isInDayItinerary = placeIdsForDay.has(place.id);
+          // Check if it belongs to ANY day's itinerary
+          const isAnyItineraryPlace = itineraryPlaceIds.has(place.id);
           const matchesToggle = toggles[place.type] || place.type === 'suggestion' || place.type === 'hotel';
 
-          return matchesCity && !isInDayItinerary && matchesToggle;
+          // Only show non-itinerary places via toggles when a specific day is selected
+          return matchesCity && !isAnyItineraryPlace && matchesToggle;
         });
 
         return [...itineraryPlaces, ...toggledCityPlaces];
@@ -67,7 +69,7 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
     }
 
     return Object.values(places).filter(place => toggles[place.type] || place.type === 'hotel');
-  }, [activeCity, openDay, places, itineraryData, toggles]);
+  }, [activeCity, openDay, places, itineraryData, toggles, itineraryPlaceIds]);
 
 
   if (!isAuthenticated) return <div className="h-full w-full bg-gray-900" />;
