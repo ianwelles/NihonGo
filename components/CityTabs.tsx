@@ -1,18 +1,17 @@
 import React from 'react';
-import { CityName, DayItinerary } from '../types';
+import { CityName } from '../types';
+import { useAppStore } from '../context/AppContext';
 
-interface CityTabsProps {
-  activeCity: CityName | null;
-  setActiveCity: (city: CityName | null) => void;
-  isMobile: boolean;
-  onToggleSidebar: () => void;
-  fullItineraryDays: DayItinerary[];
-  cityColors?: Record<string, string>;
-}
+export const CityTabs: React.FC = () => {
+  const { 
+    activeCity, 
+    setActiveCity, 
+    itineraryData, 
+    theme 
+  } = useAppStore();
 
-export const CityTabs: React.FC<CityTabsProps> = ({ activeCity, setActiveCity, isMobile, onToggleSidebar, fullItineraryDays, cityColors = {} }) => {
   // Derive unique cities from itinerary data to ensure we use loaded data
-  const cities = Array.from(new Set(fullItineraryDays.map(d => d.city))) as CityName[];
+  const cities = Array.from(new Set(itineraryData.map(d => d.city))) as CityName[];
   
   const cityEmojiMap: Record<string, string> = {
     'Tokyo': '🗼',
@@ -22,7 +21,7 @@ export const CityTabs: React.FC<CityTabsProps> = ({ activeCity, setActiveCity, i
   };
 
   const getCityDateRange = (city: CityName) => {
-    const cityDays = fullItineraryDays.filter(d => d.city === city);
+    const cityDays = itineraryData.filter(d => d.city === city);
     if (cityDays.length === 0) return "";
     
     const start = cityDays[0].date.split(' ').slice(1).join(' '); // e.g., "18 Feb"
@@ -37,7 +36,7 @@ export const CityTabs: React.FC<CityTabsProps> = ({ activeCity, setActiveCity, i
     return `${startDay}–${endDay} ${month}`;
   };
 
-  const activeCityColor = activeCity ? (cityColors[activeCity] || '#FF1744') : '#FF1744';
+  const activeCityColor = activeCity ? (theme.cityColors[activeCity] || '#FF1744') : '#FF1744';
 
   return (
     <div className="mb-6">

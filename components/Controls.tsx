@@ -1,59 +1,36 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Landmark, Utensils, Store, PanelLeftClose, Map as MapIcon, Calendar, ChevronUp, ChevronRight, Info, EyeOff } from 'lucide-react';
-import { CityName, DayItinerary, TipCategory } from '../types';
-import { itineraryData as fallbackItinerary, tipsList as fallbackTips, mapMarkerColors as fallbackMarkerColors } from '../data';
+import { CityName } from '../types';
+import { useAppStore } from '../context/AppContext';
 import { sanitizeHtml } from '../utils/htmlSanitizer';
 
-interface Toggles {
-  sight_rec: boolean;
-  food_rec: boolean;
-  bar_rec: boolean;
-  shopping: boolean;
-}
-
 interface ControlsProps {
-  toggles: Toggles;
-  toggleCategory: (key: keyof Toggles) => void;
-  openDay?: string | null;
-  isSidebarOpen?: boolean;
-  onToggleSidebar?: () => void;
-  isMobile?: boolean;
-  activeCity?: CityName | null;
-  onSelectDay?: (day: string) => void;
-  onSelectCity?: (city: CityName | null) => void;
-  itineraryData?: DayItinerary[];
-  tipsList?: TipCategory[];
   onHide?: () => void;
-  cityColors?: Record<string, string>;
-  markerColors?: Record<string, string>;
 }
 
-export const Controls: React.FC<ControlsProps> = ({
-  toggles,
-  toggleCategory,
-  openDay,
-  isSidebarOpen,
-  onToggleSidebar,
-  activeCity,
-  onSelectCity,
-  itineraryData,
-  tipsList,
-  onHide,
-  isMobile,
-  onSelectDay,
-  cityColors = {},
-  markerColors = {}
-}) => {
+export const Controls: React.FC<ControlsProps> = ({ onHide }) => {
+  const {
+    toggles,
+    toggleCategory,
+    openDay,
+    isSidebarOpen,
+    toggleSidebar,
+    activeCity,
+    setActiveCity,
+    setOpenDay,
+    itineraryData,
+    tipsList,
+    theme,
+    isMobile
+  } = useAppStore();
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isTipsOpen, setIsTipsOpen] = useState(false);
   const [expandedCity, setExpandedCity] = useState<CityName | null>(activeCity || null);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const currentItinerary = itineraryData || fallbackItinerary;
-  const currentTips = tipsList || fallbackTips;
-
-  const cityGroups = currentItinerary.reduce((acc, day) => {
+  const cityGroups = itineraryData.reduce((acc, day) => {
     const city = day.city;
     const dayIdentifier = `day${day.dayNumber}-${day.city}`;
     if (!acc[city]) {
@@ -67,7 +44,7 @@ export const Controls: React.FC<ControlsProps> = ({
   const activeClass = "bg-black/70 border-white/50 text-white shadow-lg opacity-100";
   const inactiveClass = "bg-black/40 border-white/10 text-gray-300 opacity-80 hover:border-white/40";
   
-  const activeCityColor = activeCity ? (cityColors[activeCity] || '#FF1744') : '#FF1744';
+  const activeCityColor = activeCity ? (theme.cityColors[activeCity] || '#FF1744') : '#FF1744';
   const navClass = `border-[${activeCityColor}] text-[${activeCityColor}] shadow-[0_0_12px_rgba(255,23,68,0.35)] hover:bg-[#FF1744]/25`;
   const tipsClass = "bg-amber-500/15 border-amber-500/30 text-amber-200 shadow-[0_0_12px_rgba(245,158,11,0.25)] hover:bg-amber-500/25";
 
@@ -95,7 +72,7 @@ export const Controls: React.FC<ControlsProps> = ({
 
   const handleCityClick = (city: CityName) => {
     if (expandedCity === city) {
-      onSelectCity?.(city);
+      setActiveCity(city);
       setIsMenuOpen(false);
     } else {
       setExpandedCity(city);
@@ -126,7 +103,7 @@ export const Controls: React.FC<ControlsProps> = ({
     </div>
   );
 
-  const getMarkerColor = (type: string) => markerColors[type] || fallbackMarkerColors[type] || '#ffffff';
+  const getMarkerColor = (type: string) => theme.markerColors[type] || '#ffffff';
 
   return (
     <div className="flex flex-col gap-3 w-full relative" ref={menuRef}>
@@ -139,7 +116,7 @@ export const Controls: React.FC<ControlsProps> = ({
                     <div className="h-4 w-1 rounded-full" style={{ backgroundColor: activeCityColor }}></div>
                     <span>Select City</span>
                   </div>
-                  <button onClick={() => { onSelectCity?.(null); setIsMenuOpen(false); }} className="text-xs hover:underline" style={{ color: activeCityColor }}>Reset</button>
+                  <button onClick={() => { setActiveCity(null); setIsMenuOpen(false); }} className="text-xs hover:underline" style={{ color: activeCityColor }}>Reset</button>
               </div>
               <div className="overflow-y-auto py-2 custom-scrollbar">
                 {(Object.keys(cityGroups) as CityName[]).map((city) => (
@@ -159,7 +136,7 @@ export const Controls: React.FC<ControlsProps> = ({
                         {cityGroups[city].map((day) => {
                           const isActive = openDay === day.identifier;
                           return (
-                            <button key={day.identifier} onClick={(e) => { e.stopPropagation(); onSelectCity?.(city); onSelectDay?.(day.identifier); setIsMenuOpen(false); }} 
+                            <button key={day.identifier} onClick={(e) => { e.stopPropagation(); setActiveCity(city); setOpenDay(day.identifier); setIsMenuOpen(false); }} 
                               className={`px-3 py-3 text-xs font-bold rounded-lg transition-all text-center ${isActive ? 'text-white' : 'bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white'}`}
                               style={isActive ? { backgroundColor: activeCityColor } : {}}
                             >
@@ -183,7 +160,7 @@ export const Controls: React.FC<ControlsProps> = ({
                   </div>
               </div>
               <div className="overflow-y-auto py-2 custom-scrollbar">
-                {currentTips.map((category) => (
+                {tipsList.map((category) => (
                   <div key={category.title} className="flex flex-col">
                     <button onClick={() => setExpandedCategory(expandedCategory === category.title ? null : category.title)} className={`px-5 py-4 flex items-center justify-between transition-colors hover:bg-white/5 ${expandedCategory === category.title ? 'bg-white/10 text-white' : 'text-gray-300'}`}>
                       <div className="flex items-center gap-4">
@@ -246,7 +223,7 @@ export const Controls: React.FC<ControlsProps> = ({
             </div>
             <ChevronUp size={16} className={`shrink-0 transition-transform duration-300 ${isMenuOpen ? 'rotate-180' : ''}`} />
           </button>
-          <button onClick={(e) => { e.stopPropagation(); onToggleSidebar && onToggleSidebar(); }} 
+          <button onClick={(e) => { e.stopPropagation(); toggleSidebar(); }} 
             className={`${buttonBaseClass} px-5`}
             style={{ 
                 backgroundColor: `${activeCityColor}26`, 

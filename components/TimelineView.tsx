@@ -1,17 +1,7 @@
 import React, { useRef, useEffect } from 'react';
-import { CityName, DayItinerary, Activity, Place } from '../types';
-import { Plus, Info, MapPin, Clock, ExternalLink } from 'lucide-react';
-
-interface TimelineViewProps {
-  activeCity: CityName | null;
-  openDay: string | null;
-  handleToggle: (e: React.MouseEvent, dayId: string) => void;
-  fullItineraryDays: DayItinerary[];
-  startDate: Date;
-  places: Record<string, Place>;
-  cityColors?: Record<string, string>;
-  onActivityClick: (placeId: string) => void;
-}
+import { Activity, Place } from '../types';
+import { Plus, Clock, ExternalLink, MapPin } from 'lucide-react';
+import { useAppStore } from '../context/AppContext';
 
 const ActivityCard: React.FC<{ activity: Activity; places: Record<string, Place>; onActivityClick: (placeId: string) => void }> = ({ activity, places, onActivityClick }) => {
   const place = places[activity.placeId];
@@ -99,7 +89,17 @@ const HotelCard: React.FC<{ place: Place, activeCityColor: string }> = ({ place,
   );
 };
 
-export const TimelineView: React.FC<TimelineViewProps> = ({ activeCity, openDay, handleToggle, fullItineraryDays, startDate, places, cityColors = {}, onActivityClick }) => {
+export const TimelineView: React.FC = () => {
+  const { 
+    activeCity, 
+    openDay, 
+    setOpenDay, 
+    itineraryData: fullItineraryDays, 
+    places, 
+    theme, 
+    setOpenPlaceId 
+  } = useAppStore();
+
   if (!activeCity) {
     return (
       <div className="py-12 px-6 text-center bg-card-bg rounded-2xl border border-border">
@@ -113,7 +113,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ activeCity, openDay,
   }
 
   const filteredItineraryDays = fullItineraryDays.filter(day => day.city === activeCity);
-  const activeCityColor = cityColors[activeCity] || '#FF1744';
+  const activeCityColor = theme.cityColors[activeCity] || '#FF1744';
 
   const detailsRefs = useRef<Record<string, HTMLDetailsElement | null>>({});
 
@@ -123,9 +123,18 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ activeCity, openDay,
     }
   }, [openDay]);
 
+  const handleToggle = (e: React.MouseEvent, dayIdentifier: string) => {
+    e.preventDefault();
+    setOpenDay(dayIdentifier);
+  };
+
+  const handleActivityClick = (placeId: string) => {
+    setOpenPlaceId(placeId);
+  };
+
   return (
     <div className="w-full pb-24">
-      {filteredItineraryDays.map((day, index) => {
+      {filteredItineraryDays.map((day) => {
         const dayIndexInFullItinerary = fullItineraryDays.findIndex(d => d.dayNumber === day.dayNumber && d.city === day.city);
 
         const nextDayInFullItinerary = fullItineraryDays[dayIndexInFullItinerary + 1];
@@ -167,7 +176,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ activeCity, openDay,
               </summary>
               <div className="day-content p-5 pt-0 text-gray-200 border-t border-white/5 flex flex-col gap-4">
                 {day.activities.map((activity, activityIndex) => (
-                  <ActivityCard key={activityIndex} activity={activity} places={places} onActivityClick={onActivityClick} />
+                  <ActivityCard key={activityIndex} activity={activity} places={places} onActivityClick={handleActivityClick} />
                 ))}
               </div>
             </details>

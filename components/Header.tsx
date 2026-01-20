@@ -1,11 +1,9 @@
 import React, { useMemo } from 'react';
+import { useAppStore } from '../context/AppContext';
 import { CityName } from '../types';
 
 interface HeaderProps {
-  startDate?: Date;
-  endDate?: Date;
   tripTitle?: string;
-  activeCity?: CityName | null;
 }
 
 // Mapping city names to specific "Type 1" accent colours
@@ -27,11 +25,10 @@ const formatDateRange = (startDate?: Date, endDate?: Date) => {
 };
 
 export const Header: React.FC<HeaderProps> = ({ 
-  startDate,
-  endDate,
   tripTitle = "BETO BIRTHDAY EXPERIENCE",
-  activeCity
 }) => {
+  const { activeCity, startDate, endDate } = useAppStore();
+
   const activeColor = useMemo(() => 
     activeCity ? CITY_COLORS[activeCity] : 'rgba(255, 255, 255, 0.1)', 
   [activeCity]);

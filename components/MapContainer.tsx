@@ -8,6 +8,7 @@ import { CityName, Place, DayItinerary } from '../types';
 import { Navigation, Maximize, Minimize, Route } from 'lucide-react';
 import maplibregl from 'maplibre-gl';
 import '@maplibre/maplibre-gl-leaflet';
+import { useAppStore } from '../context/AppContext';
 
 // Standard Leaflet icon fix for default markers
 // @ts-ignore
@@ -17,30 +18,6 @@ L.Icon.Default.mergeOptions({
   iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
-
-interface Toggles {
-  sight_rec: boolean;
-  food_rec: boolean;
-  bar_rec: boolean;
-  shopping: boolean;
-  hotel: boolean;
-}
-
-interface MapProps {
-  activeCity: CityName | null;
-  openDay: string | null;
-  isAuthenticated: boolean;
-  toggles: Toggles;
-  setMapRef: (map: L.Map) => void;
-  isSidebarOpen?: boolean;
-  isMobile?: boolean;
-  itineraryData: DayItinerary[];
-  places: Record<string, Place>;
-  markerColors?: Record<string, string>;
-  openPlaceId: string | null;
-  onPopupOpen: (placeId: string) => void;
-  onPopupClose: () => void;
-}
 
 const getUserIcon = (heading: number | null) => L.divIcon({
   className: 'user-location-marker',
@@ -346,13 +323,11 @@ const UserLocationMarker: React.FC<{ isSidebarOpen?: boolean; isMobile?: boolean
 };
 
 const MapController: React.FC<{
-  activeCity: CityName | null;
-  openDay: string | null;
-  isSidebarOpen?: boolean;
   setMapRef: (map: L.Map) => void;
   filteredPlaces: Place[];
   setIsMapAnimating: React.Dispatch<React.SetStateAction<boolean>>; // New prop
-}> = ({ activeCity, openDay, isSidebarOpen, setMapRef, filteredPlaces, setIsMapAnimating }) => {
+}> = ({ setMapRef, filteredPlaces, setIsMapAnimating }) => {
+  const { activeCity, openDay, isSidebarOpen } = useAppStore();
   const map = useMap();
   const prevActiveCity = useRef<CityName | null | undefined>(undefined);
   const prevOpenDay = useRef<string | null>(null);
@@ -424,7 +399,9 @@ const MapController: React.FC<{
 };
 
 // Extracted PlaceMarkers component for optimization
-const PlaceMarkers = React.memo(({ places, markerColors, isSidebarOpen, openPlaceId, onPopupOpen, onPopupClose }: { places: Place[], markerColors: Record<string, string>, isSidebarOpen?: boolean, openPlaceId: string | null, onPopupOpen: (placeId: string) => void, onPopupClose: () => void }) => {
+const PlaceMarkers = React.memo(({ places }: { places: Place[] }) => {
+  const { openPlaceId, setOpenPlaceId, theme, isSidebarOpen } = useAppStore();
+  const markerColors = theme.markerColors;
   const markerRefs = useRef<Record<string, L.Marker>>({});
   const map = useMap();
 
@@ -466,9 +443,8 @@ const PlaceMarkers = React.memo(({ places, markerColors, isSidebarOpen, openPlac
     if (openPlaceId && markerRefs.current[openPlaceId]) {
       const marker = markerRefs.current[openPlaceId];
       marker.openPopup();
-      onPopupOpen(openPlaceId); // Notify parent that popup is open
     }
-  }, [openPlaceId, map, onPopupOpen]);
+  }, [openPlaceId, map]);
 
 
   return (
@@ -485,7 +461,8 @@ const PlaceMarkers = React.memo(({ places, markerColors, isSidebarOpen, openPlac
             icon={getIcon(place.type)}
             ref={el => { if (el) markerRefs.current[place.id] = el; }}
             eventHandlers={{
-              popupclose: () => onPopupClose(), // Notify parent that popup is closed
+              click: () => setOpenPlaceId(place.id), // Ensure state updates on click
+              popupclose: () => setOpenPlaceId(null), // Notify parent that popup is closed
             }}
           >
             <Popup keepInView={true} autoPanPaddingTopLeft={popupPaddingTopLeft} autoPanPaddingBottomRight={popupPaddingBottomRight}>
@@ -540,21 +517,8 @@ const VectorTileLayer = () => {
   return null;
 };
 
-export const MapContainer: React.FC<MapProps> = ({
-  activeCity,
-  openDay,
-  isAuthenticated,
-  toggles,
-  setMapRef,
-  isSidebarOpen,
-  isMobile,
-  itineraryData,
-  places,
-  markerColors = {},
-  openPlaceId,
-  onPopupOpen,
-  onPopupClose
-}) => {
+export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthenticated: boolean }> = ({ setMapRef, isAuthenticated }) => {
+  const { activeCity, openDay, places, itineraryData, toggles, isSidebarOpen, isMobile } = useAppStore();
   const [isMapAnimating, setIsMapAnimating] = useState(false);
 
   const filteredPlaces = useMemo(() => {
@@ -654,10 +618,10 @@ export const MapContainer: React.FC<MapProps> = ({
       <LeafletMap center={[35.6895, 139.6917]} zoom={12} zoomControl={false} attributionControl={false} className="h-full w-full bg-gray-900">
         <VectorTileLayer />
         
-        <MapController activeCity={activeCity} openDay={openDay} isSidebarOpen={isSidebarOpen} setMapRef={setMapRef} filteredPlaces={filteredPlaces} setIsMapAnimating={setIsMapAnimating} />
+        <MapController setMapRef={setMapRef} filteredPlaces={filteredPlaces} setIsMapAnimating={setIsMapAnimating} />
         <PopupManager isMapAnimating={isMapAnimating} />
         <UserLocationMarker isSidebarOpen={isSidebarOpen} isMobile={isMobile} />
-        <PlaceMarkers places={filteredPlaces} markerColors={markerColors} isSidebarOpen={isSidebarOpen} openPlaceId={openPlaceId} onPopupOpen={onPopupOpen} onPopupClose={onPopupClose} />
+        <PlaceMarkers places={filteredPlaces} />
       </LeafletMap>
     </div>
   );

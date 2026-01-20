@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import L from 'leaflet';
-import { CityName, Place, DayItinerary, TipCategory } from './types';
+import { AppProvider, useAppStore } from './context/AppContext';
 import { LoginScreen } from './components/LoginScreen';
 import { LoadingScreen } from './components/LoadingScreen';
 import { downloadPlacesCSV, downloadItineraryCSV, downloadThemeCSV, downloadTipsCSV } from './utils/csvHelper';
-import { loadAppData } from './utils/dataLoader';
-import { cityThemeColors as fallbackCityColors, mapMarkerColors as fallbackMarkerColors } from './theme';
 import { SlidersHorizontal, Download } from 'lucide-react';
 
 const Header = React.lazy(() => import('./components/Header').then(module => ({ default: module.Header })));
@@ -13,19 +11,6 @@ const CityTabs = React.lazy(() => import('./components/CityTabs').then(module =>
 const MapContainer = React.lazy(() => import('./components/MapContainer').then(module => ({ default: module.MapContainer })));
 const TimelineView = React.lazy(() => import('./components/TimelineView').then(module => ({ default: module.TimelineView })));
 const Controls = React.lazy(() => import('./components/Controls').then(module => ({ default: module.Controls })));
-
-const useMediaQuery = (query: string) => {
-  const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
-
-  useEffect(() => {
-    const media = window.matchMedia(query);
-    const listener = () => setMatches(media.matches);
-    media.addEventListener('change', listener);
-    return () => media.removeEventListener('change', listener);
-  }, [query]);
-
-  return matches;
-};
 
 const PASSWORD_HASH = '9ff855c14133ee4cbe57a39fd5d5c5abe26d4bff63b73476c13f3342410bedc3';
 
@@ -37,134 +22,31 @@ async function hashPassword(password: string): Promise<string> {
   return hashHex;
 }
 
-const App: React.FC = () => {
-  const isMobile = useMediaQuery('(max-width: 767px)');
+const AppContent: React.FC = () => {
+  const {
+    itineraryData,
+    tipsList,
+    places,
+    theme,
+    startDate,
+    endDate,
+    isLoading,
+    error,
+    activeCity,
+    openDay,
+    isSidebarOpen,
+    isMobile,
+    setIsSidebarOpen,
+    setActiveCity
+  } = useAppStore();
 
-  const [activeCity, setActiveCity] = useState<CityName | null>(null); 
-  const [openDay, setOpenDay] = useState<string | null>(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(() => !window.matchMedia('(max-width: 767px)').matches);
   const [showControls, setShowControls] = useState(true);
   const [showDownloads, setShowDownloads] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => localStorage.getItem('trip_auth') === 'true');
-  const [password, setPassword] = useState('');
-  const [authError, setAuthError] = useState(false);
-  const [openPlaceId, setOpenPlaceId] = useState<string | null>(null);
+  const [mapRef, setMapRef] = useState<L.Map | null>(null);
 
-  const [toggles, setToggles] = useState({
-    sight_rec: false,
-    food_rec: false,
-    bar_rec: false,
-    shopping: false,
-  });
-
-  const [itineraryData, setItineraryData] = useState<DayItinerary[]>([]);
-  const [tipsList, setTipsList] = useState<TipCategory[]>([]);
-  const [places, setPlaces] = useState<Record<string, Place>>({});
-  const [appStartDate, setAppStartDate] = useState<Date>(new Date());
-  const [appEndDate, setAppEndDate] = useState<Date>(new Date());
-  const [theme, setTheme] = useState<{
-    cityColors: Record<string, string>;
-    markerColors: Record<string, string>;
-  }>({
-    cityColors: fallbackCityColors,
-    markerColors: fallbackMarkerColors,
-  });
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const mapRef = useRef<L.Map | null>(null);
-
-  const setMapRef = useCallback((map: L.Map) => {
-    mapRef.current = map;
+  const handleSetMapRef = useCallback((map: L.Map) => {
+    setMapRef(map);
   }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await loadAppData();
-        setItineraryData(data.itinerary);
-        setTipsList(data.tips);
-        setPlaces(data.places);
-        setAppStartDate(data.startDate);
-        setAppEndDate(data.endDate);
-        setTheme(data.theme);
-        setIsLoading(false);
-      } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : 'Failed to load data');
-        setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const hashedInput = await hashPassword(password);
-    if (hashedInput === PASSWORD_HASH) {
-      setIsAuthenticated(true);
-      localStorage.setItem('trip_auth', 'true');
-    } else {
-      setAuthError(true);
-    }
-  };
-
-  const handleCityChange = useCallback((city: CityName | null) => {
-    setActiveCity(city);
-    setOpenDay(null);
-    setOpenPlaceId(null); // Close any open popup
-  }, []);
-
-  useEffect(() => {
-    if (activeCity !== null && openDay === null) {
-      setToggles({
-        sight_rec: true,
-        food_rec: true,
-        bar_rec: true,
-        shopping: true,
-      });
-    } else {
-      setToggles({
-        sight_rec: false,
-        food_rec: false,
-        bar_rec: false,
-        shopping: false,
-      });
-    }
-  }, [openDay, activeCity]);
-
-  const handleToggle = (e: React.MouseEvent, dayIdentifier: string) => {
-    e.preventDefault();
-    setOpenDay(prev => (prev === dayIdentifier ? null : dayIdentifier));
-    setOpenPlaceId(null); // Close any open popup
-  };
-
-  const handleActivityClick = useCallback((placeId: string) => {
-    setOpenPlaceId(placeId);
-  }, []);
-
-  const handlePopupOpen = useCallback((placeId: string) => {
-    setOpenPlaceId(placeId);
-  }, []);
-
-  const handlePopupClose = useCallback(() => {
-    setOpenPlaceId(null);
-  }, []);
-
-  const toggleCategory = (key: keyof typeof toggles) => {
-    setToggles(prev => ({ ...prev, [key]: !prev[key] }));
-  };
-
-  if (!isAuthenticated) {
-    return (
-      <LoginScreen
-        password={password}
-        setPassword={setPassword}
-        authError={authError}
-        setAuthError={setAuthError}
-        handleLogin={handleLogin}
-      />
-    );
-  }
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -205,29 +87,9 @@ const App: React.FC = () => {
         >
           <div className="h-full overflow-y-auto overflow-x-hidden pb-[env(safe-area-inset-bottom)]">
             <div className="p-4 space-y-4">
-              <Header
-                startDate={appStartDate}
-                endDate={appEndDate}
-                activeCity={activeCity}
-              />
-              <CityTabs
-                activeCity={activeCity}
-                setActiveCity={handleCityChange}
-                isMobile={isMobile}
-                onToggleSidebar={() => setIsSidebarOpen(prev => !prev)}
-                fullItineraryDays={itineraryData}
-                cityColors={theme.cityColors}
-              />
-              <TimelineView 
-                activeCity={activeCity}
-                openDay={openDay}
-                handleToggle={handleToggle}
-                fullItineraryDays={itineraryData} 
-                startDate={appStartDate}
-                places={places}
-                cityColors={theme.cityColors}
-                onActivityClick={handleActivityClick}
-              />
+              <Header />
+              <CityTabs />
+              <TimelineView />
 
               <div className="mt-8 pb-4">
                 <button
@@ -267,19 +129,8 @@ const App: React.FC = () => {
 
         <main className="h-full flex-1 relative min-w-0 z-0">
           <MapContainer
-            activeCity={activeCity}
-            openDay={openDay}
-            isAuthenticated={isAuthenticated}
-            toggles={toggles}
-            setMapRef={setMapRef}
-            isSidebarOpen={isSidebarOpen}
-            isMobile={isMobile}
-            itineraryData={itineraryData}
-            places={places}
-            markerColors={theme.markerColors}
-            openPlaceId={openPlaceId}
-            onPopupOpen={handlePopupOpen}
-            onPopupClose={handlePopupClose}
+            isAuthenticated={true}
+            setMapRef={handleSetMapRef}
           />
 
           <div
@@ -312,26 +163,48 @@ const App: React.FC = () => {
           >
             <div className="pointer-events-auto">
               <Controls
-                  toggles={toggles}
-                  toggleCategory={toggleCategory}
-                  openDay={openDay}
-                  isSidebarOpen={isSidebarOpen}
-                  isMobile={isMobile}
-                  onToggleSidebar={() => setIsSidebarOpen(prev => !prev)}
-                  activeCity={activeCity}
-                  onSelectDay={(dayIdentifier) => setOpenDay(dayIdentifier)}
-                  onSelectCity={handleCityChange}
-                  itineraryData={itineraryData}
-                  tipsList={tipsList}
                   onHide={() => setShowControls(false)}
-                  cityColors={theme.cityColors}
-                  markerColors={theme.markerColors}
                 />
             </div>
           </div>
         </main>
       </div>
     </React.Suspense>
+  );
+};
+
+const App: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => localStorage.getItem('trip_auth') === 'true');
+  const [password, setPassword] = useState('');
+  const [authError, setAuthError] = useState(false);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const hashedInput = await hashPassword(password);
+    if (hashedInput === PASSWORD_HASH) {
+      setIsAuthenticated(true);
+      localStorage.setItem('trip_auth', 'true');
+    } else {
+      setAuthError(true);
+    }
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <LoginScreen
+        password={password}
+        setPassword={setPassword}
+        authError={authError}
+        setAuthError={setAuthError}
+        handleLogin={handleLogin}
+      />
+    );
+  }
+
+  return (
+    <AppProvider>
+      <AppContent />
+    </AppProvider>
   );
 };
 
