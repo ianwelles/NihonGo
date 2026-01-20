@@ -8,6 +8,7 @@ import MapController from './Map/MapController';
 import PopupManager from './Map/PopupManager';
 import UserLocationMarker from './Map/controls/UserLocation';
 import PlaceMarkers from './Map/PlaceMarkers';
+import { CityZoomDetector } from './Map/CityZoomDetector';
 
 export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthenticated: boolean }> = ({ setMapRef, isAuthenticated }) => {
   const { activeCity, openDay, places, itineraryData, toggles, isSidebarOpen, isMobile } = useAppStore();
@@ -22,9 +23,13 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
     return ids;
   }, [itineraryData]);
 
+  const allHotels = useMemo(() => 
+    Object.values(places).filter(place => place.type === 'hotel'),
+  [places]);
+
   const filteredPlaces = useMemo(() => {
     if (!activeCity && !openDay) {
-      return Object.values(places).filter(place => place.type === 'hotel');
+      return allHotels;
     }
 
     if (openDay) {
@@ -69,7 +74,14 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
     }
 
     return Object.values(places).filter(place => toggles[place.type] || place.type === 'hotel');
-  }, [activeCity, openDay, places, itineraryData, toggles, itineraryPlaceIds]);
+  }, [activeCity, openDay, places, itineraryData, toggles, itineraryPlaceIds, allHotels]);
+
+  // Combine filtered places with all hotels to ensure hotels are always visible
+  const displayPlaces = useMemo(() => {
+    const hotelIdsInFiltered = new Set(filteredPlaces.filter(p => p.type === 'hotel').map(p => p.id));
+    const extraHotels = allHotels.filter(h => !hotelIdsInFiltered.has(h.id));
+    return [...filteredPlaces, ...extraHotels];
+  }, [filteredPlaces, allHotels]);
 
 
   if (!isAuthenticated) return <div className="h-full w-full bg-gray-900" />;
@@ -80,9 +92,10 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
         <VectorTileLayer />
         
         <MapController setMapRef={setMapRef} filteredPlaces={filteredPlaces} setIsMapAnimating={setIsMapAnimating} />
+        <CityZoomDetector />
         <PopupManager isMapAnimating={isMapAnimating} />
         <UserLocationMarker isSidebarOpen={isSidebarOpen} isMobile={isMobile} />
-        <PlaceMarkers places={filteredPlaces} itineraryPlaceIds={itineraryPlaceIds} />
+        <PlaceMarkers places={displayPlaces} itineraryPlaceIds={itineraryPlaceIds} />
       </LeafletMap>
     </div>
   );
