@@ -40,7 +40,6 @@ const AppContent: React.FC = () => {
     setActiveCity
   } = useAppStore();
 
-  const [showControls, setShowControls] = useState(true);
   const [showDownloads, setShowDownloads] = useState(false);
   const [mapRef, setMapRef] = useState<L.Map | null>(null);
 
@@ -133,38 +132,12 @@ const AppContent: React.FC = () => {
             setMapRef={handleSetMapRef}
           />
 
-          <div
-            className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[10000] transition-all duration-500 pointer-events-none mb-[env(safe-area-inset-bottom)]
-              ${!isMobile && isSidebarOpen ? 'md:left-[calc(50%+192px)]' : ''}
-              ${!showControls ? 'translate-y-0 opacity-100' : 'translate-y-[150%] opacity-0'}`}
-          >
-            <button
-              onClick={() => setShowControls(true)}
-              className="active:scale-90 transition-all duration-300 hover:scale-110 pointer-events-auto"
-            >
-              <div className="relative group">
-                <div className="absolute inset-0 bg-red-600/40 blur-xl rounded-full group-hover:bg-red-500/60 transition-colors" />
-                <div className="relative w-16 h-16 flex items-center justify-center drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]">
-                  <svg className="w-full h-full overflow-visible" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="32" fill="black" stroke="#ef4444" strokeWidth="4" />
-                    <g transform="translate(50 50) rotate(45) scale(4.2) translate(-11.5 -12)">
-                      <path d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z" fill="white" />
-                    </g>
-                  </svg>
-                </div>
-              </div>
-            </button>
-          </div>
-
           <div 
             className={`fixed bottom-8 md:bottom-8 left-1/2 -translate-x-1/2 w-full max-w-sm px-4 transition-all duration-500 pointer-events-none z-[9999] mb-[env(safe-area-inset-bottom)] 
-              ${!isMobile && isSidebarOpen ? 'md:left-[calc(50%+192px)]' : ''}
-              ${showControls ? 'translate-y-0 opacity-100' : 'translate-y-[120%] opacity-0'}`}
+              ${!isMobile && isSidebarOpen ? 'md:left-[calc(50%+192px)]' : ''}`}
           >
             <div className="pointer-events-auto">
-              <Controls
-                  onHide={() => setShowControls(false)}
-                />
+              <Controls />
             </div>
           </div>
         </main>
