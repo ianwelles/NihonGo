@@ -53,7 +53,7 @@ const AppContent: React.FC = () => {
 
   if (error) {
     return (
-      <div className="h-screen w-screen flex flex-col items-center justify-center bg-gray-900 text-white p-4">
+      <div className="h-screen-safe w-screen flex flex-col items-center justify-center bg-gray-900 text-white p-4">
         <div className="bg-red-500/10 border border-red-500/20 p-6 rounded-2xl max-w-md w-full text-center">
           <div className="text-red-500 text-4xl mb-4">⚠️</div>
           <h2 className="text-xl font-bold mb-2 text-red-500 uppercase">Oops! Something went wrong</h2>
@@ -71,7 +71,7 @@ const AppContent: React.FC = () => {
 
   return (
     <React.Suspense fallback={<LoadingScreen />}>
-      <div className="h-screen w-screen overflow-hidden bg-gray-900 text-white md:flex relative">
+      <div className="h-screen-safe w-screen overflow-hidden bg-gray-900 text-white md:flex relative">
         {isSidebarOpen && isMobile && (
           <div 
             className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm"

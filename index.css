@@ -5,6 +5,12 @@
   font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
+/* Main app container height fixes for mobile browsers */
+.h-screen-safe {
+  height: 100vh;
+  height: 100svh;
+}
+
 /* Custom Scrollbar Styles for Webkit browsers (Chrome, Safari) */
 
 /* Apply to main scrollbar (body/html) */

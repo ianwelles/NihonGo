@@ -12,7 +12,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
   password, setPassword, authError, setAuthError, handleLogin 
 }) => {
   return (
-    <div className="min-h-screen bg-bg flex items-center justify-center p-4">
+    <div className="h-screen-safe bg-bg flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-card-bg p-8 rounded-2xl border-2 border-primary shadow-2xl animate-fade-in">
         <div className="text-center mb-8">
           <h1 className="text-4xl mb-2">🔒</h1>
