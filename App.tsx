@@ -137,7 +137,7 @@ const AppContent: React.FC = () => {
               ${isMobile ? 'absolute inset-0' : 'fixed bottom-0 w-full'}
               ${!isMobile && isSidebarOpen ? 'md:left-[calc(50%+192px)]' : ''}`}
           >
-            <div className="pointer-events-auto h-full w-full relative">
+            <div className="pointer-events-none h-full w-full relative">
               <Controls />
             </div>
           </div>

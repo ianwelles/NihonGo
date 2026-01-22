@@ -87,7 +87,7 @@ export const Controls: React.FC<ControlsProps> = () => {
   const menuContentClass = `w-full bg-[#121212]/95 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl flex flex-col ${popupMaxHeightClass} animate-in slide-in-from-bottom-4 fade-in duration-300 pointer-events-auto`;
 
   return (
-    <div className={`w-full h-full relative ${isMobile ? 'static' : ''}`} ref={menuRef}>
+    <div className={`w-full h-full relative ${isMobile ? 'static' : ''} pointer-events-none`} ref={menuRef}>
       
       {/* --- POPUP MENUS (CITY & TIPS) --- */}
       <div className={menuContainerClass}>
@@ -214,7 +214,7 @@ export const Controls: React.FC<ControlsProps> = () => {
       </div>
       
       {/* --- UNIFIED CONTROLS PILL --- */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[400px] h-14 z-[1001] flex items-center justify-between rounded-full backdrop-blur-xl border shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300"
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[400px] h-14 z-[1001] flex items-center justify-between rounded-full backdrop-blur-xl border shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300 pointer-events-auto"
           style={{
               backgroundColor: activeCity ? `${activeCityColor}F2` : 'rgba(20,20,20,0.9)',
               borderColor: activeCity ? activeCityColor : 'rgba(255,255,255,0.15)',
