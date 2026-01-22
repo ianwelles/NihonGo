@@ -42,6 +42,7 @@ const MapController: React.FC<MapControllerProps> = ({ setMapRef, filteredPlaces
     if (isCityChange || isDayChange || isSidebarToggle || isFullscreenChange || isInitialLoad) {
       const markers = filteredPlaces.map(place => L.marker([place.coordinates.lat, place.coordinates.lon]));
       const group = L.featureGroup(markers);
+      const bounds = group.getBounds();
 
       let fitBoundsOptions: L.FitBoundsOptions = { maxZoom: 15, animate: true };
       
@@ -59,8 +60,8 @@ const MapController: React.FC<MapControllerProps> = ({ setMapRef, filteredPlaces
         }
       } else {
         // Mobile
-        fitBoundsOptions.paddingTopLeft = [20, 20];
-        fitBoundsOptions.paddingBottomRight = [20, 250]; // Account for City Selector
+        fitBoundsOptions.paddingTopLeft = [20, 90];
+        fitBoundsOptions.paddingBottomRight = [20, 300];
       }
 
       setIsMapAnimating(true); 
@@ -72,12 +73,12 @@ const MapController: React.FC<MapControllerProps> = ({ setMapRef, filteredPlaces
 
       map.stop();
       if (isInitialLoad || (activeCity === null && openDay === null)) {
-        map.fitBounds(group.getBounds(), { ...fitBoundsOptions, maxZoom: 7, duration: 1.5 });
+        map.fitBounds(bounds, { ...fitBoundsOptions, maxZoom: 7, duration: 1.5 });
       }
       else if (isCityChange || isDayChange || isFullscreenChange) {
-        map.flyToBounds(group.getBounds(), { ...fitBoundsOptions, duration: 1.2, easeLinearity: 0.25 });
+        map.flyToBounds(bounds, { ...fitBoundsOptions, duration: 1.2, easeLinearity: 0.25 });
       } else if (isSidebarToggle) {
-        map.fitBounds(group.getBounds(), { ...fitBoundsOptions, duration: 0.6 });
+        map.fitBounds(bounds, { ...fitBoundsOptions, duration: 0.6 });
       }
     }
 

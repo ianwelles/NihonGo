@@ -16,10 +16,12 @@ const PlaceMarkers = React.memo(({ places, itineraryPlaceIds }: { places: Place[
 
   const getIcon = useCallback((type: string, isItinerary: boolean) => {
     const color = markerColors[type] || markerColors['default'] || fallbackMapMarkerColors[type] || fallbackMapMarkerColors['default'] || '#3B82F6';
-    const opacity = isItinerary ? 1 : 0.6; // Increased from 0.5 (10% more opaque)
     
-    // Scale: 36px base. isItinerary false = 31px (24% larger than original 25px).
-    const size = isItinerary ? 36 : 31;
+    // Hotels should always be fully opaque and full size, just like itinerary items
+    const isProminent = isItinerary || type === 'hotel';
+    
+    const opacity = isProminent ? 1 : 0.6; 
+    const size = isProminent ? 36 : 31;
 
     const pinSvg = `
     <svg xmlns="http://www.w3.org/2000/svg" 
@@ -56,13 +58,14 @@ const PlaceMarkers = React.memo(({ places, itineraryPlaceIds }: { places: Place[
         const displayTags = place.hotelMeta?.tags || place.tags;
         const typeColor = markerColors[place.type] || markerColors['default'] || fallbackMapMarkerColors[place.type] || fallbackMapMarkerColors['default'] || '#00BCD4';
         const isItinerary = itineraryPlaceIds.has(place.id);
+        const isProminent = isItinerary || place.type === 'hotel';
 
         return (
           <Marker
             key={place.id}
             position={[place.coordinates.lat, place.coordinates.lon]}
             icon={getIcon(place.type, isItinerary)}
-            zIndexOffset={isItinerary ? 100 : 0}
+            zIndexOffset={isProminent ? 100 : 0}
             ref={el => { if (el) markerRefs.current[place.id] = el; }}
             eventHandlers={{
               click: () => setOpenPlaceId(place.id), 
