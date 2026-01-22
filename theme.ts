@@ -15,5 +15,8 @@ export const mapMarkerColors: Record<string, string> = {
   "suggestion": "#bc13fe",
   "shopping": "#ffffff",
   "bar": "#1f51ff",
-  "default": "#e0e0e0"
+  "default": "#e0e0e0",
+  "cesar Tips": "#bc13fe",
+  "matts Tips": "#bc13fe",
+  "maria Tips": "#bc13fe"
 };

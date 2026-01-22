@@ -82,12 +82,13 @@ export const Controls: React.FC<ControlsProps> = () => {
 
   const popupMaxHeightClass = isMobile ? "max-h-[60dvh]" : "max-h-[500px]";
   
-  const menuContainerClass = "fixed bottom-24 left-1/2 -translate-x-1/2 w-[90%] max-w-[400px] z-[2002] flex flex-col pointer-events-none";
+  // Changed from fixed to absolute
+  const menuContainerClass = "absolute bottom-24 left-1/2 -translate-x-1/2 w-[90%] max-w-[400px] z-[2002] flex flex-col pointer-events-none";
 
   const menuContentClass = `w-full bg-[#121212]/95 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl flex flex-col ${popupMaxHeightClass} animate-in slide-in-from-bottom-4 fade-in duration-300 pointer-events-auto`;
 
   return (
-    <div className={`w-full h-full relative ${isMobile ? 'static' : ''} pointer-events-none`} ref={menuRef}>
+    <div className="w-full h-full relative pointer-events-none" ref={menuRef}>
       
       {/* --- POPUP MENUS (CITY & TIPS) --- */}
       <div className={menuContainerClass}>
@@ -163,17 +164,8 @@ export const Controls: React.FC<ControlsProps> = () => {
                     <span className="text-xs font-black text-amber-400 uppercase tracking-widest">Travel Tips</span>
                   </div>
                   
-                  {/* Right Actions: Back & Close */}
+                  {/* Right Actions: Close */}
                   <div className="flex items-center gap-3">
-                    {/* Back Button */}
-                    <button 
-                        onClick={() => setIsMenuOpen(true)}
-                        className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-all"
-                        title="Back to Cities"
-                    >
-                        <ChevronLeft size={18} className="-ml-0.5" />
-                    </button>
-
                     {/* Close Button */}
                     <button 
                         onClick={() => setIsTipsOpen(false)} 
@@ -214,7 +206,8 @@ export const Controls: React.FC<ControlsProps> = () => {
       </div>
       
       {/* --- UNIFIED CONTROLS PILL --- */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[400px] h-14 z-[1001] flex items-center justify-between rounded-full backdrop-blur-xl border shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300 pointer-events-auto"
+      {/* Changed from fixed to absolute */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[400px] h-14 z-[1001] flex items-center justify-between rounded-full backdrop-blur-xl border shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300 pointer-events-auto"
           style={{
               backgroundColor: activeCity ? `${activeCityColor}F2` : 'rgba(20,20,20,0.9)',
               borderColor: activeCity ? activeCityColor : 'rgba(255,255,255,0.15)',

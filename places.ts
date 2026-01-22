@@ -3,7 +3,7 @@ import { Place } from './types';
 export const places: Record<string, Place> = {
   "hilton-tokyo": {
     "id": "hilton-tokyo",
-    "name": "Hilton Tokyo",
+    "name": "Hilton Tokyo (ヒルトン東京)",
     "type": "hotel",
     "city": "Tokyo",
     "coordinates": {
@@ -28,7 +28,7 @@ export const places: Record<string, Place> = {
   },
   "haneda-airport": {
     "id": "haneda-airport",
-    "name": "Haneda Airport",
+    "name": "Haneda Airport (羽田空港)",
     "type": "travel",
     "city": "Tokyo",
     "coordinates": {
@@ -44,7 +44,7 @@ export const places: Record<string, Place> = {
   },
   "shinjuku-station": {
     "id": "shinjuku-station",
-    "name": "Shinjuku Station",
+    "name": "Shinjuku Station (新宿駅)",
     "type": "travel",
     "city": "Tokyo",
     "coordinates": {
@@ -60,7 +60,7 @@ export const places: Record<string, Place> = {
   },
   "shinjuku-gyoen": {
     "id": "shinjuku-gyoen",
-    "name": "Shinjuku Gyoen",
+    "name": "Shinjuku Gyoen (新宿御苑)",
     "type": "sight",
     "city": "Tokyo",
     "coordinates": {
@@ -76,7 +76,7 @@ export const places: Record<string, Place> = {
   },
   "senso-ji": {
     "id": "senso-ji",
-    "name": "Senso-ji",
+    "name": "Senso-ji (浅草寺)",
     "type": "sight",
     "city": "Tokyo",
     "coordinates": {
@@ -92,8 +92,8 @@ export const places: Record<string, Place> = {
   },
   "imperial-palace-east": {
     "id": "imperial-palace-east",
-    "name": "Imperial Palace East Gardens",
-    "type": "sight_rec",
+    "name": "Imperial Palace East Gardens (皇居東御苑)",
+    "type": "sight",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6852,
@@ -108,7 +108,7 @@ export const places: Record<string, Place> = {
   },
   "shinjuku-nichome": {
     "id": "shinjuku-nichome",
-    "name": "Shinjuku Ni-chome",
+    "name": "Shinjuku Ni-chome (新宿二丁目)",
     "type": "sight",
     "city": "Tokyo",
     "coordinates": {
@@ -124,7 +124,7 @@ export const places: Record<string, Place> = {
   },
   "shibuya-crossing": {
     "id": "shibuya-crossing",
-    "name": "Shibuya Crossing",
+    "name": "Shibuya Crossing (渋谷スクランブル交差点)",
     "type": "sight",
     "city": "Tokyo",
     "coordinates": {
@@ -140,7 +140,7 @@ export const places: Record<string, Place> = {
   },
   "tokyo-metro-gov": {
     "id": "tokyo-metro-gov",
-    "name": "Tokyo Metro Gov Building",
+    "name": "Tokyo Metro Gov Building (東京都庁舎)",
     "type": "sight",
     "city": "Tokyo",
     "coordinates": {
@@ -156,7 +156,7 @@ export const places: Record<string, Place> = {
   },
   "torikizoku": {
     "id": "torikizoku",
-    "name": "Torikizoku",
+    "name": "Torikizoku (鳥貴族)",
     "type": "food",
     "city": "Tokyo",
     "coordinates": {
@@ -172,8 +172,8 @@ export const places: Record<string, Place> = {
   },
   "omoide-yokocho": {
     "id": "omoide-yokocho",
-    "name": "Omoide Yokocho",
-    "type": "food_rec",
+    "name": "Omoide Yokocho (思い出横丁)",
+    "type": "food",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6929,
@@ -188,7 +188,7 @@ export const places: Record<string, Place> = {
   },
   "tsukiji-market": {
     "id": "tsukiji-market",
-    "name": "Tsukiji Outer Market",
+    "name": "Tsukiji Outer Market (築地場外市場)",
     "type": "food",
     "city": "Tokyo",
     "coordinates": {
@@ -204,8 +204,8 @@ export const places: Record<string, Place> = {
   },
   "konjiki-hototogisu": {
     "id": "konjiki-hototogisu",
-    "name": "Konjiki Hototogisu",
-    "type": "food_rec",
+    "name": "Konjiki Hototogisu (金色不如帰)",
+    "type": "food",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6897,
@@ -220,8 +220,8 @@ export const places: Record<string, Place> = {
   },
   "ramen-nagi": {
     "id": "ramen-nagi",
-    "name": "Ramen Nagi (Golden Gai)",
-    "type": "food_rec",
+    "name": "Ramen Nagi (ラーメン凪)",
+    "type": "food",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6943,
@@ -236,7 +236,7 @@ export const places: Record<string, Place> = {
   },
   "fuunji": {
     "id": "fuunji",
-    "name": "Fuunji",
+    "name": "Fuunji (風雲児)",
     "type": "food",
     "city": "Tokyo",
     "coordinates": {
@@ -252,8 +252,8 @@ export const places: Record<string, Place> = {
   },
   "ichiran-shinjuku": {
     "id": "ichiran-shinjuku",
-    "name": "Ichiran Shinjuku",
-    "type": "suggestion",
+    "name": "Ichiran Shinjuku (一蘭 新宿)",
+    "type": "maria Tips",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6909,
@@ -268,14 +268,14 @@ export const places: Record<string, Place> = {
   },
   "sushi-kunimitsu": {
     "id": "sushi-kunimitsu",
-    "name": "Sushi Kunimitsu",
+    "name": "Sushi Kunimitsu (鮨 くにみつ)",
     "type": "food",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.7061,
       "lon": 139.6839
     },
-    "description": "Kunimitsu is highly rated (4.7★) for its Omakase course. Booking essential.",
+    "description": "Highly rated Omakase course (4.7★).",
     "url": "https://www.instagram.com/sushi_kunimitsu/",
     "tags": [
       "Omakase",
@@ -284,8 +284,8 @@ export const places: Record<string, Place> = {
   },
   "osushiya-taiki": {
     "id": "osushiya-taiki",
-    "name": "Osushiya Taiki",
-    "type": "food_rec",
+    "name": "Osushiya Taiki (お鮨屋 たいき)",
+    "type": "food",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.7135,
@@ -300,8 +300,8 @@ export const places: Record<string, Place> = {
   },
   "ginza-district": {
     "id": "ginza-district",
-    "name": "Ginza District",
-    "type": "sight_rec",
+    "name": "Ginza District (銀座)",
+    "type": "sight",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6712,
@@ -316,8 +316,8 @@ export const places: Record<string, Place> = {
   },
   "tokyo-tower": {
     "id": "tokyo-tower",
-    "name": "Tokyo Tower",
-    "type": "sight_rec",
+    "name": "Tokyo Tower (東京タワー)",
+    "type": "sight",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6586,
@@ -332,8 +332,8 @@ export const places: Record<string, Place> = {
   },
   "zojo-ji": {
     "id": "zojo-ji",
-    "name": "Zojo-ji Temple",
-    "type": "sight_rec",
+    "name": "Zojo-ji Temple (増上寺)",
+    "type": "sight",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6574,
@@ -348,8 +348,8 @@ export const places: Record<string, Place> = {
   },
   "meiji-shrine": {
     "id": "meiji-shrine",
-    "name": "Meiji Shrine",
-    "type": "sight_rec",
+    "name": "Meiji Shrine (明治神宮)",
+    "type": "sight",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6764,
@@ -364,8 +364,8 @@ export const places: Record<string, Place> = {
   },
   "kabukicho": {
     "id": "kabukicho",
-    "name": "Kabukicho",
-    "type": "sight_rec",
+    "name": "Kabukicho (歌舞伎町)",
+    "type": "sight",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6938,
@@ -380,8 +380,8 @@ export const places: Record<string, Place> = {
   },
   "omotesando": {
     "id": "omotesando",
-    "name": "Omotesando",
-    "type": "sight_rec",
+    "name": "Omotesando (表参道)",
+    "type": "sight",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6652,
@@ -396,8 +396,8 @@ export const places: Record<string, Place> = {
   },
   "takeshita-street": {
     "id": "takeshita-street",
-    "name": "Takeshita Street",
-    "type": "sight_rec",
+    "name": "Takeshita Street (竹下通り)",
+    "type": "sight",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6715,
@@ -412,8 +412,8 @@ export const places: Record<string, Place> = {
   },
   "hachiko-statue": {
     "id": "hachiko-statue",
-    "name": "Hachiko Statue",
-    "type": "sight_rec",
+    "name": "Hachiko Statue (忠犬ハチ公像)",
+    "type": "sight",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6591,
@@ -428,8 +428,8 @@ export const places: Record<string, Place> = {
   },
   "akihabara-electric": {
     "id": "akihabara-electric",
-    "name": "Akihabara Electric Town",
-    "type": "sight_rec",
+    "name": "Akihabara Electric Town (秋葉原電気街)",
+    "type": "sight",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6997,
@@ -444,8 +444,8 @@ export const places: Record<string, Place> = {
   },
   "hamarikyu": {
     "id": "hamarikyu",
-    "name": "Hamarikyu Gardens",
-    "type": "sight_rec",
+    "name": "Hamarikyu Gardens (浜離宮恩賜庭園)",
+    "type": "sight",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6601,
@@ -460,14 +460,14 @@ export const places: Record<string, Place> = {
   },
   "yamato-sushi": {
     "id": "yamato-sushi",
-    "name": "Yamato Sushi",
-    "type": "food_rec",
+    "name": "Yamato Sushi (大和寿司)",
+    "type": "food",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6465,
       "lon": 139.7879
     },
-    "description": "Fresh sushi (Toyosu Market location). Tsukiji Fresh Sushi Breakfast",
+    "description": "Fresh sushi at Toyosu Market.",
     "url": "https://www.sushiyamato-toyosu.com/",
     "tags": [
       "Tsukiji Fresh",
@@ -476,14 +476,14 @@ export const places: Record<string, Place> = {
   },
   "hakushu-teppanyaki": {
     "id": "hakushu-teppanyaki",
-    "name": "Hakushu Teppanyaki",
-    "type": "food_rec",
+    "name": "Hakushu Teppanyaki (鉄板焼き 白秋)",
+    "type": "food",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6558,
       "lon": 139.7015
     },
-    "description": "High-end Teppanyaki for authentic Kobe beef in Shibuya.",
+    "description": "High-end Teppanyaki for Kobe beef.",
     "url": "https://teppanyaki-hakushu.com/",
     "tags": [
       "Kobe Beef",
@@ -492,8 +492,8 @@ export const places: Record<string, Place> = {
   },
   "niagara-curry": {
     "id": "niagara-curry",
-    "name": "Niágara Curry",
-    "type": "food_rec",
+    "name": "Niágara Curry (ナイアガラ)",
+    "type": "food",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6375,
@@ -508,7 +508,7 @@ export const places: Record<string, Place> = {
   },
   "ginza-shopping": {
     "id": "ginza-shopping",
-    "name": "Ginza Shopping Area",
+    "name": "Ginza Shopping Area (銀座ショッピングエリア)",
     "type": "shopping",
     "city": "Tokyo",
     "coordinates": {
@@ -524,7 +524,7 @@ export const places: Record<string, Place> = {
   },
   "akihabara-shopping": {
     "id": "akihabara-shopping",
-    "name": "Akihabara Shopping",
+    "name": "Akihabara Shopping (秋葉原ショッピングエリア)",
     "type": "shopping",
     "city": "Tokyo",
     "coordinates": {
@@ -540,7 +540,7 @@ export const places: Record<string, Place> = {
   },
   "gion-district": {
     "id": "gion-district",
-    "name": "Gion District",
+    "name": "Gion District (祇園)",
     "type": "sight",
     "city": "Kyoto",
     "coordinates": {
@@ -556,7 +556,7 @@ export const places: Record<string, Place> = {
   },
   "fushimi-inari": {
     "id": "fushimi-inari",
-    "name": "Fushimi Inari Taisha",
+    "name": "Fushimi Inari Taisha (伏見稲荷大社)",
     "type": "sight",
     "city": "Kyoto",
     "coordinates": {
@@ -572,7 +572,7 @@ export const places: Record<string, Place> = {
   },
   "kiyomizu-dera": {
     "id": "kiyomizu-dera",
-    "name": "Kiyomizu-dera",
+    "name": "Kiyomizu-dera (清水寺)",
     "type": "sight",
     "city": "Kyoto",
     "coordinates": {
@@ -588,7 +588,7 @@ export const places: Record<string, Place> = {
   },
   "arashiyama": {
     "id": "arashiyama",
-    "name": "Arashiyama Bamboo Grove",
+    "name": "Arashiyama Bamboo Grove (嵐山竹林)",
     "type": "sight",
     "city": "Kyoto",
     "coordinates": {
@@ -604,7 +604,7 @@ export const places: Record<string, Place> = {
   },
   "nishiki-market": {
     "id": "nishiki-market",
-    "name": "Nishiki Market",
+    "name": "Nishiki Market (錦市場)",
     "type": "food",
     "city": "Kyoto",
     "coordinates": {
@@ -620,7 +620,7 @@ export const places: Record<string, Place> = {
   },
   "honke-daiichi": {
     "id": "honke-daiichi",
-    "name": "Honke Daiichi-Asahi",
+    "name": "Honke Daiichi-Asahi (本家 第一旭)",
     "type": "food",
     "city": "Kyoto",
     "coordinates": {
@@ -636,14 +636,14 @@ export const places: Record<string, Place> = {
   },
   "menbaka-fire": {
     "id": "menbaka-fire",
-    "name": "Menbaka Fire Ramen",
-    "type": "suggestion",
+    "name": "Menbaka Fire Ramen (めん馬鹿一代)",
+    "type": "maria Tips",
     "city": "Kyoto",
     "coordinates": {
       "lat": 35.0211,
       "lon": 135.746
     },
-    "description": "A literal explosive dining experience!",
+    "description": "Explosive fire ramen performance.",
     "url": "https://www.instagram.com/menbaka_fire_ramen",
     "tags": [
       "Fire Performance",
@@ -652,8 +652,8 @@ export const places: Record<string, Place> = {
   },
   "kyoto-imperial": {
     "id": "kyoto-imperial",
-    "name": "Kyoto Imperial Palace",
-    "type": "sight_rec",
+    "name": "Kyoto Imperial Palace (京都御所)",
+    "type": "sight",
     "city": "Kyoto",
     "coordinates": {
       "lat": 35.0254,
@@ -668,8 +668,8 @@ export const places: Record<string, Place> = {
   },
   "higashiyama": {
     "id": "higashiyama",
-    "name": "Higashiyama District",
-    "type": "sight_rec",
+    "name": "Higashiyama District (東山区)",
+    "type": "sight",
     "city": "Kyoto",
     "coordinates": {
       "lat": 34.9949,
@@ -684,8 +684,8 @@ export const places: Record<string, Place> = {
   },
   "ninenzaka": {
     "id": "ninenzaka",
-    "name": "Ninenzaka & Sannenzaka",
-    "type": "sight_rec",
+    "name": "Ninenzaka & Sannenzaka (二寧坂・産寧坂)",
+    "type": "sight",
     "city": "Kyoto",
     "coordinates": {
       "lat": 34.9968,
@@ -700,8 +700,8 @@ export const places: Record<string, Place> = {
   },
   "yasaka-pagoda": {
     "id": "yasaka-pagoda",
-    "name": "Yasaka Pagoda (Hokan-ji)",
-    "type": "sight_rec",
+    "name": "Yasaka Pagoda (法観寺)",
+    "type": "sight",
     "city": "Kyoto",
     "coordinates": {
       "lat": 34.9985,
@@ -716,14 +716,14 @@ export const places: Record<string, Place> = {
   },
   "yasaka-jinja": {
     "id": "yasaka-jinja",
-    "name": "Yasaka Jinja",
-    "type": "sight_rec",
+    "name": "Yasaka Jinja (八坂神社)",
+    "type": "sight",
     "city": "Kyoto",
     "coordinates": {
       "lat": 35.0037,
       "lon": 135.7785
     },
-    "description": "Large complex of temples and gates in Gion.",
+    "description": "Large shrine complex in Gion.",
     "url": "https://www.yasaka-jinja.or.jp/en/",
     "tags": [
       "Gion Shrine",
@@ -732,40 +732,24 @@ export const places: Record<string, Place> = {
   },
   "shirakawa-lane": {
     "id": "shirakawa-lane",
-    "name": "Shirakawa Lane",
-    "type": "sight_rec",
+    "name": "Shirakawa Lane (白川筋)",
+    "type": "sight",
     "city": "Kyoto",
     "coordinates": {
       "lat": 35.0055,
       "lon": 135.7758
     },
-    "description": "Beautiful canal street, good for Geisha spotting.",
+    "description": "Scenic canal street in Gion.",
     "url": "https://www.japan-guide.com/e/e3902.html",
     "tags": [
       "Scenic Canal",
       "Willow Trees"
     ]
   },
-  "nijo-castle": {
-    "id": "nijo-castle",
-    "name": "Nijo Castle",
-    "type": "sight_rec",
-    "city": "Kyoto",
-    "coordinates": {
-      "lat": 35.0142,
-      "lon": 135.7482
-    },
-    "description": "Shogun residence and gardens.",
-    "url": "https://nijo-jocastle.city.kyoto.lg.jp/?lang=en",
-    "tags": [
-      "Shogun Palace",
-      "Nightingale Floors"
-    ]
-  },
   "kinkaku-ji": {
     "id": "kinkaku-ji",
-    "name": "Kinkaku-ji",
-    "type": "sight_rec",
+    "name": "Kinkaku-ji (金閣寺)",
+    "type": "sight",
     "city": "Kyoto",
     "coordinates": {
       "lat": 35.0394,
@@ -780,8 +764,8 @@ export const places: Record<string, Place> = {
   },
   "philosophers-path": {
     "id": "philosophers-path",
-    "name": "Philosopher’s Path",
-    "type": "sight_rec",
+    "name": "Philosopher’s Path (哲学の道)",
+    "type": "sight",
     "city": "Kyoto",
     "coordinates": {
       "lat": 35.0268,
@@ -796,8 +780,8 @@ export const places: Record<string, Place> = {
   },
   "ginkaku-ji": {
     "id": "ginkaku-ji",
-    "name": "Ginkaku-ji",
-    "type": "sight_rec",
+    "name": "Ginkaku-ji (銀閣寺)",
+    "type": "sight",
     "city": "Kyoto",
     "coordinates": {
       "lat": 35.0267,
@@ -812,14 +796,14 @@ export const places: Record<string, Place> = {
   },
   "hikiniku-to-come": {
     "id": "hikiniku-to-come",
-    "name": "Hikiniku to Come",
-    "type": "food_rec",
+    "name": "Hikiniku to Come (挽肉と米)",
+    "type": "food",
     "city": "Kyoto",
     "coordinates": {
       "lat": 34.9965,
       "lon": 135.778
     },
-    "description": "Famous charcoal grilled hamburger steaks.",
+    "description": "Charcoal grilled hamburger steaks.",
     "url": "https://hikinikutocome.com/en/",
     "tags": [
       "Hamburger Steak",
@@ -828,8 +812,8 @@ export const places: Record<string, Place> = {
   },
   "restaurante-tomisen": {
     "id": "restaurante-tomisen",
-    "name": "Restaurante Tomisen",
-    "type": "food_rec",
+    "name": "Restaurante Tomisen (冨せん)",
+    "type": "food",
     "city": "Kyoto",
     "coordinates": {
       "lat": 35.004,
@@ -844,8 +828,8 @@ export const places: Record<string, Place> = {
   },
   "mouriya-gion": {
     "id": "mouriya-gion",
-    "name": "Mouriya Gion",
-    "type": "food_rec",
+    "name": "Mouriya Gion (モーリヤ祇園)",
+    "type": "food",
     "city": "Kyoto",
     "coordinates": {
       "lat": 35.0045,
@@ -860,8 +844,8 @@ export const places: Record<string, Place> = {
   },
   "botanic-coffee": {
     "id": "botanic-coffee",
-    "name": "Botanic Coffee Kyoto",
-    "type": "food_rec",
+    "name": "Botanic Coffee Kyoto (ボタニックコーヒーキョウト)",
+    "type": "food",
     "city": "Kyoto",
     "coordinates": {
       "lat": 35.0012,
@@ -876,14 +860,14 @@ export const places: Record<string, Place> = {
   },
   "starbucks-ninenzaka": {
     "id": "starbucks-ninenzaka",
-    "name": "Starbucks Ninenzaka",
-    "type": "food_rec",
+    "name": "Starbucks Ninenzaka (スターバックス コーヒー 京都二寧坂ヤサカ茶屋店)",
+    "type": "food",
     "city": "Kyoto",
     "coordinates": {
       "lat": 34.9982,
       "lon": 135.7825
     },
-    "description": "Inside a traditional house with tatami floors.",
+    "description": "Traditional house with tatami floors.",
     "url": "https://store.starbucks.co.jp/detail-1484/",
     "tags": [
       "Tatami Seating",
@@ -892,14 +876,14 @@ export const places: Record<string, Place> = {
   },
   "yojiya-main": {
     "id": "yojiya-main",
-    "name": "Yojiya Main Store",
+    "name": "Yojiya Main Store (よーじや祇園本店)",
     "type": "shopping",
     "city": "Kyoto",
     "coordinates": {
       "lat": 35.0094,
       "lon": 135.7686
     },
-    "description": "Kyoto-based rice cosmetics brand.",
+    "description": "Kyoto cosmetics and oil-blotting paper.",
     "url": "https://www.yojiya.co.jp/english/",
     "tags": [
       "Cosmetics",
@@ -908,7 +892,7 @@ export const places: Record<string, Place> = {
   },
   "shijo-kawaramachi": {
     "id": "shijo-kawaramachi",
-    "name": "Shijo Kawaramachi",
+    "name": "Shijo Kawaramachi (四条河原町)",
     "type": "shopping",
     "city": "Kyoto",
     "coordinates": {
@@ -924,14 +908,14 @@ export const places: Record<string, Place> = {
   },
   "hilton-osaka": {
     "id": "hilton-osaka",
-    "name": "Hilton Osaka",
+    "name": "Hilton Osaka (ヒルトン大阪)",
     "type": "hotel",
     "city": "Osaka",
     "coordinates": {
       "lat": 34.7003,
       "lon": 135.4955
     },
-    "description": "Top Pick Hotel - Umeda, Kita-ku.",
+    "description": "Top Pick Hotel in Umeda.",
     "url": "https://www.hilton.com/en/hotels/osahitw-hilton-osaka/",
     "tags": [
       "Umeda Location",
@@ -940,7 +924,7 @@ export const places: Record<string, Place> = {
     "hotelMeta": {
       "address": "1-8-8, Umeda, Kita-ku, Osaka 530-0001, Japan",
       "directions": "https://www.google.com/maps/dir/?api=1&destination=34.7003,135.4955&travelmode=transit,Umeda",
-      "neighborhoodInsights": "Umeda is Osaka's glittering northern hub. It's a vertical city of giant department stores and high-end dining.",
+      "neighborhoodInsights": "Umeda is Osaka's vertical city hub.",
       "tags": [
         "Umeda Location",
         "City Views"
@@ -949,14 +933,14 @@ export const places: Record<string, Place> = {
   },
   "osaka-castle": {
     "id": "osaka-castle",
-    "name": "Osaka Castle",
+    "name": "Osaka Castle (大阪城)",
     "type": "sight",
     "city": "Osaka",
     "coordinates": {
       "lat": 34.6873,
       "lon": 135.5262
     },
-    "description": "Historic Landmark",
+    "description": "Historic Landmark and museum.",
     "url": "https://www.osakacastle.net/english/",
     "tags": [
       "Historic Castle",
@@ -965,14 +949,14 @@ export const places: Record<string, Place> = {
   },
   "dotonbori": {
     "id": "dotonbori",
-    "name": "Dotonbori",
-    "type": "sight_rec",
+    "name": "Dotonbori (道頓堀)",
+    "type": "sight",
     "city": "Osaka",
     "coordinates": {
       "lat": 34.6687,
       "lon": 135.5013
     },
-    "description": "Food & Neon District",
+    "description": "Vibrant food and neon district.",
     "url": "https://osaka-info.jp/en/spot/dotonbori/",
     "tags": [
       "Neon Lights",
@@ -981,14 +965,14 @@ export const places: Record<string, Place> = {
   },
   "shinsekai": {
     "id": "shinsekai",
-    "name": "Shinsekai",
-    "type": "sight_rec",
+    "name": "Shinsekai (新世界)",
+    "type": "sight",
     "city": "Osaka",
     "coordinates": {
       "lat": 34.652,
       "lon": 135.5063
     },
-    "description": "Retro Osaka Vibes",
+    "description": "Retro Osaka entertainment district.",
     "url": "https://osaka-info.jp/en/spot/shinsekai/",
     "tags": [
       "Retro Vibe",
@@ -997,14 +981,14 @@ export const places: Record<string, Place> = {
   },
   "doyama-cho": {
     "id": "doyama-cho",
-    "name": "Dōyama-chō",
+    "name": "Dōyama-chō (堂山町)",
     "type": "sight",
     "city": "Osaka",
     "coordinates": {
       "lat": 34.7036,
       "lon": 135.5033
     },
-    "description": "Gay District",
+    "description": "Osaka's main gay district.",
     "url": "https://insideosaka.com/osaka-gay-district/",
     "tags": [
       "Gay District",
@@ -1013,14 +997,14 @@ export const places: Record<string, Place> = {
   },
   "kushikatsu-daruma": {
     "id": "kushikatsu-daruma",
-    "name": "Kushikatsu Daruma",
+    "name": "Kushikatsu Daruma (串かつだるま)",
     "type": "food",
     "city": "Osaka",
     "coordinates": {
       "lat": 34.669,
       "lon": 135.503
     },
-    "description": "Famous Fried Skewers",
+    "description": "Famous deep-fried skewers.",
     "url": "https://www.kushikatsu-daruma.com/",
     "tags": [
       "Deep Fried Skewers",
@@ -1029,14 +1013,14 @@ export const places: Record<string, Place> = {
   },
   "fukutaro": {
     "id": "fukutaro",
-    "name": "Fukutaro",
+    "name": "Fukutaro (福太郎)",
     "type": "food",
     "city": "Osaka",
     "coordinates": {
-      "lat": 34.6655,
+      "lat": 34.6645,
       "lon": 135.502
     },
-    "description": "Top Rated Okonomiyaki",
+    "description": "Renowned okonomiyaki and negiyaki.",
     "url": "https://2951.jp/",
     "tags": [
       "Okonomiyaki",
@@ -1045,14 +1029,14 @@ export const places: Record<string, Place> = {
   },
   "ajinoya-honten": {
     "id": "ajinoya-honten",
-    "name": "Ajinoya Honten",
-    "type": "food_rec",
+    "name": "Ajinoya Honten (味乃家 本店)",
+    "type": "food",
     "city": "Osaka",
     "coordinates": {
       "lat": 34.668,
       "lon": 135.501
     },
-    "description": "Michelin Bib Gourmand Okonomiyaki",
+    "description": "Michelin Bib Gourmand Okonomiyaki.",
     "url": "http://www.ajinoya-okonomiyaki.com/top/",
     "tags": [
       "Michelin Bib",
@@ -1061,14 +1045,14 @@ export const places: Record<string, Place> = {
   },
   "den-den-town": {
     "id": "den-den-town",
-    "name": "Den Den Town",
-    "type": "sight_rec",
+    "name": "Den Den Town (でんでんタウン)",
+    "type": "sight",
     "city": "Osaka",
     "coordinates": {
       "lat": 34.6593,
       "lon": 135.506
     },
-    "description": "Electronics district (Osaka's Akihabara).",
+    "description": "Osaka's electronics and anime district.",
     "url": "https://osaka-info.jp/en/spot/nipponbashi-den-den-town/",
     "tags": [
       "Anime Goods",
@@ -1077,14 +1061,14 @@ export const places: Record<string, Place> = {
   },
   "nishinomaru-garden": {
     "id": "nishinomaru-garden",
-    "name": "Nishinomaru Garden",
-    "type": "sight_rec",
+    "name": "Nishinomaru Garden (西の丸庭園)",
+    "type": "sight",
     "city": "Osaka",
     "coordinates": {
       "lat": 34.685,
       "lon": 135.5255
     },
-    "description": "Osaka Castle grounds with 600 cherry trees.",
+    "description": "Scenic garden in Osaka Castle Park.",
     "url": "https://www.osakacastle.net/english/park/nishinomaru.html",
     "tags": [
       "Castle Views",
@@ -1093,8 +1077,8 @@ export const places: Record<string, Place> = {
   },
   "glico-man": {
     "id": "glico-man",
-    "name": "Glico Man Sign",
-    "type": "sight_rec",
+    "name": "Glico Man Sign (グリコサイン)",
+    "type": "sight",
     "city": "Osaka",
     "coordinates": {
       "lat": 34.6687,
@@ -1109,14 +1093,14 @@ export const places: Record<string, Place> = {
   },
   "kani-doraku": {
     "id": "kani-doraku",
-    "name": "Kani Doraku Dotonbori",
-    "type": "food_rec",
+    "name": "Kani Doraku Dotonbori (かに道楽)",
+    "type": "food",
     "city": "Osaka",
     "coordinates": {
       "lat": 34.6687,
       "lon": 135.5013
     },
-    "description": "Famous crab specialist with giant sign.",
+    "description": "Famous crab specialty restaurant.",
     "url": "https://douraku.co.jp/",
     "tags": [
       "Crab Feast",
@@ -1125,14 +1109,14 @@ export const places: Record<string, Place> = {
   },
   "gems-namba": {
     "id": "gems-namba",
-    "name": "GEMS Namba",
-    "type": "food_rec",
+    "name": "GEMS Namba (GEMSなんば)",
+    "type": "food",
     "city": "Osaka",
     "coordinates": {
       "lat": 34.6644,
       "lon": 135.5008
     },
-    "description": "Dining complex specialising in meat.",
+    "description": "Dining complex for meat lovers.",
     "url": "https://www.gems-portal.com/series/detail.php?id=8",
     "tags": [
       "Dining Complex",
@@ -1141,14 +1125,14 @@ export const places: Record<string, Place> = {
   },
   "ajinoya-branch": {
     "id": "ajinoya-branch",
-    "name": "Ajinoya",
-    "type": "food_rec",
+    "name": "Ajinoya (味乃家)",
+    "type": "food",
     "city": "Osaka",
     "coordinates": {
       "lat": 34.668,
       "lon": 135.5015
     },
-    "description": "Famous Okonomiyaki (Bib Gourmand).",
+    "description": "Famous fluffy Okonomiyaki.",
     "url": "http://www.ajinoya-okonomiyaki.com/english/",
     "tags": [
       "Okonomiyaki",
@@ -1157,14 +1141,14 @@ export const places: Record<string, Place> = {
   },
   "don-quijote": {
     "id": "don-quijote",
-    "name": "Don Quijote Dotonbori",
+    "name": "Don Quijote Dotonbori (ドン・キホーテ 道頓堀店)",
     "type": "shopping",
     "city": "Osaka",
     "coordinates": {
       "lat": 34.6693,
       "lon": 135.5028
     },
-    "description": "For Skincare/Snack Loot Drops (Ferris Wheel).",
+    "description": "Discount shopping and Ferris wheel.",
     "url": "https://www.donki.com/en/",
     "tags": [
       "Discount Shopping",
@@ -1173,7 +1157,7 @@ export const places: Record<string, Place> = {
   },
   "shinsaibashi-arcade": {
     "id": "shinsaibashi-arcade",
-    "name": "Shinsaibashi Shopping Arcade",
+    "name": "Shinsaibashi Shopping Arcade (心斎橋筋商店街)",
     "type": "shopping",
     "city": "Osaka",
     "coordinates": {
@@ -1189,14 +1173,14 @@ export const places: Record<string, Place> = {
   },
   "hilton-shanghai": {
     "id": "hilton-shanghai",
-    "name": "Hilton Shanghai City Center",
+    "name": "Hilton Shanghai City Center (上海静安希尔顿酒店)",
     "type": "hotel",
     "city": "Shanghai",
     "coordinates": {
       "lat": 31.2185,
       "lon": 121.4332
     },
-    "description": "Top Pick Hotel - West Yan'an Road.",
+    "description": "Top Pick Hotel near Jing'an.",
     "url": "https://www.hilton.com/en/hotels/shamshi-hilton-shanghai-city-center/",
     "tags": [
       "Central Location",
@@ -1205,7 +1189,7 @@ export const places: Record<string, Place> = {
     "hotelMeta": {
       "address": "No. 488 West Yan'an Road, Shanghai, 200050, China",
       "directions": "https://www.google.com/maps/dir/?api=1&destination=31.2185,121.4332&travelmode=transit,Located",
-      "neighborhoodInsights": "Near the edge of the historic Former French Concession. It provides a more localized and authentic 'Old Shanghai' feel.",
+      "neighborhoodInsights": "Near the Former French Concession.",
       "tags": [
         "Central Location",
         "Business"
@@ -1214,14 +1198,14 @@ export const places: Record<string, Place> = {
   },
   "pudong-airport": {
     "id": "pudong-airport",
-    "name": "Pudong Airport (PVG)",
+    "name": "Pudong Airport (PVG) (浦东国际机场)",
     "type": "travel",
     "city": "Shanghai",
     "coordinates": {
       "lat": 31.1443,
       "lon": 121.8083
     },
-    "description": "Arrival/Departure",
+    "description": "Arrival and Departure hub.",
     "url": "https://www.shanghaiairport.com/en/",
     "tags": [
       "International Hub",
@@ -1230,14 +1214,14 @@ export const places: Record<string, Place> = {
   },
   "maglev-station": {
     "id": "maglev-station",
-    "name": "Maglev Longyang Rd",
+    "name": "Maglev Longyang Rd (磁浮龙阳路站)",
     "type": "travel",
     "city": "Shanghai",
     "coordinates": {
       "lat": 31.209,
       "lon": 121.558
     },
-    "description": "High Speed Train Station",
+    "description": "High Speed Maglev link to PVG.",
     "url": "https://www.smtdc.com/en/",
     "tags": [
       "High Speed Train",
@@ -1246,14 +1230,14 @@ export const places: Record<string, Place> = {
   },
   "french-concession": {
     "id": "french-concession",
-    "name": "French Concession",
-    "type": "sight_rec",
+    "name": "French Concession (上海法租界)",
+    "type": "sight",
     "city": "Shanghai",
     "coordinates": {
       "lat": 31.2155,
       "lon": 121.4556
     },
-    "description": "Historic Walking Area",
+    "description": "Historic tree-lined walking area.",
     "url": "https://www.smartshanghai.com/articles/tourist/the-former-french-concession/",
     "tags": [
       "Tree-lined Streets",
@@ -1262,14 +1246,14 @@ export const places: Record<string, Place> = {
   },
   "yu-garden": {
     "id": "yu-garden",
-    "name": "Yu Garden",
+    "name": "Yu Garden (豫园)",
     "type": "sight",
     "city": "Shanghai",
     "coordinates": {
       "lat": 31.2272,
       "lon": 121.4921
     },
-    "description": "Classical Garden",
+    "description": "Classical Ming-style garden.",
     "url": "https://www.meet-in-shanghai.net/scenic-spots/yu-garden",
     "tags": [
       "Classical Garden",
@@ -1278,14 +1262,14 @@ export const places: Record<string, Place> = {
   },
   "the-bund": {
     "id": "the-bund",
-    "name": "The Bund",
+    "name": "The Bund (外滩)",
     "type": "sight",
     "city": "Shanghai",
     "coordinates": {
       "lat": 31.2402,
       "lon": 121.4905
     },
-    "description": "Iconic Waterfront Skyline",
+    "description": "Iconic waterfront skyline view.",
     "url": "https://www.meet-in-shanghai.net/scenic-spots/the-bund",
     "tags": [
       "Waterfront Views",
@@ -1294,14 +1278,14 @@ export const places: Record<string, Place> = {
   },
   "fu-1039": {
     "id": "fu-1039",
-    "name": "Fu 1039",
+    "name": "Fu 1039 (福1039)",
     "type": "food",
     "city": "Shanghai",
     "coordinates": {
       "lat": 31.22,
       "lon": 121.43
     },
-    "description": "Birthday Dinner (Classic)",
+    "description": "Classic Shanghainese in a villa.",
     "url": "https://guide.michelin.com/en/shanghai-municipality/shanghai/restaurant/fu-1039",
     "tags": [
       "Shanghainese",
@@ -1310,14 +1294,14 @@ export const places: Record<string, Place> = {
   },
   "fu-he-hui": {
     "id": "fu-he-hui",
-    "name": "Fu He Hui",
-    "type": "food_rec",
+    "name": "Fu He Hui (福和慧)",
+    "type": "food",
     "city": "Shanghai",
     "coordinates": {
       "lat": 31.221,
       "lon": 121.431
     },
-    "description": "Birthday Dinner (Veg Option)",
+    "description": "Michelin vegetarian fine dining.",
     "url": "https://guide.michelin.com/en/shanghai-municipality/shanghai/restaurant/fu-he-hui",
     "tags": [
       "Vegetarian Fine Dining",
@@ -1326,14 +1310,14 @@ export const places: Record<string, Place> = {
   },
   "old-jesse": {
     "id": "old-jesse",
-    "name": "Old Jesse",
+    "name": "Old Jesse (老吉士)",
     "type": "food",
     "city": "Shanghai",
     "coordinates": {
       "lat": 31.205,
       "lon": 121.44
     },
-    "description": "Authentic Local Cuisine",
+    "description": "Authentic local Shanghainese food.",
     "url": "https://guide.michelin.com/en/shanghai-municipality/shanghai/restaurant/old-jesse-xuhui",
     "tags": [
       "Authentic Local",
@@ -1342,14 +1326,14 @@ export const places: Record<string, Place> = {
   },
   "jianguo-328": {
     "id": "jianguo-328",
-    "name": "Jianguo 328",
+    "name": "Jianguo 328 (建国328小馆)",
     "type": "food",
     "city": "Shanghai",
     "coordinates": {
       "lat": 31.208,
       "lon": 121.455
     },
-    "description": "MSG-Free Shanghainese.",
+    "description": "MSG-free local home cooking.",
     "url": "https://guide.michelin.com/en/shanghai-municipality/shanghai/restaurant/jianguo-328",
     "tags": [
       "MSG-Free",
@@ -1358,14 +1342,14 @@ export const places: Record<string, Place> = {
   },
   "yangs-dumplings": {
     "id": "yangs-dumplings",
-    "name": "Yang's Dumplings",
+    "name": "Yang's Dumplings (小杨生煎)",
     "type": "food",
     "city": "Shanghai",
     "coordinates": {
       "lat": 31.148,
       "lon": 121.81
     },
-    "description": "Famous Sheng Jian Bao chain (PVG Terminal 2).",
+    "description": "Famous pan-fried soup buns.",
     "url": "https://www.smartshanghai.com/venue/2945/yang_s_fry-dumpling",
     "tags": [
       "Sheng Jian Bao",
@@ -1374,14 +1358,14 @@ export const places: Record<string, Place> = {
   },
   "hunt-bar": {
     "id": "hunt-bar",
-    "name": "HUNT",
-    "type": "bar_rec",
+    "name": "HUNT (HUNT酒吧)",
+    "type": "bar",
     "city": "Shanghai",
     "coordinates": {
       "lat": 31.2057,
       "lon": 121.4336
     },
-    "description": "Popular Gay Bar/Club (Bear Friendly)",
+    "description": "Popular social gay bar.",
     "url": "https://www.travelgay.com/venue/hunt-shanghai",
     "tags": [
       "Gay Bar",
@@ -1390,14 +1374,14 @@ export const places: Record<string, Place> = {
   },
   "nara-park": {
     "id": "nara-park",
-    "name": "Nara Deer Park",
-    "type": "sight_rec",
+    "name": "Nara Deer Park (奈良公園)",
+    "type": "sight",
     "city": "Kyoto",
     "coordinates": {
       "lat": 34.685,
       "lon": 135.843
     },
-    "description": "Park with free-roaming deer and temples.",
+    "description": "Park with wild bowing deer.",
     "url": "https://www.japan-guide.com/e/e4103.html",
     "tags": [
       "Friendly Deer",
@@ -1406,46 +1390,30 @@ export const places: Record<string, Place> = {
   },
   "shanghai-tower": {
     "id": "shanghai-tower",
-    "name": "Shanghai Tower",
+    "name": "Shanghai Tower (上海中心大厦)",
     "type": "sight",
     "city": "Shanghai",
     "coordinates": {
       "lat": 31.233,
       "lon": 121.505
     },
-    "description": "China's tallest building and world's second-tallest.",
+    "description": "China's tallest observation deck.",
     "url": "https://en.shanghaitower.com/",
     "tags": [
       "Skyline",
       "Views"
     ]
   },
-  "pudong-airport-int": {
-    "id": "pudong-airport-int",
-    "name": "Shanghai Pudong Int. Airport",
-    "type": "travel",
-    "city": "Shanghai",
-    "coordinates": {
-      "lat": 31.1443,
-      "lon": 121.8083
-    },
-    "description": "Main international airport.",
-    "url": "https://www.shanghaiairport.com/en/",
-    "tags": [
-      "Airport",
-      "Travel"
-    ]
-  },
   "osaka-station": {
     "id": "osaka-station",
-    "name": "Osaka Station",
+    "name": "Osaka Station (大阪駅)",
     "type": "travel",
     "city": "Osaka",
     "coordinates": {
       "lat": 34.7025,
       "lon": 135.496
     },
-    "description": "Major transport hub in Umeda.",
+    "description": "Main transit hub for Umeda.",
     "url": "https://www.westjr.co.jp/global/en/",
     "tags": [
       "Transport"
@@ -1453,14 +1421,14 @@ export const places: Record<string, Place> = {
   },
   "kansai-airport": {
     "id": "kansai-airport",
-    "name": "Kansai Intl Airport (KIX)",
+    "name": "Kansai Intl Airport (KIX) (関西国際空港)",
     "type": "travel",
     "city": "Osaka",
     "coordinates": {
       "lat": 34.4325,
       "lon": 135.2304
     },
-    "description": "International airport on an artificial island.",
+    "description": "Departure airport for Osaka.",
     "url": "https://www.kansai-airport.or.jp/en/",
     "tags": [
       "Airport",
@@ -1469,14 +1437,14 @@ export const places: Record<string, Place> = {
   },
   "kyoto-station": {
     "id": "kyoto-station",
-    "name": "Kyoto Station",
+    "name": "Kyoto Station (京都駅)",
     "type": "travel",
     "city": "Kyoto",
     "coordinates": {
       "lat": 34.9858,
       "lon": 135.7588
     },
-    "description": "Major transport hub and architectural landmark.",
+    "description": "Major architectural transport hub.",
     "url": "https://www.kyotostation.com/",
     "tags": [
       "Transport",
@@ -1485,14 +1453,14 @@ export const places: Record<string, Place> = {
   },
   "ramen-tatsunoya": {
     "id": "ramen-tatsunoya",
-    "name": "Ramen Tatsunoya",
-    "type": "food_rec",
+    "name": "Ramen Tatsunoya (ラーメン龍の家)",
+    "type": "food",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6946,
       "lon": 139.6993
     },
-    "description": "A popular tonkotsu ramen shop famous for its 'Tsukemen Motsu' (dipping noodles with offal).",
+    "description": "Tonkotsu ramen and dipping noodles.",
     "url": "http://www.tatsunoya.net/",
     "tags": [
       "Ramen",
@@ -1502,14 +1470,14 @@ export const places: Record<string, Place> = {
   },
   "ishibekoji-muan": {
     "id": "ishibekoji-muan",
-    "name": "Ishibekoji Muan",
+    "name": "Ishibekoji Muan (石塀小路 夢庵)",
     "type": "hotel",
     "city": "Kyoto",
     "coordinates": {
       "lat": 35.0003,
       "lon": 135.7797
     },
-    "description": "Intimate 5-star ryokan with three rooms, blending traditional Japanese aesthetics (tatami, futons) with modern luxury (Dyson, Aesop). Features private hinoki cypress baths.",
+    "description": "Intimate luxury 5-star ryokan.",
     "url": "https://www.ishibekojimuan.com/",
     "tags": [
       "Ryokan",
@@ -1520,7 +1488,7 @@ export const places: Record<string, Place> = {
     "hotelMeta": {
       "address": "463-10 Shimokawara-cho, Higashiyama-ku, Kyoto 605-0825, Japan",
       "directions": "https://www.google.com/maps/dir/?api=1&destination=35.0003,135.7797&travelmode=transit",
-      "neighborhoodInsights": "Located in Southern Higashiyama on Ishibe-koji, Kyoto's most atmospheric stone-paved lane. It is a quiet 'inner sanctum' steps away from Gion, Yasaka Shrine, and Kodai-ji.",
+      "neighborhoodInsights": "Located in atmospheric Ishibe-koji.",
       "tags": [
         "Ryokan",
         "Luxury",
@@ -1531,14 +1499,14 @@ export const places: Record<string, Place> = {
   },
   "nanxiang-bun": {
     "id": "nanxiang-bun",
-    "name": "Nanxiang Steamed Bun",
+    "name": "Nanxiang Steamed Bun (南翔馒头店)",
     "type": "food",
     "city": "Shanghai",
     "coordinates": {
       "lat": 31.2272,
       "lon": 121.4921
     },
-    "description": "Famous soup dumplings inside Yu Garden.",
+    "description": "Iconic xiaolongbao in Yu Garden.",
     "url": "https://guide.michelin.com/en/shanghai-municipality/shanghai/restaurant/nanxiang-steamed-bun-city-god-temple",
     "tags": [
       "Old City",
@@ -1547,14 +1515,14 @@ export const places: Record<string, Place> = {
   },
   "teamlab-planets": {
     "id": "teamlab-planets",
-    "name": "TeamLab Planets",
-    "type": "sight_rec",
+    "name": "TeamLab Planets (チームラボプラネッツ)",
+    "type": "sight",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6457,
       "lon": 139.7892
     },
-    "description": "Immersive digital art museum. Book in advance.",
+    "description": "Immersive water-themed digital art.",
     "url": "https://planets.teamlab.art/tokyo/",
     "tags": [
       "Art",
@@ -1564,14 +1532,14 @@ export const places: Record<string, Place> = {
   },
   "shibuya-sky": {
     "id": "shibuya-sky",
-    "name": "Shibuya Sky",
-    "type": "sight_rec",
+    "name": "Shibuya Sky (渋谷スカイ)",
+    "type": "sight",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6585,
       "lon": 139.7023
     },
-    "description": "Open-air observation deck above Shibuya Scramble.",
+    "description": "Open-air deck above the Scramble.",
     "url": "https://www.shibuya-scramble-square.com/sky/",
     "tags": [
       "Views",
@@ -1581,14 +1549,14 @@ export const places: Record<string, Place> = {
   },
   "nezu-museum": {
     "id": "nezu-museum",
-    "name": "Nezu Museum",
-    "type": "sight_rec",
+    "name": "Nezu Museum (根津美術館)",
+    "type": "sight",
     "city": "Tokyo",
     "coordinates": {
       "lat": 35.6622,
       "lon": 139.7188
     },
-    "description": "Private art collection with a stunning Japanese garden.",
+    "description": "Private art collection and garden.",
     "url": "https://www.nezu-muse.or.jp/en/",
     "tags": [
       "Garden",
@@ -1598,14 +1566,14 @@ export const places: Record<string, Place> = {
   },
   "pontocho-alley": {
     "id": "pontocho-alley",
-    "name": "Pontocho Alley",
-    "type": "sight_rec",
+    "name": "Pontocho Alley (先斗町)",
+    "type": "sight",
     "city": "Kyoto",
     "coordinates": {
       "lat": 35.0049,
       "lon": 135.7712
     },
-    "description": "Atmospheric narrow alley for evening dining.",
+    "description": "Historic narrow dining alley.",
     "url": "https://www.japan-guide.com/e/e3921.html",
     "tags": [
       "Dining",
@@ -1615,14 +1583,14 @@ export const places: Record<string, Place> = {
   },
   "todai-ji": {
     "id": "todai-ji",
-    "name": "Todai-ji Temple",
+    "name": "Todai-ji Temple (東大寺)",
     "type": "sight",
     "city": "Kyoto",
     "coordinates": {
       "lat": 34.689,
       "lon": 135.8398
     },
-    "description": "Home of the Great Buddha (Daibutsu) in the Nara Deer Park.",
+    "description": "Giant Buddha statue in Nara.",
     "url": "https://www.todaiji.or.jp/en/",
     "tags": [
       "Great Buddha",
@@ -1632,14 +1600,14 @@ export const places: Record<string, Place> = {
   },
   "umeda-sky": {
     "id": "umeda-sky",
-    "name": "Umeda Sky Building",
-    "type": "sight_rec",
+    "name": "Umeda Sky Building (梅田スカイビル)",
+    "type": "sight",
     "city": "Osaka",
     "coordinates": {
       "lat": 34.7053,
       "lon": 135.4897
     },
-    "description": "Futuristic building with a floating garden observatory.",
+    "description": "Floating Garden Observatory.",
     "url": "https://www.skybldg.co.jp/en/",
     "tags": [
       "Architecture",
@@ -1649,14 +1617,14 @@ export const places: Record<string, Place> = {
   },
   "kuromon-market": {
     "id": "kuromon-market",
-    "name": "Kuromon Market",
-    "type": "food_rec",
+    "name": "Kuromon Market (黒門市場)",
+    "type": "food",
     "city": "Osaka",
     "coordinates": {
       "lat": 34.6653,
       "lon": 135.5074
     },
-    "description": "Osaka's Kitchen - fresh seafood and street food.",
+    "description": "Osaka's fresh seafood market hub.",
     "url": "https://kuromon.com/en/",
     "tags": [
       "Seafood",
@@ -1666,14 +1634,14 @@ export const places: Record<string, Place> = {
   },
   "jingan-temple": {
     "id": "jingan-temple",
-    "name": "Jing'an Temple",
-    "type": "sight_rec",
+    "name": "Jing'an Temple (静安寺)",
+    "type": "sight",
     "city": "Shanghai",
     "coordinates": {
       "lat": 31.223,
       "lon": 121.446
     },
-    "description": "Ancient temple surrounded by modern malls.",
+    "description": "Golden Buddhist temple in the city centre.",
     "url": "https://www.meet-in-shanghai.net/scenic-spots/jingan-temple",
     "tags": [
       "Temple",
@@ -1683,14 +1651,14 @@ export const places: Record<string, Place> = {
   },
   "tianzifang": {
     "id": "tianzifang",
-    "name": "Tianzifang",
+    "name": "Tianzifang (田子坊)",
     "type": "sight",
     "city": "Shanghai",
     "coordinates": {
       "lat": 31.209,
       "lon": 121.464
     },
-    "description": "Arts and crafts in Shikumen alleyways.",
+    "description": "Artistic labyrinth of boutiques.",
     "url": "https://www.meet-in-shanghai.net/scenic-spots/tianzifang",
     "tags": [
       "Shopping",
@@ -1700,14 +1668,14 @@ export const places: Record<string, Place> = {
   },
   "rice-bar": {
     "id": "rice-bar",
-    "name": "Rice Bar",
+    "name": "Rice Bar (ライスバー)",
     "type": "bar",
     "city": "Shanghai",
     "coordinates": {
       "lat": 31.2031,
       "lon": 121.4256
     },
-    "description": "Intimate, Japanese-themed lounge with a relaxed atmosphere.",
+    "description": "Japanese-themed social lounge.",
     "url": "https://www.smartshanghai.com/venue/5856/rice_bar",
     "tags": [
       "Lounge",
@@ -1717,18 +1685,604 @@ export const places: Record<string, Place> = {
   "ren-he-guan": {
     "id": "ren-he-guan",
     "name": "Ren He Guan (人和馆)",
-    "type": "suggestion",
+    "type": "cesar Tips",
     "city": "Shanghai",
     "coordinates": {
       "lat": 31.2035,
       "lon": 121.4565
     },
-    "description": "Cesar: By far my favourite. Michelin star Shanghainese home cooking, no bookings, just turn up and queue. Absolutely excellent.",
+    "description": "Excellent Shanghainese home cooking.",
     "url": "https://guide.michelin.com/en/shanghai-municipality/shanghai/restaurant/ren-he-guan-zhaojiabang-road",
     "tags": [
       "Shanghainese",
       "Michelin Star",
       "Home Cooking"
+    ]
+  },
+  "gion-tanto": {
+    "id": "gion-tanto",
+    "name": "Gion Tanto (祇園たんと)",
+    "type": "matts Tips",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 35.0055,
+      "lon": 135.7735
+    },
+    "description": "Popular riverside okonomiyaki in Gion.",
+    "url": "http://www.gion-tanto.com/",
+    "tags": [
+      "Okonomiyaki",
+      "Gion",
+      "Riverside"
+    ]
+  },
+  "omen-udon": {
+    "id": "omen-udon",
+    "name": "Omen (おめん)",
+    "type": "matts Tips",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 35.026,
+      "lon": 135.7954
+    },
+    "description": "Renowned udon restaurant near Ginkaku-ji.",
+    "url": "https://www.omen.co.jp/en/",
+    "tags": [
+      "Udon",
+      "Traditional",
+      "Ginkaku-ji"
+    ]
+  },
+  "ichiran-kyoto": {
+    "id": "ichiran-kyoto",
+    "name": "Ichiran Ramen (一蘭)",
+    "type": "matts Tips",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 35.003,
+      "lon": 135.768
+    },
+    "description": "Famous tonkotsu ramen with solo booths.",
+    "url": "https://en.ichiran.com/",
+    "tags": [
+      "Tonkotsu Ramen",
+      "Solo Booths",
+      "Customisable"
+    ]
+  },
+  "engine-ramen": {
+    "id": "engine-ramen",
+    "name": "Engine Ramen (エンジンラーメン)",
+    "type": "matts Tips",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 35.0056,
+      "lon": 135.7675
+    },
+    "description": "Modern ramen shop with vegan options.",
+    "url": "https://www.engineramen.com/",
+    "tags": [
+      "Vegan Ramen",
+      "Modern",
+      "Downtown"
+    ]
+  },
+  "honke-daiichi-asahi": {
+    "id": "honke-daiichi-asahi",
+    "name": "Honke Daiichi Asahi (本家 第一旭)",
+    "type": "matts Tips",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 34.9856,
+      "lon": 135.7602
+    },
+    "description": "Historic shop for classic Kyoto soy ramen.",
+    "url": "https://www.honke-daiichiasahi.com/",
+    "tags": [
+      "Soy Ramen",
+      "Breakfast",
+      "Kyoto Station"
+    ]
+  },
+  "yakiniku-hiro": {
+    "id": "yakiniku-hiro",
+    "name": "Yakiniku Hiro (京の焼肉処 弘)",
+    "type": "matts Tips",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 35.009,
+      "lon": 135.77
+    },
+    "description": "High-quality Japanese wagyu BBQ.",
+    "url": "https://yakiniku-hiro.com/english/",
+    "tags": [
+      "Wagyu",
+      "BBQ",
+      "Gion"
+    ]
+  },
+  "yakiniku-kua": {
+    "id": "yakiniku-kua",
+    "name": "Yakiniku-Kua (焼肉 摠)",
+    "type": "matts Tips",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 35.0033,
+      "lon": 135.7758
+    },
+    "description": "Small atmospheric grilled meat specialist.",
+    "url": "https://yakiniku-kua.com/",
+    "tags": [
+      "Grilled Meat",
+      "Local",
+      "Atmospheric"
+    ]
+  },
+  "roan-kikunoi": {
+    "id": "roan-kikunoi",
+    "name": "Roan Kikunoi (露庵 菊乃井)",
+    "type": "matts Tips",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 35.0033,
+      "lon": 135.7709
+    },
+    "description": "Michelin-starred seasonal kaiseki cuisine.",
+    "url": "https://kikunoi.jp/english/roan/",
+    "tags": [
+      "Kaiseki",
+      "Michelin",
+      "Traditional"
+    ]
+  },
+  "gion-sushi-matsumoto": {
+    "id": "gion-sushi-matsumoto",
+    "name": "Gion Sushi Matsumoto (祇園 鮨 まつもと)",
+    "type": "matts Tips",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 35.002,
+      "lon": 135.7766
+    },
+    "description": "Traditional Edomae sushi omakase.",
+    "url": "https://sushimatsumoto.com/",
+    "tags": [
+      "Sushi",
+      "Omakase",
+      "High-end"
+    ]
+  },
+  "sushi-tetsu": {
+    "id": "sushi-tetsu",
+    "name": "Sushi Tetsu (すしてつ)",
+    "type": "matts Tips",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 35.008,
+      "lon": 135.77
+    },
+    "description": "Budget-friendly sushi in Pontocho.",
+    "url": "http://www.sushitetsu.jp/",
+    "tags": [
+      "Affordable Sushi",
+      "Pontocho",
+      "Casual"
+    ]
+  },
+  "gyoza-nakajima": {
+    "id": "gyoza-nakajima",
+    "name": "Gyoza Nakajima (ぎょうざ処 亮昌)",
+    "type": "matts Tips",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 35.0016,
+      "lon": 135.7577
+    },
+    "description": "Local Kyoto gyoza with seasonal ingredients.",
+    "url": "https://www.nakajimagyoza.com/",
+    "tags": [
+      "Gyoza",
+      "Local Ingredients",
+      "Budget"
+    ]
+  },
+  "chao-chao-gyoza": {
+    "id": "chao-chao-gyoza",
+    "name": "Chao Chao Gyoza (餃々)",
+    "type": "matts Tips",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 35.0048,
+      "lon": 135.7711
+    },
+    "description": "Award-winning thin-skin gyoza specialty shop.",
+    "url": "https://www.gyozaya.com/english/",
+    "tags": [
+      "Gyoza",
+      "Variety",
+      "Casual"
+    ]
+  },
+  "katsukura-tonkatsu": {
+    "id": "katsukura-tonkatsu",
+    "name": "Katsukura Tonkatsu Sanjo (名代とんかつ かかつくら)",
+    "type": "matts Tips",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 35.0087,
+      "lon": 135.767
+    },
+    "description": "Top-rated crispy tonkatsu restaurant.",
+    "url": "https://www.katsukura.jp/en/",
+    "tags": [
+      "Tonkatsu",
+      "Sanjo",
+      "Specialty"
+    ]
+  },
+  "gohan-ya-isshin": {
+    "id": "gohan-ya-isshin",
+    "name": "Gohan Ya Isshin (ごはんや一芯)",
+    "type": "matts Tips",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 35.008,
+      "lon": 135.768
+    },
+    "description": "Stylish restaurant for traditional washoku sets.",
+    "url": "https://isshin-kyoto.gorp.jp/",
+    "tags": [
+      "Washoku",
+      "Lunch Sets",
+      "Trendy"
+    ]
+  },
+  "matcha-house": {
+    "id": "matcha-house",
+    "name": "Matcha House (抹茶館)",
+    "type": "matts Tips",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 35.0045,
+      "lon": 135.769
+    },
+    "description": "Famous for its matcha tiramisu.",
+    "url": "https://maccha-house.com/en/",
+    "tags": [
+      "Tiramisu",
+      "Matcha",
+      "Social Media Famous"
+    ]
+  },
+  "kirukan-okamoto": {
+    "id": "kirukan-okamoto",
+    "name": "Kirukan Okamoto (空海山 岡本)",
+    "type": "matts Tips",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 35.013,
+      "lon": 135.766
+    },
+    "description": "Izakaya specialising in Japanese fried chicken.",
+    "url": "http://karaage-okamoto.com/",
+    "tags": [
+      "Karaage",
+      "Japanese Fried Chicken",
+      "Izakaya"
+    ]
+  },
+  "nishiki-market-tips": {
+    "id": "nishiki-market-tips",
+    "name": "Nishiki Market (錦市場)",
+    "type": "matts Tips",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 35.005,
+      "lon": 135.7649
+    },
+    "description": "Iconic retail market for local Kyoto specialities.",
+    "url": "https://www.kyoto-nishiki.or.jp/",
+    "tags": [
+      "Street Food",
+      "Market",
+      "Traditional"
+    ]
+  },
+  "camellia-tea-house": {
+    "id": "camellia-tea-house",
+    "name": "Camellia Tea House (茶道体験 カメリア)",
+    "type": "matts Tips",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 34.9977,
+      "lon": 135.7818
+    },
+    "description": "Cultural tea ceremony experience near Ninenzaka.",
+    "url": "https://tea-kyoto.com/",
+    "tags": [
+      "Tea Ceremony",
+      "Cultural",
+      "Ninenzaka"
+    ]
+  },
+  "tonkatsu-daiki": {
+    "id": "tonkatsu-daiki",
+    "name": "Tonkatsu Daiki (とんかつ 大喜)",
+    "type": "matts Tips",
+    "city": "Osaka",
+    "coordinates": {
+      "lat": 34.671,
+      "lon": 135.505
+    },
+    "description": "Popular local tonkatsu spot in Shinsaibashi.",
+    "url": "https://tatsudaiki.com/",
+    "tags": [
+      "Tonkatsu",
+      "Shinsaibashi",
+      "Local Gem"
+    ]
+  },
+  "osaka-wonder-cruise": {
+    "id": "osaka-wonder-cruise",
+    "name": "Osaka Wonder Cruise (大阪ワンダークルーズ)",
+    "type": "sight",
+    "city": "Osaka",
+    "coordinates": {
+      "lat": 34.6687,
+      "lon": 135.5011
+    },
+    "description": "Scenic boat cruise along the Dotonbori canal and Osaka waterways.",
+    "url": "https://www.wondercruise.jp/en/",
+    "tags": [
+      "Boat Tour",
+      "River Views",
+      "Dotonbori"
+    ]
+  },
+  "m50-creative-park-shanghai": {
+    "id": "m50-creative-park-shanghai",
+    "name": "M50 Creative Park (M50创意园)",
+    "type": "cesar Tips",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.2475,
+      "lon": 121.4475
+    },
+    "description": "Contemporary art district situated in former textile mills along the Suzhou Creek, housing over 100 artist studios and galleries.",
+    "url": "http://www.m50.com.cn",
+    "tags": [
+      "Art",
+      "Culture"
+    ]
+  },
+  "xiaotaoyuan-shanghai": {
+    "id": "xiaotaoyuan-shanghai",
+    "name": "Xiaotaoyuan (小桃园)",
+    "type": "cesar Tips",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.2131,
+      "lon": 121.4524
+    },
+    "description": "Specialist in traditional Shanghainese 'Four King Kong' breakfast items, including fried dough sticks, soy milk, and rice balls.",
+    "tags": [
+      "Breakfast",
+      "Traditional"
+    ]
+  },
+  "xiejia-courtyard-shanghai": {
+    "id": "xiejia-courtyard-shanghai",
+    "name": "Xiejia Courtyard (谢家大院)",
+    "type": "cesar Tips",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.235521,
+      "lon": 121.486512
+    },
+    "description": "Preserved late-Qing dynasty courtyard residence featuring traditional Jiangnan architecture, located near the Bund.",
+    "tags": [
+      "Historic Site",
+      "Architecture"
+    ]
+  },
+  "yangs-fried-dumpling-shanghai": {
+    "id": "yangs-fried-dumpling-shanghai",
+    "name": "Yang's Fried Dumpling (小杨生煎)",
+    "type": "cesar Tips",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.2395,
+      "lon": 121.4825
+    },
+    "description": "Prominent chain specialising in shengjianbao (pan-fried buns) known for thin skins and substantial soup content.",
+    "url": "https://www.google.com/maps/search/?api=1&query=Yang's+Fried+Dumpling+Shanghai",
+    "tags": [
+      "Dumplings",
+      "Local Eats"
+    ]
+  },
+  "savoy-kaminarimon-tokyo": {
+    "id": "savoy-kaminarimon-tokyo",
+    "name": "Savoy Kaminarimon (SAVOY雷門店)",
+    "type": "cesar Tips",
+    "city": "Tokyo",
+    "coordinates": {
+      "lat": 35.710755,
+      "lon": 139.796552
+    },
+    "description": "Asakusa outpost of the acclaimed Neapolitan pizza specialist, featuring wood-fired ovens and a counter-seating format.",
+    "url": "https://www.google.com/maps/search/?api=1&query=Savoy+Kaminarimon+Tokyo",
+    "tags": [
+      "Pizza",
+      "Italian"
+    ]
+  },
+  "dahuchun-shanghai": {
+    "id": "dahuchun-shanghai",
+    "name": "Dahuchun (大壶春)",
+    "type": "cesar Tips",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.2344,
+      "lon": 121.4854
+    },
+    "description": "Time-honored brand established in 1932, serving traditional thick-skinned, yeast-leavened pan-fried pork buns.",
+    "url": "https://www.google.com/maps/search/?api=1&query=Dahuchun+Shanghai",
+    "tags": [
+      "Chinese Restaurant",
+      "Pan-fried Buns"
+    ]
+  },
+  "quanjude-shanghai": {
+    "id": "quanjude-shanghai",
+    "name": "Quanjude (全聚德)",
+    "type": "cesar Tips",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.2347,
+      "lon": 121.4746
+    },
+    "description": "Branch of the historic Beijing institution founded in 1864, renowned for authentic charcoal-roasted Peking Duck.",
+    "tags": [
+      "Peking Duck",
+      "Historic"
+    ]
+  },
+  "shen-shen-bakery-shanghai": {
+    "id": "shen-shen-bakery-shanghai",
+    "name": "Shen Shen Bakery (申申面包店)",
+    "type": "cesar Tips",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.2011,
+      "lon": 121.4564
+    },
+    "description": "Local bakery specialising in retro-style Shanghainese pastries and fresh cream breads.",
+    "tags": [
+      "Bakery",
+      "Pastries"
+    ]
+  },
+  "long-time-ago-mutton-chuan-changli-rd-shanghai": {
+    "id": "long-time-ago-mutton-chuan-changli-rd-shanghai",
+    "name": "Long Time Ago Mutton Chuan (很久以前羊肉串)",
+    "type": "cesar Tips",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.1734,
+      "lon": 121.4914
+    },
+    "description": "Barbecue specialist featuring automated charcoal grills and mutton sourced from Inner Mongolia.",
+    "url": "https://www.dianping.com/shop/G92045542",
+    "tags": [
+      "BBQ",
+      "Late Night"
+    ]
+  },
+  "long-time-ago-mutton-chuan-dapu-rd-shanghai": {
+    "id": "long-time-ago-mutton-chuan-dapu-rd-shanghai",
+    "name": "Long Time Ago Mutton Chuan (很久以前羊肉串)",
+    "type": "cesar Tips",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.201521,
+      "lon": 121.474512
+    },
+    "description": "Automated charcoal barbecue chain known for Inner Mongolian mutton skewers and immersive interior design.",
+    "tags": [
+      "Barbecue",
+      "Chinese Cuisine"
+    ]
+  },
+  "yuxing-ji-shanghai": {
+    "id": "yuxing-ji-shanghai",
+    "name": "Yuxing Ji (裕兴记)",
+    "type": "cesar Tips",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.2285,
+      "lon": 121.4585
+    },
+    "description": "Suzhou-style noodle house specialising in high-end seasonal toppings, including crab fat and shrimp roe.",
+    "tags": [
+      "Noodles",
+      "Suzhou Cuisine"
+    ]
+  },
+  "yuxing-ji-noodle-restaurant-shanghai": {
+    "id": "yuxing-ji-noodle-restaurant-shanghai",
+    "name": "Yuxing Ji Noodle Restaurant (裕兴记面馆)",
+    "type": "cesar Tips",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.234512,
+      "lon": 121.479543
+    },
+    "description": "Renowned destination for authentic Suzhou 'Sanxia' noodles and traditional hand-stripped crab meat toppings.",
+    "tags": [
+      "Noodle Shop",
+      "Suzhou Cuisine"
+    ]
+  },
+  "lailai-snack-dumpling-shanghai": {
+    "id": "lailai-snack-dumpling-shanghai",
+    "name": "Lailai Snack Dumpling (莱莱小吃汤包馆)",
+    "type": "cesar Tips",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.2385,
+      "lon": 121.4782
+    },
+    "description": "Bib Gourmand eatery specialising in premium crab-meat xiaolongbao and seasonal Shanghainese snacks.",
+    "tags": [
+      "Dumplings",
+      "Local Eats"
+    ]
+  },
+  "harmay-shanghai": {
+    "id": "harmay-shanghai",
+    "name": "Harmay (话梅)",
+    "type": "cesar Tips",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.2105,
+      "lon": 121.4425
+    },
+    "description": "Industrial-aesthetic retail warehouse offering a curated selection of international beauty brands and samples.",
+    "url": "https://www.harmay.com/",
+    "tags": [
+      "Cosmetics",
+      "Retail"
+    ]
+  },
+  "jia-jia-tang-bao-shanghai": {
+    "id": "jia-jia-tang-bao-shanghai",
+    "name": "Jia Jia Tang Bao (佳家汤包)",
+    "type": "cesar Tips",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.234544,
+      "lon": 121.471518
+    },
+    "description": "Celebrated xiaolongbao specialist known for thin-skinned soup dumplings made to order.",
+    "tags": [
+      "Soup Dumplings",
+      "Local Favorite"
+    ]
+  },
+  "yuyuan-public-market-shanghai": {
+    "id": "yuyuan-public-market-shanghai",
+    "name": "Yuyuan Public Market (愚园公共市集)",
+    "type": "sight",
+    "city": "Shanghai",
+    "coordinates": {
+      "lat": 31.2195,
+      "lon": 121.4255
+    },
+    "description": "A revitalized community space featuring local food stalls, art galleries, and daily services in a historic neighborhood.",
+    "tags": [
+      "Market",
+      "Community"
     ]
   }
 };

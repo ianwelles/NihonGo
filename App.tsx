@@ -133,9 +133,8 @@ const AppContent: React.FC = () => {
           />
 
           <div 
-            className={`transition-all duration-500 pointer-events-none z-[9999] 
-              ${isMobile ? 'absolute inset-0' : 'fixed bottom-0 w-full'}
-              ${!isMobile && isSidebarOpen ? 'md:left-[calc(50%+192px)]' : ''}`}
+            className={`transition-all duration-300 pointer-events-none z-[9999] absolute inset-0
+              ${!isMobile && isSidebarOpen ? 'md:left-[384px]' : 'left-0'}`}
           >
             <div className="pointer-events-none h-full w-full relative">
               <Controls />
