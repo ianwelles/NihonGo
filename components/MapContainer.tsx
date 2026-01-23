@@ -400,7 +400,7 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
       </div>
 
       {/* Bottom-Right Stack (Mobile & Desktop) */}
-      <div className="absolute right-4 bottom-[100px] z-[1000] flex flex-col gap-3 transition-all duration-500">
+      <div className="absolute right-4 bottom-32 z-[1000] flex flex-col gap-3 transition-all duration-500">
         <button 
           onClick={toggleFullscreen} 
           className="flex items-center justify-center w-12 h-12 rounded-xl border border-white/10 bg-black/40 backdrop-blur-md text-gray-200 opacity-90 hover:opacity-100 hover:scale-[1.05] active:scale-95 cursor-pointer shadow-xl transition-all duration-300"

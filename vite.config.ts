@@ -28,6 +28,7 @@ export default defineConfig(({ mode }) => {
             theme_color: '#111827',
             background_color: '#111827',
             display: 'standalone',
+            start_url: '/',
             icons: [
               {
                 src: 'icons/manifest-icon-192.maskable.png',
@@ -54,6 +55,12 @@ export default defineConfig(({ mode }) => {
                 purpose: 'maskable'
               }
             ]
+          },
+          workbox: {
+            globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
+            cleanupOutdatedCaches: true,
+            clientsClaim: true,
+            skipWaiting: true
           }
         })
       ],
