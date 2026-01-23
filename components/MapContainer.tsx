@@ -42,6 +42,7 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
   
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const locationWatcher = useRef<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // --- REFACTORED LOCATION LOGIC ---
 
@@ -323,13 +324,34 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
   
   const getMarkerColor = (type: string) => theme.markerColors[type] || '#ffffff';
 
+  // Use ResizeObserver to automatically invalidate map size when the container resizes (e.g. sidebar toggle)
+  useEffect(() => {
+    if (!mapInstance || !containerRef.current) return;
+
+    let timeout: NodeJS.Timeout;
+    const observer = new ResizeObserver(() => {
+      // Debounce the invalidation to avoid too many redraws during the animation,
+      // but keep it frequent enough to reduce white-space flashes.
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        mapInstance.invalidateSize({ pan: true });
+      }, 50);
+    });
+
+    observer.observe(containerRef.current);
+    return () => {
+      observer.disconnect();
+      clearTimeout(timeout);
+    };
+  }, [mapInstance]);
+
   if (!isAuthenticated) return <div className="h-full w-full bg-gray-900" />;
 
-  const filtersLeftOffset = !isMobile && isSidebarOpen ? SIDEBAR_WIDTH + 16 : (isMobile ? 0 : 16);
+  const filtersLeftOffset = isMobile ? 0 : 16;
   const filtersMaxWidth = isMobile ? '100%' : 'calc(100% - 140px)';
 
   return (
-    <div className="h-full w-full relative">
+    <div ref={containerRef} className="h-full w-full relative overflow-hidden">
       <LeafletMap center={[35.6895, 139.6917]} zoom={12} zoomControl={false} attributionControl={false} className="h-full w-full bg-gray-900">
         <VectorTileLayer />
         

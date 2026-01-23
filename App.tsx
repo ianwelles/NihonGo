@@ -71,16 +71,20 @@ const AppContent: React.FC = () => {
 
   return (
     <React.Suspense fallback={<LoadingScreen />}>
-      <div className="h-screen-safe w-screen overflow-hidden bg-gray-900 text-white md:flex relative">
-        {isSidebarOpen && isMobile && (
-          <div 
-            className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm"
-            onClick={() => setIsSidebarOpen(false)}
-          />
-        )}
+      <div className={`h-screen-safe w-screen overflow-hidden bg-gray-900 text-white grid grid-cols-1 transition-[grid-template-columns] duration-300 ease-in-out relative
+        ${isSidebarOpen && !isMobile ? 'md:grid-cols-[384px_1fr]' : 'md:grid-cols-[0px_1fr]'}
+      `}>
+        {/* Backdrop - refactored from conditional rendering to CSS-controlled visibility */}
+        <div 
+          className={`fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm transition-opacity duration-300 md:hidden
+            ${isSidebarOpen && isMobile ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
+          `}
+          onClick={() => setIsSidebarOpen(false)}
+        />
         
         <aside
-          className={`bg-black/80 backdrop-blur-sm z-[70] h-full transition-all duration-300 ease-in-out overflow-hidden fixed top-0 left-0 w-11/12 max-w-sm shadow-2xl
+          className={`bg-black/80 backdrop-blur-sm z-[70] h-full transition-all duration-300 ease-in-out overflow-hidden shadow-2xl
+            ${isMobile ? 'fixed top-0 left-0 w-11/12 max-w-sm' : 'relative w-[384px]'}
             ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
             `}
         >
@@ -126,16 +130,13 @@ const AppContent: React.FC = () => {
           </div>
         </aside>
 
-        <main className="h-full flex-1 relative min-w-0 z-0">
+        <main className="h-full relative min-w-0 z-0">
           <MapContainer
             isAuthenticated={true}
             setMapRef={handleSetMapRef}
           />
 
-          <div 
-            className={`transition-all duration-300 pointer-events-none z-[9999] absolute inset-0
-              ${!isMobile && isSidebarOpen ? 'md:left-[384px]' : 'left-0'}`}
-          >
+          <div className="absolute inset-0 pointer-events-none z-[9999]">
             <div className="pointer-events-none h-full w-full relative">
               <Controls />
             </div>

@@ -3,7 +3,6 @@ import { useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { CityName, Place } from '../../types';
 import { useAppStore } from '../../context/AppContext';
-import { SIDEBAR_WIDTH } from './mapConstants';
 
 interface MapControllerProps {
   setMapRef: (map: L.Map) => void;
@@ -39,7 +38,10 @@ const MapController: React.FC<MapControllerProps> = ({ setMapRef, filteredPlaces
     const isFullscreenChange = isFullscreen !== prevIsFullscreen.current;
     const isInitialLoad = prevActiveCity.current === undefined;
 
-    if (isCityChange || isDayChange || isSidebarToggle || isFullscreenChange || isInitialLoad) {
+    // Refactored to remove isSidebarToggle from the auto-fit trigger.
+    // The CSS Grid layout handles the shift, and the ResizeObserver in MapContainer
+    // handles the size invalidation. This prevents jittery double-animations.
+    if (isCityChange || isDayChange || isFullscreenChange || isInitialLoad) {
       const markers = filteredPlaces.map(place => L.marker([place.coordinates.lat, place.coordinates.lon]));
       const group = L.featureGroup(markers);
       const bounds = group.getBounds();
@@ -50,16 +52,12 @@ const MapController: React.FC<MapControllerProps> = ({ setMapRef, filteredPlaces
         fitBoundsOptions.paddingTopLeft = [0, 0];
         fitBoundsOptions.paddingBottomRight = [0, 0];
       } else if (!isMobile) {
-        // Desktop
-        if (isSidebarOpen) {
-          fitBoundsOptions.paddingTopLeft = [SIDEBAR_WIDTH, 0];
-          fitBoundsOptions.paddingBottomRight = [40, 40]; // Base padding for visibility
-        } else {
-          fitBoundsOptions.paddingTopLeft = [40, 40];
-          fitBoundsOptions.paddingBottomRight = [40, 250]; // Account for City Selector
-        }
+        // Desktop - Map container is already offset by the sidebar via CSS Grid,
+        // so we don't need to add the SIDEBAR_WIDTH to the padding anymore.
+        fitBoundsOptions.paddingTopLeft = [40, 40];
+        fitBoundsOptions.paddingBottomRight = [40, 250]; // Account for City Selector / Bottom controls
       } else {
-        // Mobile
+        // Mobile - Sidebar remains an overlay
         fitBoundsOptions.paddingTopLeft = [20, 90];
         fitBoundsOptions.paddingBottomRight = [20, 300];
       }
@@ -75,10 +73,8 @@ const MapController: React.FC<MapControllerProps> = ({ setMapRef, filteredPlaces
       if (isInitialLoad || (activeCity === null && openDay === null)) {
         map.fitBounds(bounds, { ...fitBoundsOptions, maxZoom: 7, duration: 1.5 });
       }
-      else if (isCityChange || isDayChange || isFullscreenChange) {
+      else {
         map.flyToBounds(bounds, { ...fitBoundsOptions, duration: 1.2, easeLinearity: 0.25 });
-      } else if (isSidebarToggle) {
-        map.fitBounds(bounds, { ...fitBoundsOptions, duration: 0.6 });
       }
     }
 
