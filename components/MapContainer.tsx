@@ -377,36 +377,15 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
         )}
       </div>
 
-      {/* Map Controls Overlay - Desktop Top Right */}
-      {!isMobile && (
-        <div className="absolute top-4 right-4 z-[1000] flex flex-col gap-3">
-          <button 
-            onClick={toggleFullscreen} 
-            className="flex items-center justify-center w-14 h-14 rounded-xl border border-white/10 bg-black/40 backdrop-blur-md text-gray-200 opacity-90 hover:opacity-100 hover:scale-[1.05] active:scale-95 cursor-pointer shadow-xl transition-all duration-300"
-            title="Toggle Fullscreen"
-          >
-            {isFullscreen ? <Minimize size={24} /> : <Maximize size={24} />}
-          </button>
-        </div>
-      )}
-
-      {/* Mobile Bottom-Right Stack / Desktop Bottom-Right */}
-      <div 
-        className={`absolute right-4 z-[1000] flex flex-col gap-3 transition-all duration-500
-          ${isMobile 
-            ? 'bottom-[100px]' 
-            : (isFullscreen || !isSidebarOpen ? 'bottom-8' : 'bottom-8 md:bottom-8')
-          }`}
-      >
-        {isMobile && (
-          <button 
-            onClick={toggleFullscreen} 
-            className="flex items-center justify-center w-12 h-12 rounded-xl border border-white/10 bg-black/40 backdrop-blur-md text-gray-200 opacity-90 hover:opacity-100 hover:scale-[1.05] active:scale-95 cursor-pointer shadow-xl transition-all duration-300"
-            title="Toggle Fullscreen"
-          >
-            {isFullscreen ? <Minimize size={24} /> : <Maximize size={24} />}
-          </button>
-        )}
+      {/* Bottom-Right Stack (Mobile & Desktop) */}
+      <div className="absolute right-4 bottom-[100px] z-[1000] flex flex-col gap-3 transition-all duration-500">
+        <button 
+          onClick={toggleFullscreen} 
+          className="flex items-center justify-center w-12 h-12 rounded-xl border border-white/10 bg-black/40 backdrop-blur-md text-gray-200 opacity-90 hover:opacity-100 hover:scale-[1.05] active:scale-95 cursor-pointer shadow-xl transition-all duration-300"
+          title="Toggle Fullscreen"
+        >
+          {isFullscreen ? <Minimize size={24} /> : <Maximize size={24} />}
+        </button>
         <button 
           onClick={handleLocateClick} 
           className={`flex items-center justify-center w-12 h-12 rounded-xl border backdrop-blur-md transition-all duration-300 ${isLocating ? 'animate-pulse' : ''} ${userPosition ? 'bg-black/70 border-white/40 text-blue-400 opacity-100' : 'bg-black/40 border-white/10 text-gray-200 opacity-90'} hover:opacity-100 hover:scale-[1.05] active:scale-95 cursor-pointer shadow-xl`} 
