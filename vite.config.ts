@@ -21,6 +21,9 @@ export default defineConfig(({ mode }) => {
         VitePWA({
           registerType: 'autoUpdate',
           includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
+          devOptions: {
+            enabled: true
+          },
           manifest: {
             name: 'NihonGo',
             short_name: 'NihonGo',
@@ -29,6 +32,7 @@ export default defineConfig(({ mode }) => {
             background_color: '#111827',
             display: 'standalone',
             start_url: '/',
+            orientation: 'portrait',
             icons: [
               {
                 src: 'icons/manifest-icon-192.maskable.png',
