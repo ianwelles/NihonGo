@@ -78,17 +78,17 @@ const PlaceMarkers = React.memo(({ places, itineraryPlaceIds }: { places: Place[
                   {place.type.replace(/_/g, ' ')}
                 </span>
                 {place.url ? (
-                  <a href={place.url} target="_blank" rel="noopener noreferrer" className="text-2xl font-bold !text-white mb-2 leading-tight inline-block border-b-2 border-white/30 hover:!text-white hover:border-transparent transition-colors duration-200">
+                  <a href={place.url} target="_blank" rel="noopener noreferrer" className="text-xl font-bold !text-white mb-2 leading-tight inline-block border-b-2 border-white/30 hover:!text-white hover:border-transparent transition-colors duration-200">
                     {place.name}
                   </a>
                 ) : (
-                  <span className="text-2xl font-bold text-white mb-2 leading-tight block">{place.name}</span>
+                  <span className="text-xl font-bold text-white mb-2 leading-tight block">{place.name}</span>
                 )}
                 <span className="text-gray-100 text-base leading-relaxed mb-3 block">{place.description}</span>
                 {displayTags && displayTags.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-3 mb-5">
                     {displayTags.map((tag, idx) => (
-                      <span key={idx} className="text-[9px] font-black uppercase text-white/30 tracking-widest border border-white/10 px-2 py-1 rounded">{tag}</span>
+                      <span key={idx} className="text-[11px] font-black uppercase text-white/30 tracking-widest border border-white/10 px-2 py-1 rounded">{tag}</span>
                     ))}
                   </div>
                 )}

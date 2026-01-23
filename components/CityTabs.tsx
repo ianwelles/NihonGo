@@ -48,7 +48,7 @@ export const CityTabs: React.FC = () => {
                     setActiveCity(city);
                 }}
                 className={`
-                    py-4 px-4 rounded-2xl font-bold text-lg text-center w-full transition-all duration-300 border
+                    py-5 px-4 rounded-2xl font-black text-xl text-center w-full transition-all duration-300 border
                     ${activeCity === city 
                         ? 'bg-card-bg text-white' 
                         : 'bg-card-bg border-white/10 text-gray-400 hover:bg-white/5 hover:text-white'
@@ -56,12 +56,12 @@ export const CityTabs: React.FC = () => {
                 `}
                 style={activeCity === city ? { borderColor: activeCityColor, boxShadow: `0 0 20px ${activeCityColor}40` } : {}}
             >
-                <div className="flex items-center justify-center gap-2 mb-1">
+                <div className="flex items-center justify-center gap-2 mb-1.5">
                     <span>{city}</span>
-                    <span className="text-lg opacity-90 filter grayscale-[0.2]">{cityEmojiMap[city] || '📍'}</span>
+                    <span className="text-xl opacity-90 filter grayscale-[0.2]">{cityEmojiMap[city] || '📍'}</span>
                 </div>
                 <span 
-                  className="block text-sm font-semibold"
+                  className="block text-base font-bold"
                   style={{ color: activeCity === city ? activeCityColor : '#6b7280' }}
                 >
                     {getCityDateRange(city)}
@@ -73,10 +73,10 @@ export const CityTabs: React.FC = () => {
         {/* Sub-header to confirm context */}
         <div className="flex items-center gap-3 px-1 mb-4">
             <div 
-              className="h-5 w-1.5 rounded-full"
+              className="h-6 w-2 rounded-full"
               style={{ backgroundColor: activeCityColor }}
             ></div>
-            <h2 className="text-base font-bold text-gray-100 uppercase tracking-widest">
+            <h2 className="text-lg font-black text-gray-100 uppercase tracking-widest">
                 {activeCity ? `${activeCity} Itinerary` : 'Select a City'}
             </h2>
             <div className="h-px bg-white/10 flex-1"></div>

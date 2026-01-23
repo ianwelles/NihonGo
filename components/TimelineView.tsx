@@ -8,7 +8,7 @@ const ActivityCard: React.FC<{ activity: Activity; places: Record<string, Place>
 
   if (!place) {
     return (
-      <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-200 text-sm">
+      <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-200 text-sm">
         Place not found: {activity.placeId}
       </div>
     );
@@ -24,20 +24,20 @@ const ActivityCard: React.FC<{ activity: Activity; places: Record<string, Place>
     >
         <div className="flex items-center gap-2 text-sm font-bold text-white">
             {activity.icon && <span className="text-lg">{activity.icon}</span>}
-            <Clock size={14} className="text-gray-400" />
+            <Clock size={16} className="text-gray-400" />
             <span>{activity.time}</span>
         </div>
         <h4 className="text-lg font-bold text-white leading-tight">
-          <span className="text-white hover:text-[#FF1744] transition-colors flex items-center gap-1">
+          <span className="text-white hover:text-[#FF1744] transition-colors flex items-center gap-1.5">
             {name}
-            <MapPin size={14} className="opacity-50" />
+            <MapPin size={16} className="opacity-50" />
           </span>
         </h4>
         <p className="text-sm text-gray-300 leading-relaxed">{description}</p>
         {activity.tip && (
-            <div className="flex items-start gap-2 text-xs text-amber-200 bg-amber-500/10 px-3 py-2 rounded-lg border border-amber-500/20 mt-2">
+            <div className="flex items-start gap-2.5 text-sm text-amber-200 bg-amber-500/10 px-3.5 py-2.5 rounded-lg border border-amber-500/20 mt-1.5">
                 <div className="flex flex-col">
-                  <span className="font-bold uppercase tracking-wider text-[10px] block mb-0.5 text-amber-500">Tip:</span>
+                  <span className="font-bold uppercase tracking-wider text-[12px] block mb-0.5 text-amber-500">Tip:</span>
                   <p className="leading-relaxed">{activity.tip}</p>
                 </div>
             </div>
@@ -52,7 +52,7 @@ const HotelCard: React.FC<{ place: Place, activeCityColor: string, onHotelClick:
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${place.name}, ${place.city}`)}`;
 
   return (
-    <div className="hotel-section bg-[#121212] rounded-2xl border border-border overflow-hidden mt-10 mb-8 shadow-2xl">
+    <div className="hotel-section bg-[#121212] rounded-2xl border border-border overflow-hidden mt-8 mb-8 shadow-2xl">
       <div className="flex flex-col">
         <div className="p-6 border-b border-border">
           <div className="flex items-center gap-2 mb-4">
@@ -60,7 +60,7 @@ const HotelCard: React.FC<{ place: Place, activeCityColor: string, onHotelClick:
             <span className="text-sub-text font-bold text-xs uppercase tracking-widest">Selected Hotel</span>
           </div>
           <h3 
-            className="text-2xl font-black text-white mb-2 leading-none uppercase tracking-tighter cursor-pointer hover:text-[#FF1744] transition-colors inline-flex items-center gap-2"
+            className="text-xl font-black text-white mb-2 leading-none uppercase tracking-tighter cursor-pointer hover:text-[#FF1744] transition-colors inline-flex items-center gap-2"
             onClick={() => onHotelClick(place.id)}
           >
             {place.name}
@@ -81,9 +81,9 @@ const HotelCard: React.FC<{ place: Place, activeCityColor: string, onHotelClick:
           <p className="text-sm text-sub-text leading-relaxed font-medium">
             {place.hotelMeta.neighborhoodInsights}
           </p>
-          <div className="mt-5 flex gap-2">
+          <div className="mt-5 flex flex-wrap gap-2">
             {place.hotelMeta.tags.map((tag, tagIndex) => (
-              <span key={tagIndex} className="text-[9px] font-black uppercase text-white/30 tracking-widest border border-white/10 px-2 py-1 rounded">{tag}</span>
+              <span key={tagIndex} className="text-[11px] font-black uppercase text-white/30 tracking-widest border border-white/10 px-2 py-1 rounded">{tag}</span>
             ))}
           </div>
         </div>

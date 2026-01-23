@@ -5,6 +5,7 @@ import { LoginScreen } from './components/LoginScreen';
 import { LoadingScreen } from './components/LoadingScreen';
 import { downloadPlacesCSV, downloadItineraryCSV, downloadThemeCSV, downloadTipsCSV } from './utils/csvHelper';
 import { SlidersHorizontal, Download } from 'lucide-react';
+import { InstallPrompt } from './components/InstallPrompt';
 
 const Header = React.lazy(() => import('./components/Header').then(module => ({ default: module.Header })));
 const CityTabs = React.lazy(() => import('./components/CityTabs').then(module => ({ default: module.CityTabs })));
@@ -139,6 +140,7 @@ const AppContent: React.FC = () => {
           <div className="absolute inset-0 pointer-events-none z-[9999]">
             <div className="pointer-events-none h-full w-full relative">
               <Controls />
+              <InstallPrompt />
             </div>
           </div>
         </main>

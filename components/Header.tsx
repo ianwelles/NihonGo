@@ -105,10 +105,10 @@ export const Header: React.FC<HeaderProps> = ({
         className="mt-4 flex flex-col border-l pl-4 transition-all duration-300 ease-in-out border-white/10" 
         style={{ borderLeftColor: activeColor }}
       >
-        <p className="text-[14px] font-mono font-bold tracking-[0.18em] text-white uppercase leading-snug">
+        <p className="text-[16px] font-mono font-bold tracking-[0.18em] text-white uppercase leading-snug">
           {tripTitle}
         </p>
-        <p className="text-[12px] font-mono font-bold tracking-[0.1em] text-white/60 uppercase leading-none mt-1.5 pb-2">
+        <p className="text-[14px] font-mono font-bold tracking-[0.1em] text-white/60 uppercase leading-none mt-2 pb-2">
           {dateRangeStr}
         </p>
       </div>

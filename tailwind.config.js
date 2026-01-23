@@ -33,7 +33,13 @@ export default {
         '2xl': '16px',
       },
       fontSize: {
-        'xl-base': '1.25rem',
+        'xs': ['0.875rem', { lineHeight: '1.25rem' }],     // increased from 0.75rem
+        'sm': ['1rem', { lineHeight: '1.5rem' }],       // increased from 0.875rem
+        'base': ['1.125rem', { lineHeight: '1.75rem' }],   // increased from 1rem
+        'lg': ['1.25rem', { lineHeight: '1.75rem' }],    // increased from 1.125rem
+        'xl': ['1.5rem', { lineHeight: '2rem' }],       // increased from 1.25rem
+        '2xl': ['1.875rem', { lineHeight: '2.25rem' }],    // increased from 1.5rem
+        '3xl': ['2.25rem', { lineHeight: '2.5rem' }],      // increased from 1.875rem
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
