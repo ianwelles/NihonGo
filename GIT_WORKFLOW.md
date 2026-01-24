@@ -5,3 +5,13 @@ Analyse the changes in this workspace and generate a concise commit message. Pro
 3. Merge the feature branch into 'main'.
 4. Push 'main' to origin.
 5. Delete the local feature branch.
+
+
+
+
+git add . && \
+git commit -m "Fix: Adjust filter chips visibility and scrolling behavior" && \
+current_branch=$(git rev-parse --abbrev-ref HEAD) && \
+git checkout main && \
+git merge $current_branch && \
+git branch -d $current_branch

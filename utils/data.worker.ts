@@ -14,10 +14,8 @@ const TIPS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRniSOAatP
 const fetchCSV = async (url: string): Promise<any[]> => {
   if (!url) throw new Error("URL not provided");
   
-  const cacheBuster = `t=${Date.now()}`;
-  const fetchUrl = url.includes('?') ? `${url}&${cacheBuster}` : `${url}?${cacheBuster}`;
-
-  const response = await fetch(fetchUrl);
+  // Removed cacheBuster to allow for proper HTTP and service worker caching
+  const response = await fetch(url);
 
   if (!response.ok) throw new Error(`Failed to fetch CSV: ${response.statusText}`);
   const text = await response.text();
@@ -26,7 +24,7 @@ const fetchCSV = async (url: string): Promise<any[]> => {
     Papa.parse(text, {
       header: true,
       skipEmptyLines: true,
-      transformHeader: (header) => header.trim().replace(/^\uFEFF/, ''),
+      transformHeader: (header) => header.trim().replace(/^﻿/, ''),
       complete: (results) => resolve(results.data),
       error: (error: any) => reject(error),
     });

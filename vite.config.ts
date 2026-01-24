@@ -64,7 +64,23 @@ export default defineConfig(({ mode }) => {
             globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
             cleanupOutdatedCaches: true,
             clientsClaim: true,
-            skipWaiting: true
+            skipWaiting: true,
+            runtimeCaching: [
+              {
+                urlPattern: /^https:\/\/docs\.google\.com\/spreadsheets\/d\/e\/2PAC-1vRniSOAatP5VkPcJar3i-lMab0sZxPd3Q5td67o9kig_Zc9ZgjR4mCWL78dWHnxy0Yr9HAHdUxskKwb\/pub\?.*/i,
+                handler: 'StaleWhileRevalidate',
+                options: {
+                  cacheName: 'google-sheets-data',
+                  expiration: {
+                    maxEntries: 10,
+                    maxAgeSeconds: 60 * 60 * 12, // Cache for 12 hours
+                  },
+                  cacheableResponse: {
+                    statuses: [0, 200],
+                  },
+                },
+              },
+            ],
           }
         })
       ],
