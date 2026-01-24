@@ -347,8 +347,8 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
 
   if (!isAuthenticated) return <div className="h-full w-full bg-gray-900" />;
 
-  const filtersLeftOffset = isMobile ? 0 : 16;
-  const filtersMaxWidth = isMobile ? '100%' : 'calc(100% - 140px)';
+  const filtersLeftOffset = isMobile ? 0 : 0;
+  const filtersRightOffset = isMobile ? 0 : 0; 
 
   return (
     <div ref={containerRef} className="h-full w-full relative overflow-hidden">
@@ -364,17 +364,21 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
 
       {/* Filter Chips Container - Top Left */}
       <div 
-        className="absolute top-4 z-[1000] overflow-hidden pointer-events-none transition-all duration-300"
+        className="absolute top-4 z-[1000] pointer-events-none transition-all duration-300"
         style={{ 
           left: `${filtersLeftOffset}px`,
-          maxWidth: filtersMaxWidth,
-          width: isMobile ? '100vw' : 'auto'
+          right: `${filtersRightOffset}px`,
+          width: 'auto'
         }}
       >
         {visibleToggleKeys.length > 0 && (
           <div 
             ref={scrollContainerRef}
-            className={`flex gap-2 overflow-x-auto no-scrollbar py-2 cursor-grab active:cursor-grabbing select-none pointer-events-auto ${isMobile ? 'px-4' : ''}`}
+            className={`flex gap-2 overflow-x-auto no-scrollbar py-2 cursor-grab active:cursor-grabbing select-none pointer-events-auto px-4`}
+            style={{ 
+              maskImage: 'linear-gradient(to right, transparent 0%, black 20px, black calc(100% - 20px), transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 20px, black calc(100% - 20px), transparent 100%)'
+            }}
           >
             {visibleToggleKeys.map((type) => {
               const isActive = toggles[type];
@@ -383,7 +387,7 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
                 <button
                   key={type}
                   onClick={() => toggleCategory(type)}
-                  className={`flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full border backdrop-blur-md transition-all duration-300 text-[10px] font-black uppercase tracking-wider
+                  className={`flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full border backdrop-blur-md transition-all duration-300 text-xs font-black uppercase tracking-wider
                     ${isActive 
                       ? 'bg-black/70 text-white shadow-lg' 
                       : 'bg-black/40 border-white/10 text-gray-400 hover:border-white/30'
