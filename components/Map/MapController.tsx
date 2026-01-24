@@ -42,6 +42,9 @@ const MapController: React.FC<MapControllerProps> = ({ setMapRef, filteredPlaces
     // The CSS Grid layout handles the shift, and the ResizeObserver in MapContainer
     // handles the size invalidation. This prevents jittery double-animations.
     if (isCityChange || isDayChange || isFullscreenChange || isInitialLoad) {
+      // Close any active popups to prevent autoPan conflicts before zooming
+      map.closePopup();
+
       const markers = filteredPlaces.map(place => L.marker([place.coordinates.lat, place.coordinates.lon]));
       const group = L.featureGroup(markers);
       const bounds = group.getBounds();

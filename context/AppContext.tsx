@@ -144,11 +144,16 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       setPopupPaddingTopLeft(L.point(50, 100));
       setPopupPaddingBottomRight(L.point(50, 100));
     } else {
-      const leftPadding = isSidebarOpen ? SIDEBAR_WIDTH + 60 : 50;
+      // Corrected logic: Since the map container is resized by the sidebar (using CSS Grid),
+      // we do NOT need to offset the padding by the sidebar width. The map's 0,0 coordinate
+      // is already at the right edge of the sidebar.
+      // Adding the sidebar width here causes popups to be pushed too far right, potentially off-screen.
+      const leftPadding = 50; 
+      
       setPopupPaddingTopLeft(L.point(leftPadding, 100));
       setPopupPaddingBottomRight(L.point(50, 100));
     }
-  }, [isSidebarOpen]);
+  }, []); // Removed isSidebarOpen dependency as it's no longer used in calculation
 
   useEffect(() => {
     calculatePopupPadding();

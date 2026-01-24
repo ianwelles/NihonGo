@@ -129,6 +129,7 @@ export const TimelineView: React.FC = () => {
   const handleToggle = (e: React.MouseEvent, dayIdentifier: string) => {
     e.preventDefault();
     setOpenDay(dayIdentifier);
+    setOpenPlaceId(null); // Clear selected place when toggling day to prevent zoom conflicts
   };
 
   const handleActivityClick = (placeId: string) => {
