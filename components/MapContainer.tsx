@@ -345,14 +345,14 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
     };
   }, [mapInstance]);
 
-  if (!isAuthenticated) return <div className="h-full w-full bg-gray-900" />;
+  if (!isAuthenticated) return <div className="h-full w-full bg-black" />;
 
   const filtersLeftOffset = isMobile ? 0 : 0;
   const filtersRightOffset = isMobile ? 0 : 0; 
 
   return (
     <div ref={containerRef} className="h-full w-full relative overflow-hidden">
-      <LeafletMap center={[35.6895, 139.6917]} zoom={12} zoomControl={false} attributionControl={false} className="h-full w-full bg-gray-900">
+      <LeafletMap center={[35.6895, 139.6917]} zoom={12} zoomControl={false} attributionControl={false} className="h-full w-full bg-black"> {/* Changed bg-gray-900 to bg-black */}
         <VectorTileLayer />
         
         <MapController setMapRef={handleSetMapRef} filteredPlaces={filteredPlaces} setIsMapAnimating={setIsMapAnimating} />

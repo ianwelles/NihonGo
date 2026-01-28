@@ -1,6 +1,15 @@
 @import "tailwindcss";
 @config "./tailwind.config.js";
 
+html, body, #root {
+  background-color: black; /* Ensure a black background from the very start */
+}
+
+/* Ensure MapLibre GL JS canvas has a black background during loading */
+.leaflet-container canvas {
+  background-color: black !important;
+}
+
 :root {
   font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
