@@ -12,10 +12,34 @@ export const LoadingScreen: React.FC = () => {
           .dot-pulse {
             animation: sequentialPulse 1.5s ease-in-out infinite;
           }
+          @keyframes zoomInFromCenter {
+            0% { 
+              transform: scale(0.1); 
+              opacity: 0;
+            }
+            70% {
+              opacity: 1;
+            }
+            100% { 
+              transform: scale(1);
+              opacity: 1;
+            }
+          }
+          .zoom-in-element {
+            animation: zoomInFromCenter 1s ease-out forwards;
+          }
+          @keyframes fadeInText {
+            0% { opacity: 0; }
+            50% { opacity: 0; } /* Delay the fade-in slightly */
+            100% { opacity: 1; }
+          }
+          .fade-in-text {
+            animation: fadeInText 1.5s ease-out forwards;
+          }
         `}
       </style>
 
-      <div className="relative mb-12">
+      <div className="relative mb-12 zoom-in-element">
         <div className="absolute inset-0 bg-red-500/20 blur-3xl rounded-full" />
         <svg className="w-40 h-40 relative z-10" viewBox="0 0 100 100">
           <circle cx="50" cy="50" r="38" fill="black" stroke="#ef4444" strokeWidth="4" />
@@ -25,7 +49,7 @@ export const LoadingScreen: React.FC = () => {
         </svg>
       </div>
       
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center zoom-in-element">
         <div className="flex items-stretch gap-4 h-[80px] relative mb-4">
           <div className="h-full w-3 shrink-0">
             <svg viewBox="0 0 10 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full overflow-visible">
@@ -39,7 +63,7 @@ export const LoadingScreen: React.FC = () => {
             </svg>
           </div>
 
-          <div className="flex flex-col h-full justify-between">
+          <div className="flex flex-col h-full justify-between fade-in-text">
             <h1 className="flex flex-col h-full justify-between items-start">
               <span 
                 className="font-black tracking-tighter leading-none text-[2.2rem] md:text-[2.6rem]"
@@ -57,7 +81,7 @@ export const LoadingScreen: React.FC = () => {
           </div>
         </div>
 
-        <p className="text-gray-400 text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase pt-10 text-center pl-[0.3em]">
+        <p className="text-gray-400 text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase pt-10 text-center pl-[0.3em] fade-in-text">
           Generating your custom itinerary
         </p>
       </div>

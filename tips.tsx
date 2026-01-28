@@ -76,6 +76,10 @@ export const tipsList: TipCategory[] = [
     "title": "Travel",
     "items": [
       {
+        "name": "Visit Japan Web",
+        "notes": "<a href=\"https://www.vjw.digital.go.jp/\">Entry QR Code</a>"
+      },
+      {
         "name": "Tokyo Transport",
         "notes": "Purchase a Suica or Pasmo IC card immediately for seamless travel on all metro and JR lines."
       },

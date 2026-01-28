@@ -2284,5 +2284,149 @@ export const places: Record<string, Place> = {
       "Market",
       "Community"
     ]
+  },
+  "nintendo-museum-uji": {
+    "id": "nintendo-museum-uji",
+    "name": "Nintendo Museum (ニンテンドーミュージアム)",
+    "type": "Nintendo",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 34.8905,
+      "lon": 135.7931
+    },
+    "description": "Housed in the former Uji Ogura Plant, this facility documents the company's transition from a hanafuda playing card manufacturer to a digital entertainment developer through interactive exhibits.",
+    "url": "https://museum.nintendo.com/en/",
+    "tags": [
+      "Museum",
+      "Gaming"
+    ]
+  },
+  "marufukuro-kyoto": {
+    "id": "marufukuro-kyoto",
+    "name": "Marufukuro (丸福樓)",
+    "type": "Nintendo",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 34.9915,
+      "lon": 135.7655
+    },
+    "description": "Occupying the 1933 Art Deco headquarters of the Yamauchi Nintendo playing card company, this boutique hotel preserves original architectural elements and historical archives within the Shimogyo Ward.",
+    "url": "https://marufukuro.com/en/",
+    "tags": [
+      "Boutique Hotel",
+      "Historic Landmark"
+    ]
+  },
+  "nintendo-tokyo-shibuya": {
+    "id": "nintendo-tokyo-shibuya",
+    "name": "Nintendo Tokyo (ニンテンドートウキョウ)",
+    "type": "Nintendo",
+    "city": "Tokyo",
+    "coordinates": {
+      "lat": 35.662,
+      "lon": 139.6985
+    },
+    "description": "Situated within the Shibuya PARCO complex, this inaugural official retail outlet in Japan stocks exclusive merchandise and features interactive installations themed around the company's software franchises.",
+    "url": "https://www.nintendo.co.jp/officialstore/",
+    "tags": [
+      "Retail",
+      "Gaming"
+    ]
+  },
+  "kirby-cafe-tokyo": {
+    "id": "kirby-cafe-tokyo",
+    "name": "Kirby Café (カービィカフェ)",
+    "type": "Nintendo",
+    "city": "Tokyo",
+    "coordinates": {
+      "lat": 35.7101,
+      "lon": 139.8107
+    },
+    "description": "This themed restaurant located within Tokyo Skytree Town serves a menu inspired by the Nintendo video game franchise Kirby.",
+    "url": "https://kirbycafe.jp/",
+    "tags": [
+      "Themed Dining",
+      "Video Games"
+    ]
+  },
+  "kirby-cafe-osaka": {
+    "id": "kirby-cafe-osaka",
+    "name": "Kirby Café Osaka (カービィカフェ OSAKA)",
+    "type": "Nintendo",
+    "city": "Osaka",
+    "coordinates": {
+      "lat": 34.6735,
+      "lon": 135.5013
+    },
+    "description": "Opened in 2024 on the ninth floor of the Daimaru Shinsaibashi department store, this permanent themed restaurant serves character-inspired cuisine based on the Nintendo video game franchise.",
+    "url": "https://kirbycafe.jp/",
+    "tags": [
+      "Theme Restaurant",
+      "Gaming"
+    ]
+  },
+  "fushimi-inari-taisha-kyoto": {
+    "id": "fushimi-inari-taisha-kyoto",
+    "name": "Fushimi Inari Taisha (伏見稲荷大社)",
+    "type": "Nintendo",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 34.9671,
+      "lon": 135.7727
+    },
+    "description": "Established in 711, this head shrine of Inari features thousands of vermilion torii gates and served as the visual inspiration for the fox statues and level design in the Star Fox video game series.",
+    "url": "http://inari.jp/en/",
+    "tags": [
+      "Shinto Shrine",
+      "Landmark"
+    ]
+  },
+  "nintendo-osaka-osaka": {
+    "id": "nintendo-osaka-osaka",
+    "name": "Nintendo OSAKA (ニンテンドーオオサカ)",
+    "type": "Nintendo",
+    "city": "Osaka",
+    "coordinates": {
+      "lat": 34.702485,
+      "lon": 135.495957
+    },
+    "description": "Official retail outlet located on the 13th floor of the Daimaru Umeda building, retailing exclusive merchandise, hardware, and software from the Kyoto-based video game developer.",
+    "url": "https://www.nintendo.co.jp/officialstore/",
+    "tags": [
+      "Shopping",
+      "Gaming"
+    ]
+  },
+  "nintendo-kyoto-kyoto": {
+    "id": "nintendo-kyoto-kyoto",
+    "name": "Nintendo KYOTO (ニンテンドーキョウト)",
+    "type": "Nintendo",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 35.003645,
+      "lon": 135.768711
+    },
+    "description": "Official retail outlet situated on the seventh floor of Kyoto Takashimaya S.C. [T8] featuring exclusive merchandise and character-themed installations.",
+    "url": "https://www.nintendo.co.jp/officialstore/",
+    "tags": [
+      "Retail",
+      "Gaming"
+    ]
+  },
+  "nintendo-hq-kyoto": {
+    "id": "nintendo-hq-kyoto",
+    "name": "Nintendo HQ (任天堂本社)",
+    "type": "Nintendo",
+    "city": "Kyoto",
+    "coordinates": {
+      "lat": 34.9691,
+      "lon": 135.7562
+    },
+    "description": "Located in Minami Ward, this minimalist white building serves as the global corporate headquarters for the multinational video game company established in 1889.",
+    "url": "https://www.nintendo.co.jp/corporate/en/",
+    "tags": [
+      "Corporate",
+      "Landmark"
+    ]
   }
 };

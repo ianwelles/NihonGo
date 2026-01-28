@@ -85,13 +85,21 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await loadAppData();
+        const fullDataPromise = loadAppData((initialData) => {
+          setPlaces(initialData.places);
+          setTheme(initialData.theme);
+          setIsLoading(false);
+        });
+
+        const data = await fullDataPromise;
+        
+        // Update with full data once available
         setItineraryData(data.itinerary);
-        setTipsList(data.tips);
-        setPlaces(data.places);
+        setPlaces(data.places); // Update with all places
         setStartDate(data.startDate);
         setEndDate(data.endDate);
-        setTheme(data.theme);
+        setTipsList(data.tips);
+        setTheme(data.theme); // Ensure final theme is set (might be same as initial)
 
         // Discover all unique place types from the data to initialize toggles
         const types = new Set<string>();
@@ -101,14 +109,12 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
             types.add(place.type);
           }
         });
-
         const initialToggles: Toggles = {};
         types.forEach(type => {
           initialToggles[type] = false;
         });
         setToggles(initialToggles);
 
-        setIsLoading(false);
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : 'Failed to load data');
         setIsLoading(false);
