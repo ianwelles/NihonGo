@@ -5,8 +5,15 @@ html, body, #root {
   background-color: black; /* Ensure a black background from the very start */
 }
 
-/* Ensure MapLibre GL JS canvas has a black background during loading */
-.leaflet-container canvas {
+/* Ensure Leaflet container and MapLibre GL JS canvas have a black background during loading */
+.leaflet-container {
+  background: black !important;
+}
+
+.leaflet-container canvas,
+.leaflet-tile-pane,
+.leaflet-proxy,
+.maplibregl-canvas {
   background-color: black !important;
 }
 
