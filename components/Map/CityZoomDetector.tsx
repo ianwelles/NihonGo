@@ -1,17 +1,17 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import { CityName, Place } from '../../types';
 import { useAppStore } from '../../context/AppContext';
 
-// This component detects when the user zooms in or out and manually changes their view.
-// If they are zoomed into a specific city's area, we want to set that city as active.
+// This component detects when the user moves the map and automatically 
+// updates the active city based on the visible area.
 export const CityZoomDetector: React.FC = () => {
   const { activeCity, setActiveCity, places } = useAppStore();
 
-  // Pre-calculate city centers and rough bounds
+  // Pre-calculate city centers and bounds
   const cityRegions = useMemo(() => {
-    const regions: Record<string, { center: L.LatLng, radius: number }> = {};
+    const regions: Record<string, { center: L.LatLng, bounds: L.LatLngBounds }> = {};
     
     // Group places by city
     const cityPlaces: Record<string, Place[]> = {};
@@ -25,11 +25,8 @@ export const CityZoomDetector: React.FC = () => {
       const bounds = L.latLngBounds(coords);
       regions[cityName] = {
         center: bounds.getCenter(),
-        // Radius in degrees (very rough) to determine if we are "in" the city
-        radius: Math.max(
-          bounds.getNorth() - bounds.getSouth(),
-          bounds.getEast() - bounds.getWest()
-        ) * 1.5 
+        // Store the actual bounds of the city's places
+        bounds: bounds
       };
     });
 
@@ -42,25 +39,46 @@ export const CityZoomDetector: React.FC = () => {
       const currentCenter = map.getCenter();
 
       // Only trigger auto-city-switching if we are zoomed in enough
-      // to reasonably be looking at a specific city (e.g., zoom > 9)
-      if (currentZoom > 9) {
-        let closestCity: CityName | null = null;
-        let minDistance = Infinity;
+      // Increased from 9 to 11 to be more deliberate
+      if (currentZoom >= 11) {
+        let detectedCity: CityName | null = null;
 
+        // Check if we are inside the bounds of any city (with a small padding)
         Object.entries(cityRegions).forEach(([cityName, region]) => {
-          const distance = currentCenter.distanceTo(region.center);
-          // distanceTo returns meters. 50km is a reasonable "city area"
-          if (distance < 50000 && distance < minDistance) {
-            minDistance = distance;
-            closestCity = cityName as CityName;
+          // Add 20% padding to the bounds to be a bit more inclusive
+          const paddedBounds = region.bounds.pad(0.2);
+          
+          if (paddedBounds.contains(currentCenter)) {
+            detectedCity = cityName as CityName;
           }
         });
 
-        if (closestCity && closestCity !== activeCity) {
-          setActiveCity(closestCity);
+        // If we found a city and it's different from the active one, switch.
+        // If we are currently in an active city but the center is NO LONGER 
+        // in any city bounds (and we are zoomed in), we stay with the active one 
+        // to avoid "flickering" to null while browsing the outskirts.
+        if (detectedCity && detectedCity !== activeCity) {
+          // Optional: Only switch if the distance to the new city center is 
+          // significantly closer than the distance to the current city center.
+          if (activeCity) {
+            const currentCityRegion = cityRegions[activeCity];
+            if (currentCityRegion) {
+              const distToNew = currentCenter.distanceTo(cityRegions[detectedCity].center);
+              const distToCurrent = currentCenter.distanceTo(currentCityRegion.center);
+              
+              // Only switch if we are clearly closer to the new city
+              if (distToNew < distToCurrent * 0.8) {
+                setActiveCity(detectedCity);
+              }
+            } else {
+              setActiveCity(detectedCity);
+            }
+          } else {
+            setActiveCity(detectedCity);
+          }
         }
-      } else if (currentZoom < 7 && activeCity !== null) {
-        // If they zoom out very far, clear the active city
+      } else if (currentZoom < 8 && activeCity !== null) {
+        // If they zoom out far enough, clear the active city
         setActiveCity(null);
       }
     },
