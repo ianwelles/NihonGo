@@ -36,6 +36,7 @@ interface AppContextType {
   setOpenDay: (dayId: string | null) => void;
   setOpenPlaceId: (placeId: string | null) => void;
   toggleCategory: (key: string) => void;
+  setAllToggles: (enabled: boolean) => void;
   setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   toggleSidebar: () => void;
   // No explicit setter for padding, as it's derived
@@ -183,6 +184,16 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setToggles(prev => ({ ...prev, [key]: !prev[key] }));
   }, []);
 
+  const setAllToggles = useCallback((enabled: boolean) => {
+    setToggles(prev => {
+      const next = { ...prev };
+      Object.keys(next).forEach(key => {
+        next[key] = enabled;
+      });
+      return next;
+    });
+  }, []);
+
   const toggleSidebar = useCallback(() => {
     setIsSidebarOpen(prev => !prev);
   }, []);
@@ -208,6 +219,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setOpenDay: handleDayChange,
     setOpenPlaceId,
     toggleCategory,
+    setAllToggles,
     setIsSidebarOpen,
     toggleSidebar
   };

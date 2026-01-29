@@ -2,7 +2,7 @@ import React, { useMemo, useState, useRef, useEffect, useCallback } from 'react'
 import { MapContainer as LeafletMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useAppStore } from '../context/AppContext';
-import { Landmark, Utensils, Wine, Store, Info, Navigation, Maximize, Minimize } from 'lucide-react';
+import { Landmark, Utensils, Wine, Store, Info, Navigation, Maximize, Minimize, Power } from 'lucide-react';
 import { SIDEBAR_WIDTH } from './Map/mapConstants';
 import L from 'leaflet';
 
@@ -26,13 +26,15 @@ const CategoryIcon: React.FC<{ type: string; size?: number; color?: string }> = 
       return <Wine size={size} style={{ color }} />;
     case 'shopping':
       return <Store size={size} style={{ color }} />;
+    case 'power':
+      return <Power size={size} style={{ color }} />;
     default:
       return <Info size={size} style={{ color }} />;
   }
 };
 
 export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthenticated: boolean }> = ({ setMapRef, isAuthenticated }) => {
-  const { activeCity, openDay, places, itineraryData, toggles, isSidebarOpen, isMobile, toggleCategory, theme } = useAppStore();
+  const { activeCity, openDay, places, itineraryData, toggles, isSidebarOpen, isMobile, toggleCategory, setAllToggles, theme } = useAppStore();
   const [isMapAnimating, setIsMapAnimating] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
@@ -176,7 +178,12 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
         dayItinerary.activities.forEach(activity => placeIdsForDay.add(activity.placeId));
         if (dayItinerary.hotelId) placeIdsForDay.add(dayItinerary.hotelId);
         
-        const itineraryPlaces = Array.from(placeIdsForDay).map(id => places[id]).filter(Boolean);
+        const itineraryPlaces = Array.from(placeIdsForDay).map(id => {
+          const p = places[id];
+          if (!p) return null;
+          // In day view, we want all day activities shown
+          return p;
+        }).filter((p): p is NonNullable<typeof p> => p !== null);
 
         const toggledCityPlaces = Object.values(places).filter(place => {
           const matchesCity = place.city === activeCity;
@@ -243,6 +250,11 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
       .sort();
   }, [places, itineraryData, activeCity, toggles]);
   
+  const areAllTogglesOn = useMemo(() => {
+    if (visibleToggleKeys.length === 0) return false;
+    return visibleToggleKeys.every(key => toggles[key]);
+  }, [visibleToggleKeys, toggles]);
+
   useEffect(() => {
     const el = scrollContainerRef.current;
     if (!el) return;
@@ -352,7 +364,7 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
 
   return (
     <div ref={containerRef} className="h-full w-full relative overflow-hidden">
-      <LeafletMap center={[35.6895, 139.6917]} zoom={12} zoomControl={false} attributionControl={false} className="h-full w-full bg-black"> {/* Changed bg-gray-900 to bg-black */}
+      <LeafletMap center={[35.6895, 139.6917]} zoom={12} zoomControl={false} attributionControl={false} className="h-full w-full bg-black">
         <VectorTileLayer />
         
         <MapController setMapRef={handleSetMapRef} filteredPlaces={filteredPlaces} setIsMapAnimating={setIsMapAnimating} />
@@ -380,6 +392,18 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
               WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 20px, black calc(100% - 20px), transparent 100%)'
             }}
           >
+            {/* Toggle All Button */}
+            <button
+              onClick={() => setAllToggles(!areAllTogglesOn)}
+              className={`flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full border backdrop-blur-md transition-all duration-300
+                ${areAllTogglesOn 
+                  ? 'bg-black/70 text-white shadow-lg border-white/40' 
+                  : 'bg-black/40 border-white/10 text-gray-400 hover:border-white/30'
+                }`}
+            >
+              <Power size={14} className={areAllTogglesOn ? 'text-white' : 'text-gray-400'} />
+            </button>
+
             {visibleToggleKeys.map((type) => {
               const isActive = toggles[type];
               const color = getMarkerColor(type);

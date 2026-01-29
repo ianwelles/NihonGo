@@ -77,7 +77,11 @@ export const tipsList: TipCategory[] = [
     "items": [
       {
         "name": "Visit Japan Web",
-        "notes": "<a href=\"https://www.vjw.digital.go.jp/\">Entry QR Code</a>"
+        "notes": "<a href=\"https://docs.google.com/document/d/11jksOkyrQxdpPEM3p4n9f9KTvOUg-TA_51sUzm1RHLs/edit?usp=sharing\">Entry QR Code</a>"
+      },
+      {
+        "name": "Confirmations Info",
+        "notes": "<a href=\"https://www.vjw.digital.go.jp/\">Open Doc</a>"
       },
       {
         "name": "Tokyo Transport",
