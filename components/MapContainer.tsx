@@ -371,7 +371,7 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
         <CityZoomDetector />
         <PopupManager isMapAnimating={isMapAnimating} />
         <UserLocation position={userPosition} heading={userHeading} />
-        <PlaceMarkers places={displayPlaces} itineraryPlaceIds={itineraryPlaceIds} />
+        <PlaceMarkers places={displayPlaces} itineraryPlaceIds={itineraryPlaceIds} isMapAnimating={isMapAnimating} />
       </LeafletMap>
 
       {/* Filter Chips Container - Top Left */}

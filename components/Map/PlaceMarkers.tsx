@@ -6,13 +6,17 @@ import { mapMarkerColors as fallbackMapMarkerColors } from '../../theme';
 import { Place } from '../../types';
 import { useAppStore } from '../../context/AppContext';
 
-const PlaceMarkers = React.memo(({ places, itineraryPlaceIds }: { places: Place[], itineraryPlaceIds: Set<string> }) => {
-  const { openPlaceId, setOpenPlaceId, theme } = useAppStore();
+interface PlaceMarkersProps {
+  places: Place[];
+  itineraryPlaceIds: Set<string>;
+  isMapAnimating: boolean;
+}
+
+const PlaceMarkers = React.memo(({ places, itineraryPlaceIds, isMapAnimating }: PlaceMarkersProps) => {
+  const { openPlaceId, setOpenPlaceId, theme, popupPaddingTopLeft, popupPaddingBottomRight } = useAppStore();
   const markerColors = theme.markerColors;
   const markerRefs = useRef<Record<string, L.Marker>>({});
   const map = useMap();
-
-  const { popupPaddingTopLeft, popupPaddingBottomRight } = useAppStore();
 
   const getIcon = useCallback((type: string, isItinerary: boolean) => {
     const color = markerColors[type] || markerColors['default'] || fallbackMapMarkerColors[type] || fallbackMapMarkerColors['default'] || '#3B82F6';
@@ -45,11 +49,18 @@ const PlaceMarkers = React.memo(({ places, itineraryPlaceIds }: { places: Place[
   }, [markerColors]);
 
   useEffect(() => {
-    if (openPlaceId && markerRefs.current[openPlaceId]) {
+    // Attempt to open the popup.
+    // We check !isMapAnimating to ensure we don't open it mid-flight (which can cause issues or be ignored).
+    // If animation is happening, this effect will run again when isMapAnimating becomes false.
+    if (openPlaceId && markerRefs.current[openPlaceId] && !isMapAnimating) {
       const marker = markerRefs.current[openPlaceId];
-      marker.openPopup();
+      // A slight delay ensures the map 'moveend' event has fully processed and Leaflet is ready
+      const t = setTimeout(() => {
+        marker.openPopup();
+      }, 100);
+      return () => clearTimeout(t);
     }
-  }, [openPlaceId, map]);
+  }, [openPlaceId, map, isMapAnimating]);
 
   return (
     <>

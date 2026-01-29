@@ -11,13 +11,14 @@ interface MapControllerProps {
 }
 
 const MapController: React.FC<MapControllerProps> = ({ setMapRef, filteredPlaces, setIsMapAnimating }) => {
-  const { activeCity, openDay, isSidebarOpen, isMobile } = useAppStore();
+  const { activeCity, openDay, isSidebarOpen, isMobile, openPlaceId, places } = useAppStore();
   const map = useMap();
   const [isFullscreen, setIsFullscreen] = useState(false);
   const prevActiveCity = useRef<CityName | null | undefined>(undefined);
   const prevOpenDay = useRef<string | null>(null);
   const prevIsSidebarOpen = useRef<boolean | undefined>(isSidebarOpen);
   const prevIsFullscreen = useRef<boolean>(false);
+  const prevOpenPlaceId = useRef<string | null>(null);
 
   useEffect(() => {
     if (map) setMapRef(map);
@@ -30,19 +31,47 @@ const MapController: React.FC<MapControllerProps> = ({ setMapRef, filteredPlaces
   }, []);
 
   useEffect(() => {
-    if (!map || filteredPlaces.length === 0) return;
+    // We need map to be ready. 
+    // Note: filteredPlaces might be empty if no category is selected, but if a place is opened via search, 
+    // we ensure its category is toggled on, so it should eventually appear in filteredPlaces.
+    // However, for the 'flyTo' logic, we use 'places' directly, so we don't strictly need filteredPlaces > 0
+    // for the place zoom to work, but the component usually guards against empty data.
+    if (!map) return;
 
     const isCityChange = activeCity !== prevActiveCity.current;
     const isDayChange = openDay !== prevOpenDay.current;
     const isSidebarToggle = isSidebarOpen !== prevIsSidebarOpen.current;
     const isFullscreenChange = isFullscreen !== prevIsFullscreen.current;
     const isInitialLoad = prevActiveCity.current === undefined;
+    const isPlaceChange = openPlaceId !== prevOpenPlaceId.current;
 
-    // Refactored to remove isSidebarToggle from the auto-fit trigger.
-    // The CSS Grid layout handles the shift, and the ResizeObserver in MapContainer
-    // handles the size invalidation. This prevents jittery double-animations.
-    if (isCityChange || isDayChange || isFullscreenChange || isInitialLoad) {
-      // Close any active popups to prevent autoPan conflicts before zooming
+    // 1. Handle zooming to a specific place (Search Result or Click)
+    if (isPlaceChange && openPlaceId) {
+        const place = places[openPlaceId];
+        if (place) {
+            setIsMapAnimating(true);
+            
+            // Offset logic for mobile/desktop if needed, but centering (flyTo) is usually sufficient.
+            // If we wanted to account for the sidebar, we'd use setView or project/unproject, 
+            // but Leaflet's flyTo centers the point. 
+            // Given the popup offset logic in AppContext, centering the marker is usually correct behavior.
+            map.flyTo([place.coordinates.lat, place.coordinates.lon], 16, {
+                duration: 1.5,
+                easeLinearity: 0.25
+            });
+
+            const handleMoveEnd = () => {
+                setIsMapAnimating(false);
+                map.off('moveend', handleMoveEnd);
+            };
+            map.on('moveend', handleMoveEnd);
+        }
+    } 
+    // 2. Handle City/Day/View changes (Fit Bounds)
+    // Only if we didn't just zoom to a place (or if place is null)
+    else if ((isCityChange || isDayChange || isFullscreenChange || isInitialLoad) && filteredPlaces.length > 0) {
+      
+      // Close popups on major view changes
       map.closePopup();
 
       const markers = filteredPlaces.map(place => L.marker([place.coordinates.lat, place.coordinates.lon]));
@@ -55,12 +84,9 @@ const MapController: React.FC<MapControllerProps> = ({ setMapRef, filteredPlaces
         fitBoundsOptions.paddingTopLeft = [0, 0];
         fitBoundsOptions.paddingBottomRight = [0, 0];
       } else if (!isMobile) {
-        // Desktop - Map container is already offset by the sidebar via CSS Grid,
-        // so we don't need to add the SIDEBAR_WIDTH to the padding anymore.
         fitBoundsOptions.paddingTopLeft = [40, 40];
-        fitBoundsOptions.paddingBottomRight = [40, 250]; // Account for City Selector / Bottom controls
+        fitBoundsOptions.paddingBottomRight = [40, 250]; 
       } else {
-        // Mobile - Sidebar remains an overlay
         fitBoundsOptions.paddingTopLeft = [20, 90];
         fitBoundsOptions.paddingBottomRight = [20, 300];
       }
@@ -85,7 +111,8 @@ const MapController: React.FC<MapControllerProps> = ({ setMapRef, filteredPlaces
     prevOpenDay.current = openDay;
     prevIsSidebarOpen.current = isSidebarOpen;
     prevIsFullscreen.current = isFullscreen;
-  }, [map, activeCity, openDay, isSidebarOpen, isFullscreen, isMobile, filteredPlaces, setIsMapAnimating]);
+    prevOpenPlaceId.current = openPlaceId;
+  }, [map, activeCity, openDay, isSidebarOpen, isFullscreen, isMobile, filteredPlaces, setIsMapAnimating, openPlaceId, places]);
 
   return null;
 };
