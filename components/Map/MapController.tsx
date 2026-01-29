@@ -45,30 +45,39 @@ const MapController: React.FC<MapControllerProps> = ({ setMapRef, filteredPlaces
     const isInitialLoad = prevActiveCity.current === undefined;
     const isPlaceChange = openPlaceId !== prevOpenPlaceId.current;
 
-    // 1. Handle zooming to a specific place (Search Result or Click)
+    // 1. Handle moving to a specific place (Search Result or Click)
     if (isPlaceChange && openPlaceId) {
         const place = places[openPlaceId];
         if (place) {
-            setIsMapAnimating(true);
-            
-            // Offset logic for mobile/desktop if needed, but centering (flyTo) is usually sufficient.
-            // If we wanted to account for the sidebar, we'd use setView or project/unproject, 
-            // but Leaflet's flyTo centers the point. 
-            // Given the popup offset logic in AppContext, centering the marker is usually correct behavior.
-            map.flyTo([place.coordinates.lat, place.coordinates.lon], 16, {
-                duration: 1.5,
-                easeLinearity: 0.25
-            });
+            const targetLatLng = L.latLng(place.coordinates.lat, place.coordinates.lon);
+            const currentBounds = map.getBounds();
 
-            const handleMoveEnd = () => {
-                setIsMapAnimating(false);
-                map.off('moveend', handleMoveEnd);
-            };
-            map.on('moveend', handleMoveEnd);
+            // If the place is already visible, then do not move the map. The popup will still open.
+            const isPlaceAlreadyVisible = currentBounds.contains(targetLatLng); 
+
+            if (!isPlaceAlreadyVisible) {
+                setIsMapAnimating(true);
+                
+                // Use panTo to move to the location without changing zoom
+                map.panTo([place.coordinates.lat, place.coordinates.lon], {
+                    duration: 1.5,
+                    easeLinearity: 0.25
+                });
+
+                const handleMoveEnd = () => {
+                    setIsMapAnimating(false);
+                    map.off('moveend', handleMoveEnd);
+                };
+                map.on('moveend', handleMoveEnd);
+            } else {
+                // If already visible, no map animation needed.
+                // The popup will still open due to PlaceMarkers' useEffect.
+                setIsMapAnimating(false); 
+            }
         }
     } 
     // 2. Handle City/Day/View changes (Fit Bounds)
-    // Only if we didn't just zoom to a place (or if place is null)
+    // Only if we didn't just move to a place (or if place is null)
     else if ((isCityChange || isDayChange || isFullscreenChange || isInitialLoad) && filteredPlaces.length > 0) {
       
       // Close popups on major view changes
