@@ -26,7 +26,7 @@ export const getUserIcon = (heading: number | null) => L.divIcon({
           </svg>
         </div>
       ` : ''}
-      <div class="absolute -inset-2 bg-blue-500 rounded-full animate-ping opacity-25"></div>
+      <div class="absolute -inset-2 bg-blue-500 rounded-full opacity-25"></div>
       <div class="relative bg-blue-500 border-2 border-white rounded-full w-4 h-4 shadow-lg z-10"></div>
     </div>
   `,
