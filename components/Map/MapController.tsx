@@ -8,9 +8,11 @@ interface MapControllerProps {
   setMapRef: (map: L.Map) => void;
   filteredPlaces: Place[];
   setIsMapAnimating: Dispatch<SetStateAction<boolean>>;
+  locateUserTrigger: number;
+  userPosition: L.LatLng | null;
 }
 
-const MapController: React.FC<MapControllerProps> = ({ setMapRef, filteredPlaces, setIsMapAnimating }) => {
+const MapController: React.FC<MapControllerProps> = ({ setMapRef, filteredPlaces, setIsMapAnimating, locateUserTrigger, userPosition }) => {
   const { activeCity, openDay, isSidebarOpen, isMobile, openPlaceId, places } = useAppStore();
   const map = useMap();
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -19,6 +21,7 @@ const MapController: React.FC<MapControllerProps> = ({ setMapRef, filteredPlaces
   const prevIsSidebarOpen = useRef<boolean | undefined>(isSidebarOpen);
   const prevIsFullscreen = useRef<boolean>(false);
   const prevOpenPlaceId = useRef<string | null>(null);
+  const prevLocateUserTrigger = useRef<number>(locateUserTrigger);
 
   useEffect(() => {
     if (map) setMapRef(map);
@@ -31,35 +34,47 @@ const MapController: React.FC<MapControllerProps> = ({ setMapRef, filteredPlaces
   }, []);
 
   useEffect(() => {
-    // We need map to be ready. 
-    // Note: filteredPlaces might be empty if no category is selected, but if a place is opened via search, 
-    // we ensure its category is toggled on, so it should eventually appear in filteredPlaces.
-    // However, for the 'flyTo' logic, we use 'places' directly, so we don't strictly need filteredPlaces > 0
-    // for the place zoom to work, but the component usually guards against empty data.
     if (!map) return;
 
     const isCityChange = activeCity !== prevActiveCity.current;
     const isDayChange = openDay !== prevOpenDay.current;
-    const isSidebarToggle = isSidebarOpen !== prevIsSidebarOpen.current;
     const isFullscreenChange = isFullscreen !== prevIsFullscreen.current;
     const isInitialLoad = prevActiveCity.current === undefined;
     const isPlaceChange = openPlaceId !== prevOpenPlaceId.current;
+    const isLocateUser = locateUserTrigger !== prevLocateUserTrigger.current;
 
-    // 1. Handle moving to a specific place (Search Result or Click)
-    if (isPlaceChange && openPlaceId) {
+    // We only stop the map if we are actively about to move it.
+    
+    if (isLocateUser && userPosition) {
+      map.stop();
+      setIsMapAnimating(true);
+      map.flyTo(userPosition, 16, { duration: 1.5, easeLinearity: 0.25 });
+      const handleMoveEnd = () => {
+        setIsMapAnimating(false);
+        map.off('moveend', handleMoveEnd);
+      };
+      map.on('moveend', handleMoveEnd);
+    }
+    else if (isPlaceChange && openPlaceId) {
         const place = places[openPlaceId];
         if (place) {
             const targetLatLng = L.latLng(place.coordinates.lat, place.coordinates.lon);
             const currentBounds = map.getBounds();
+            const currentZoom = map.getZoom();
 
-            // If the place is already visible, then do not move the map. The popup will still open.
+            // Check if place is visible AND we are at a decent zoom level.
+            // If we are zoomed out (e.g. overview mode), we want to fly in.
+            const isZoomedInEnough = currentZoom >= 13;
             const isPlaceAlreadyVisible = currentBounds.contains(targetLatLng); 
 
-            if (!isPlaceAlreadyVisible) {
+            if (!isPlaceAlreadyVisible || !isZoomedInEnough) {
+                map.stop();
                 setIsMapAnimating(true);
                 
-                // Use panTo to move to the location without changing zoom
-                map.panTo([place.coordinates.lat, place.coordinates.lon], {
+                // If we need to zoom in, use flyTo with a target zoom
+                const targetZoom = Math.max(currentZoom, 15);
+                
+                map.flyTo([place.coordinates.lat, place.coordinates.lon], targetZoom, {
                     duration: 1.5,
                     easeLinearity: 0.25
                 });
@@ -70,49 +85,52 @@ const MapController: React.FC<MapControllerProps> = ({ setMapRef, filteredPlaces
                 };
                 map.on('moveend', handleMoveEnd);
             } else {
-                // If already visible, no map animation needed.
-                // The popup will still open due to PlaceMarkers' useEffect.
+                // If visible and zoomed in, no map animation needed.
                 setIsMapAnimating(false); 
             }
         }
     } 
-    // 2. Handle City/Day/View changes (Fit Bounds)
-    // Only if we didn't just move to a place (or if place is null)
     else if ((isCityChange || isDayChange || isFullscreenChange || isInitialLoad) && filteredPlaces.length > 0) {
       
-      // Close popups on major view changes
-      map.closePopup();
-
-      const markers = filteredPlaces.map(place => L.marker([place.coordinates.lat, place.coordinates.lon]));
-      const group = L.featureGroup(markers);
-      const bounds = group.getBounds();
-
-      let fitBoundsOptions: L.FitBoundsOptions = { maxZoom: 15, animate: true };
+      // GUARD: If the city changed because the user selected a place (implied by openPlaceId being set
+      // and matching the new city), and we are already looking at that place, DO NOT zoom out to the full city view.
+      // This prevents the "Reset" bug where CityZoomDetector updates the activeCity and MapController undoes the user's zoom.
+      const isImpliedCityChange = isCityChange && openPlaceId && places[openPlaceId]?.city === activeCity;
       
-      if (isFullscreen) {
-        fitBoundsOptions.paddingTopLeft = [0, 0];
-        fitBoundsOptions.paddingBottomRight = [0, 0];
-      } else if (!isMobile) {
-        fitBoundsOptions.paddingTopLeft = [40, 40];
-        fitBoundsOptions.paddingBottomRight = [40, 250]; 
-      } else {
-        fitBoundsOptions.paddingTopLeft = [20, 90];
-        fitBoundsOptions.paddingBottomRight = [20, 300];
-      }
+      if (!isImpliedCityChange) {
+        map.closePopup();
 
-      setIsMapAnimating(true); 
-      const handleMoveEnd = () => {
-        setIsMapAnimating(false); 
-        map.off('moveend', handleMoveEnd);
-      };
-      map.on('moveend', handleMoveEnd);
+        const markers = filteredPlaces.map(place => L.marker([place.coordinates.lat, place.coordinates.lon]));
+        const group = L.featureGroup(markers);
+        const bounds = group.getBounds();
 
-      map.stop();
-      if (isInitialLoad || (activeCity === null && openDay === null)) {
-        map.fitBounds(bounds, { ...fitBoundsOptions, maxZoom: 7, duration: 1.5 });
-      }
-      else {
-        map.flyToBounds(bounds, { ...fitBoundsOptions, duration: 1.2, easeLinearity: 0.25 });
+        let fitBoundsOptions: L.FitBoundsOptions = { maxZoom: 15, animate: true };
+        
+        if (isFullscreen) {
+          fitBoundsOptions.paddingTopLeft = [0, 0];
+          fitBoundsOptions.paddingBottomRight = [0, 0];
+        } else if (!isMobile) {
+          fitBoundsOptions.paddingTopLeft = [40, 40];
+          fitBoundsOptions.paddingBottomRight = [40, 250]; 
+        } else {
+          fitBoundsOptions.paddingTopLeft = [20, 90];
+          fitBoundsOptions.paddingBottomRight = [20, 300];
+        }
+
+        map.stop();
+        setIsMapAnimating(true); 
+        const handleMoveEnd = () => {
+          setIsMapAnimating(false); 
+          map.off('moveend', handleMoveEnd);
+        };
+        map.on('moveend', handleMoveEnd);
+
+        if (isInitialLoad || (activeCity === null && openDay === null)) {
+          map.fitBounds(bounds, { ...fitBoundsOptions, maxZoom: 7, duration: 1.5 });
+        }
+        else {
+          map.flyToBounds(bounds, { ...fitBoundsOptions, duration: 1.2, easeLinearity: 0.25 });
+        }
       }
     }
 
@@ -121,7 +139,8 @@ const MapController: React.FC<MapControllerProps> = ({ setMapRef, filteredPlaces
     prevIsSidebarOpen.current = isSidebarOpen;
     prevIsFullscreen.current = isFullscreen;
     prevOpenPlaceId.current = openPlaceId;
-  }, [map, activeCity, openDay, isSidebarOpen, isFullscreen, isMobile, filteredPlaces, setIsMapAnimating, openPlaceId, places]);
+    prevLocateUserTrigger.current = locateUserTrigger;
+  }, [map, activeCity, openDay, isSidebarOpen, isFullscreen, isMobile, filteredPlaces, setIsMapAnimating, openPlaceId, places, locateUserTrigger, userPosition]);
 
   return null;
 };

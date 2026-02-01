@@ -172,8 +172,19 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const handleCityChange = useCallback((city: CityName | null) => {
     setActiveCity(city);
     setOpenDay(null);
-    setOpenPlaceId(null);
-  }, []);
+    
+    // Smartly handle openPlaceId:
+    // If the active city is changing to null, clear the place.
+    // If the active city is changing to a new city, ONLY clear the place if it doesn't belong to that new city.
+    // This prevents the "CityZoomDetector" from closing the popup of a place we just zoomed into.
+    setOpenPlaceId(prevPlaceId => {
+      if (!city) return null;
+      if (prevPlaceId && places[prevPlaceId]?.city === city) {
+        return prevPlaceId;
+      }
+      return null;
+    });
+  }, [places]);
 
   const handleDayChange = useCallback((dayId: string | null) => {
     setOpenDay(prev => (prev === dayId ? null : dayId));

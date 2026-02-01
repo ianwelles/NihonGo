@@ -41,14 +41,12 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
   const [userPosition, setUserPosition] = useState<L.LatLng | null>(null);
   const [userHeading, setUserHeading] = useState<number | null>(null);
   const [mapInstance, setInternalMapRef] = useState<L.Map | null>(null);
+  const [locateUserTrigger, setLocateUserTrigger] = useState(0);
   
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const locationWatcher = useRef<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // --- REFACTORED LOCATION LOGIC ---
-
-  // Effect for device orientation (compass heading)
   useEffect(() => {
     const handleOrientation = (e: DeviceOrientationEvent) => {
       // @ts-ignore
@@ -79,7 +77,6 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
     return () => window.removeEventListener('deviceorientation', handleOrientation);
   }, []);
 
-  // Function to stop any active location watching
   const stopWatchingLocation = useCallback(() => {
     if (locationWatcher.current !== null) {
       navigator.geolocation.clearWatch(locationWatcher.current);
@@ -88,7 +85,6 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
     setIsLocating(false);
   }, []);
 
-  // Initial location fix on mount
   useEffect(() => {
     if (isAuthenticated) {
       navigator.geolocation.getCurrentPosition(
@@ -96,18 +92,13 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
           const { latitude, longitude } = position.coords;
           setUserPosition(new L.LatLng(latitude, longitude));
         },
-        () => {
-          // Handle error silently on initial load
-        },
+        () => {},
         { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 }
       );
     }
   }, [isAuthenticated]);
 
   const handleLocateClick = useCallback(() => {
-    if (!mapInstance) return;
-
-    // If we are already locating, stop it.
     if (isLocating) {
       stopWatchingLocation();
       return;
@@ -115,43 +106,37 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
 
     setIsLocating(true);
 
-    // First, try a quick, high-accuracy fix and fly to it.
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
         const newPos = new L.LatLng(latitude, longitude);
         setUserPosition(newPos);
-        mapInstance.flyTo(newPos, 16, { duration: 1.5, easeLinearity: 0.25 });
+        setLocateUserTrigger(Date.now()); // Trigger animation in MapController
 
-        // Once centered, downgrade to a watcher for orientation updates, etc.
-        // Stop any previous watcher first.
         stopWatchingLocation(); 
         
         locationWatcher.current = navigator.geolocation.watchPosition(
           (pos) => {
             setUserPosition(new L.LatLng(pos.coords.latitude, pos.coords.longitude));
           },
-          () => { // On error, stop watching
+          () => {
             stopWatchingLocation();
           },
           { enableHighAccuracy: true }
         );
         
-        // Set a timeout to automatically stop watching after a while to save battery
         setTimeout(() => {
             stopWatchingLocation();
-        }, 30000); // Stop after 30 seconds of active watching
+        }, 30000);
 
       },
       (error) => {
         console.error(`Geolocation error: ${error.message}`);
-        setIsLocating(false); // Stop loading animation on error
+        setIsLocating(false);
       },
       { enableHighAccuracy: true, timeout: 5000 }
     );
-  }, [mapInstance, isLocating, stopWatchingLocation]);
-
-  // --- END OF REFACTORED LOGIC ---
+  }, [isLocating, stopWatchingLocation]);
 
   const itineraryPlaceIds = useMemo(() => {
     const ids = new Set<string>();
@@ -181,7 +166,6 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
         const itineraryPlaces = Array.from(placeIdsForDay).map(id => {
           const p = places[id];
           if (!p) return null;
-          // In day view, we want all day activities shown
           return p;
         }).filter((p): p is NonNullable<typeof p> => p !== null);
 
@@ -336,14 +320,11 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
   
   const getMarkerColor = (type: string) => theme.markerColors[type] || '#ffffff';
 
-  // Use ResizeObserver to automatically invalidate map size when the container resizes (e.g. sidebar toggle)
   useEffect(() => {
     if (!mapInstance || !containerRef.current) return;
 
     let timeout: NodeJS.Timeout;
     const observer = new ResizeObserver(() => {
-      // Debounce the invalidation to avoid too many redraws during the animation,
-      // but keep it frequent enough to reduce white-space flashes.
       clearTimeout(timeout);
       timeout = setTimeout(() => {
         mapInstance.invalidateSize({ pan: true });
@@ -367,8 +348,14 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
       <LeafletMap center={[35.6895, 139.6917]} zoom={12} zoomControl={false} attributionControl={false} className="h-full w-full bg-black">
         <VectorTileLayer />
         
-        <MapController setMapRef={handleSetMapRef} filteredPlaces={filteredPlaces} setIsMapAnimating={setIsMapAnimating} />
-        <CityZoomDetector />
+        <MapController 
+          setMapRef={handleSetMapRef} 
+          filteredPlaces={filteredPlaces} 
+          setIsMapAnimating={setIsMapAnimating} 
+          locateUserTrigger={locateUserTrigger}
+          userPosition={userPosition}
+        />
+        <CityZoomDetector isMapAnimating={isMapAnimating} />
         <PopupManager isMapAnimating={isMapAnimating} />
         <UserLocation position={userPosition} heading={userHeading} />
         <PlaceMarkers places={displayPlaces} itineraryPlaceIds={itineraryPlaceIds} isMapAnimating={isMapAnimating} />
@@ -392,7 +379,6 @@ export const MapContainer: React.FC<{ setMapRef: (map: L.Map) => void, isAuthent
               WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 20px, black calc(100% - 20px), transparent 100%)'
             }}
           >
-            {/* Toggle All Button */}
             <button
               onClick={() => setAllToggles(!areAllTogglesOn)}
               className={`flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full border backdrop-blur-md transition-all duration-300

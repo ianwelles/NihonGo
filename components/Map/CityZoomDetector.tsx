@@ -4,9 +4,13 @@ import L from 'leaflet';
 import { CityName, Place } from '../../types';
 import { useAppStore } from '../../context/AppContext';
 
+interface CityZoomDetectorProps {
+  isMapAnimating: boolean;
+}
+
 // This component detects when the user moves the map and automatically 
 // updates the active city based on the visible area.
-export const CityZoomDetector: React.FC = () => {
+export const CityZoomDetector: React.FC<CityZoomDetectorProps> = ({ isMapAnimating }) => {
   const { activeCity, setActiveCity, places } = useAppStore();
 
   // Pre-calculate city centers and bounds
@@ -35,6 +39,10 @@ export const CityZoomDetector: React.FC = () => {
 
   const map = useMapEvents({
     moveend: () => {
+      // If the map is currently animating (flyTo, panTo, etc.), 
+      // we do NOT want to interfere with the state.
+      if (isMapAnimating) return;
+
       const currentZoom = map.getZoom();
       const currentCenter = map.getCenter();
 
