@@ -1,68 +1,80 @@
-export type PlaceCategory = 'hotel' | 'food' | 'sight' | 'travel' | 'shopping' | 'suggestion' | 'bar';
+export interface Trip {
+    title: string;
+    description: string;
+    startDate: string;
+    endDate: string;
+    cities: City[];
+}
 
-export type CityName = 'Tokyo' | 'Kyoto' | 'Osaka' | 'Shanghai';
+export interface City {
+    name: string;
+    country: string;
+    lat: number;
+    lng: number;
+    zoom: number;
+}
 
 export interface Place {
-  id: string;
-  name: string;
-  type: PlaceCategory;
-  city: CityName; 
-  coordinates: {
+    id: string;
+    city: string;
+    name: string;
+    type: string;
+    theme: string;
+    description: string;
     lat: number;
-    lon: number;
-  };
-  description: string;
-  url?: string;
-  tags?: string[]; // Added tags property to Place interface
-  hotelMeta?: {
-    address: string;
-    directions: string;
-    neighborhoodInsights: string;
-    tags: string[];
-  };
+    lng: number;
+    visited: boolean;
+    rating: number;
+    photos: string[];
+    notes: string;
 }
 
-export interface Activity {
-  placeId: string; 
-  time: string;
-  label?: string; 
-  description?: string; 
-  tip?: string;
-  icon?: string;
+export interface Itinerary {
+    days: Day[];
 }
 
-export interface DayItinerary {
-  dayNumber: number;
-  city: CityName;
-  date: string; 
-  theme: string;
-  hotelIds?: string[]; // Changed from hotelId to hotelIds to support multiple hotels
-  activities: Activity[];
+export interface Day {
+    day: string;
+    title: string;
+    theme: string;
+    places: string[];
 }
 
-export interface TipItem {
-  name: string;
-  notes: string;
+export interface Theme {
+    name: string;
+    icon: string;
 }
 
-export interface TipCategory {
-  title: string;
-  items: TipItem[];
+export interface Toggles {
+    theme: { [key: string]: boolean };
+    type: { [key: string]: boolean };
+    visited: boolean;
 }
 
-export interface ItineraryResponse {
-  days: DayItinerary[];
-  tipsList: TipCategory[];
+export interface AppState {
+    trip: Trip | null;
+    places: Place[];
+    itineraryData: Itinerary;
+    themes: Theme[];
+    tips: any[];
+    activeCity: City['name'] | 'all';
+    openDay: Day['day'] | 'all';
+    toggles: Toggles;
+    isSidebarOpen: boolean;
+    isMobile: boolean;
+    isLoading: boolean;
+    isAuthenticated: boolean;
+    user: any;
+    birthDate: string;
 }
 
-export interface AppData {
-  places: Record<string, Place>;
-  itinerary: DayItinerary[];
-  startDate: Date;
-  endDate: Date;
-  theme: {
-    cityColors: Record<string, string>;
-    markerColors: Record<string, string>;
-  };
-  tips: TipCategory[];
+export interface AppContextType extends AppState {
+    login: (password: string) => Promise<boolean>;
+    logout: () => void;
+    setActiveCity: (city: City['name'] | 'all') => void;
+    setOpenDay: (day: Day['day'] | 'all') => void;
+    setSidebarOpen: (isOpen: boolean) => void;
+toggleFilter: (group: 'theme' | 'type' | 'visited', key: string, value?: boolean) => void;
+    updateItinerary: (updatedItinerary: Itinerary) => Promise<void>;
+    updatePlace: (updatedPlace: Place) => Promise<void>;
 }

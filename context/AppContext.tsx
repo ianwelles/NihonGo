@@ -1,241 +1,183 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
-import { CityName, Place, DayItinerary, TipCategory } from '../types';
-import { loadAppData } from '../utils/dataLoader';
-import { cityThemeColors as fallbackCityColors, mapMarkerColors as fallbackMarkerColors } from '../theme';
-import L from 'leaflet'; // Import Leaflet
-import { SIDEBAR_WIDTH } from '../components/Map/mapConstants'; // Import SIDEBAR_WIDTH
 
-type Toggles = Record<string, boolean>;
-
-interface AppContextType {
-  // Data
-  itineraryData: DayItinerary[];
-  tipsList: TipCategory[];
-  places: Record<string, Place>;
-  theme: {
-    cityColors: Record<string, string>;
-    markerColors: Record<string, string>;
-  };
-  startDate: Date;
-  endDate: Date;
-  isLoading: boolean;
-  error: string | null;
-
-  // UI State
-  activeCity: CityName | null;
-  openDay: string | null;
-  openPlaceId: string | null;
-  toggles: Toggles;
-  isSidebarOpen: boolean;
-  isMobile: boolean;
-  popupPaddingTopLeft: L.PointExpression;
-  popupPaddingBottomRight: L.PointExpression;
-
-  // Actions
-  setActiveCity: (city: CityName | null) => void;
-  setOpenDay: (dayId: string | null) => void;
-  setOpenPlaceId: (placeId: string | null) => void;
-  toggleCategory: (key: string) => void;
-  setAllToggles: (enabled: boolean) => void;
-  setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  toggleSidebar: () => void;
-  // No explicit setter for padding, as it's derived
-}
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
+import { Trip, Place, Itinerary, Theme, Day, City, Toggles, AppState, AppContextType } from '../types';
+import { DataLoader } from '../utils/dataLoader';
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-const useMediaQuery = (query: string) => {
-  const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
+const dataLoader = new DataLoader();
 
-  useEffect(() => {
-    const media = window.matchMedia(query);
-    const listener = () => setMatches(media.matches);
-    media.addEventListener('change', listener);
-    return () => media.removeEventListener('change', listener);
-  }, [query]);
-
-  return matches;
-};
-
-export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const isMobile = useMediaQuery('(max-width: 767px)');
-  
-  // Data State
-  const [itineraryData, setItineraryData] = useState<DayItinerary[]>([]);
-  const [tipsList, setTipsList] = useState<TipCategory[]>([]);
-  const [places, setPlaces] = useState<Record<string, Place>>({});
-  const [startDate, setStartDate] = useState<Date>(new Date());
-  const [endDate, setEndDate] = useState<Date>(new Date());
-  const [theme, setTheme] = useState({
-    cityColors: fallbackCityColors,
-    markerColors: fallbackMarkerColors,
+export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [state, setState] = useState<AppState>({
+    trip: null,
+    places: [],
+    itineraryData: { days: [] },
+    themes: [],
+    tips: [],
+    activeCity: 'all',
+    openDay: 'all',
+    toggles: {
+      theme: { 'Gardens': true, 'Museums': true, 'Shimanami Kaido': true, 'Temples': true, 'Castles': true },
+      type: { 'Activity': true, 'Food': true, 'Shopping': true, 'Accommodation': true, 'Travel': true },
+      visited: false,
+    },
+    isSidebarOpen: true,
+    isMobile: window.innerWidth < 768,
+    isLoading: true,
+    isAuthenticated: false,
+    user: null,
+    birthDate: '2026-02-02'
   });
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  // UI State
-  const [activeCity, setActiveCity] = useState<CityName | null>(null);
-  const [openDay, setOpenDay] = useState<string | null>(null);
-  const [openPlaceId, setOpenPlaceId] = useState<string | null>(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(() => !window.matchMedia('(max-width: 767px)').matches);
-  const [toggles, setToggles] = useState<Toggles>({});
-  const [popupPaddingTopLeft, setPopupPaddingTopLeft] = useState<L.PointExpression>(L.point(50, 100));
-  const [popupPaddingBottomRight, setPopupPaddingBottomRight] = useState<L.PointExpression>(L.point(50, 100));
-
-  // Load Data
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const fullDataPromise = loadAppData((initialData) => {
-          setPlaces(initialData.places);
-          setTheme(initialData.theme);
-          setIsLoading(false);
-        });
-
-        const data = await fullDataPromise;
-        
-        // Update with full data once available
-        setItineraryData(data.itinerary);
-        setPlaces(data.places); // Update with all places
-        setStartDate(data.startDate);
-        setEndDate(data.endDate);
-        setTipsList(data.tips);
-        setTheme(data.theme); // Ensure final theme is set (might be same as initial)
-
-        // Discover all unique place types from the data to initialize toggles
-        const types = new Set<string>();
-        Object.values(data.places).forEach(place => {
-          // Exclude hotel as it's usually handled differently
-          if (place.type !== 'hotel' && place.type !== 'suggestion') {
-            types.add(place.type);
-          }
-        });
-        const initialToggles: Toggles = {};
-        types.forEach(type => {
-          initialToggles[type] = false;
-        });
-        setToggles(initialToggles);
-
-      } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : 'Failed to load data');
-        setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
-
-  // Manage Toggles Logic based on City/Day selection
-  useEffect(() => {
-    setToggles(prev => {
-      const nextToggles = { ...prev };
-      const keys = Object.keys(nextToggles);
-      
-      if (activeCity !== null && openDay === null) {
-        keys.forEach(key => {
-          nextToggles[key] = true;
-        });
+  const checkAuth = useCallback(async () => {
+    try {
+      const user = await dataLoader.checkAuth();
+      if (user) {
+        setState(prevState => ({ ...prevState, isAuthenticated: true, user: user, isLoading: false }));
+        loadInitialData();
       } else {
-        keys.forEach(key => {
-          nextToggles[key] = false;
-        });
+        setState(prevState => ({ ...prevState, isAuthenticated: false, user: null, isLoading: false }));
       }
-      return nextToggles;
-    });
-  }, [openDay, activeCity]);
-
-  // Calculate popup padding based on sidebar and window size
-  const calculatePopupPadding = useCallback(() => {
-    const isMobileView = window.innerWidth < 768;
-
-    if (isMobileView) {
-      setPopupPaddingTopLeft(L.point(50, 100));
-      setPopupPaddingBottomRight(L.point(50, 100));
-    } else {
-      // Corrected logic: Since the map container is resized by the sidebar (using CSS Grid),
-      // we do NOT need to offset the padding by the sidebar width. The map's 0,0 coordinate
-      // is already at the right edge of the sidebar.
-      // Adding the sidebar width here causes popups to be pushed too far right, potentially off-screen.
-      const leftPadding = 50; 
-      
-      setPopupPaddingTopLeft(L.point(leftPadding, 100));
-      setPopupPaddingBottomRight(L.point(50, 100));
+    } catch (error) {
+      console.error("Authentication check failed:", error);
+      setState(prevState => ({ ...prevState, isAuthenticated: false, user: null, isLoading: false }));
     }
-  }, []); // Removed isSidebarOpen dependency as it's no longer used in calculation
+  }, []);
 
   useEffect(() => {
-    calculatePopupPadding();
-    window.addEventListener('resize', calculatePopupPadding);
-    return () => window.removeEventListener('resize', calculatePopupPadding);
-  }, [calculatePopupPadding]);
-
-  // Actions
-  const handleCityChange = useCallback((city: CityName | null) => {
-    setActiveCity(city);
-    setOpenDay(null);
+    checkAuth();
     
-    // Smartly handle openPlaceId:
-    // If the active city is changing to null, clear the place.
-    // If the active city is changing to a new city, ONLY clear the place if it doesn't belong to that new city.
-    // This prevents the "CityZoomDetector" from closing the popup of a place we just zoomed into.
-    setOpenPlaceId(prevPlaceId => {
-      if (!city) return null;
-      if (prevPlaceId && places[prevPlaceId]?.city === city) {
-        return prevPlaceId;
+    const handleResize = () => {
+      setState(prevState => ({ ...prevState, isMobile: window.innerWidth < 768 }));
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [checkAuth]);
+
+  const loadInitialData = useCallback(async () => {
+    setState(prevState => ({ ...prevState, isLoading: true }));
+    try {
+      const [trip, places, itineraryData, themes, tips] = await dataLoader.loadAllData();
+
+      const initialCity = trip?.cities?.[0]?.name.toLowerCase() || 'all';
+
+      setState(prevState => ({
+        ...prevState,
+        trip,
+        places,
+        itineraryData,
+        themes,
+        tips,
+        activeCity: initialCity,
+        isLoading: false,
+      }));
+    } catch (error) {
+      console.error("Failed to load initial data:", error);
+      setState(prevState => ({ ...prevState, isLoading: false }));
+    }
+  }, []);
+
+  const login = useCallback(async (password: string) => {
+    setState(prevState => ({ ...prevState, isLoading: true }));
+    try {
+      const user = await dataLoader.login(password);
+      if (user) {
+        setState(prevState => ({ ...prevState, isAuthenticated: true, user: user, isLoading: false }));
+        loadInitialData();
+        return true;
+      } else {
+        setState(prevState => ({ ...prevState, isAuthenticated: false, user: null, isLoading: false }));
+        return false;
       }
-      return null;
+    } catch (error) {
+      console.error("Login failed:", error);
+      setState(prevState => ({ ...prevState, isAuthenticated: false, user: null, isLoading: false }));
+      return false;
+    }
+  }, [loadInitialData]);
+
+  const logout = useCallback(async () => {
+    try {
+      await dataLoader.logout();
+      setState(prevState => ({
+        ...prevState,
+        isAuthenticated: false,
+        user: null,
+        trip: null,
+        places: [],
+        itineraryData: { days: [] },
+      }));
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  }, []);
+
+  const setActiveCity = useCallback((city: City | 'all') => {
+    setState(prevState => ({ ...prevState, activeCity: city, openDay: 'all' }));
+  }, []);
+
+  const setOpenDay = useCallback((day: Day['day'] | 'all') => {
+    setState(prevState => ({ ...prevState, openDay: day }));
+  }, []);
+
+_
+  const setSidebarOpen = useCallback((isOpen: boolean) => {
+    setState(prevState => ({ ...prevState, isSidebarOpen: isOpen }));
+  }, []);
+
+  const toggleFilter = useCallback((group: 'theme' | 'type' | 'visited', key: string, value?: boolean) => {
+    setState(prevState => {
+      const newToggles = { ...prevState.toggles };
+      if (group === 'visited') {
+        newToggles.visited = value !== undefined ? value : !newToggles.visited;
+      } else {
+        const currentGroup = { ...newToggles[group] };
+        currentGroup[key] = value !== undefined ? value : !currentGroup[key];
+        newToggles[group] = currentGroup;
+      }
+      return { ...prevState, toggles: newToggles };
     });
-  }, [places]);
-
-  const handleDayChange = useCallback((dayId: string | null) => {
-    setOpenDay(prev => (prev === dayId ? null : dayId));
-    setOpenPlaceId(null);
+  }, []);
+  
+  const updateItinerary = useCallback(async (updatedItinerary: Itinerary) => {
+    try {
+      await dataLoader.saveItinerary(updatedItinerary);
+      setState(prevState => ({...prevState, itineraryData: updatedItinerary}));
+    } catch (error) {
+      console.error("Failed to update itinerary:", error);
+    }
   }, []);
 
-  const toggleCategory = useCallback((key: string) => {
-    setToggles(prev => ({ ...prev, [key]: !prev[key] }));
-  }, []);
-
-  const setAllToggles = useCallback((enabled: boolean) => {
-    setToggles(prev => {
-      const next = { ...prev };
-      Object.keys(next).forEach(key => {
-        next[key] = enabled;
+  const updatePlace = useCallback(async (updatedPlace: Place) => {
+    try {
+      await dataLoader.savePlace(updatedPlace);
+      setState(prevState => {
+        const newPlaces = prevState.places.map(p => p.id === updatedPlace.id ? updatedPlace : p);
+        return {...prevState, places: newPlaces};
       });
-      return next;
-    });
+    } catch (error) {
+      console.error("Failed to update place:", error);
+    }
   }, []);
 
-  const toggleSidebar = useCallback(() => {
-    setIsSidebarOpen(prev => !prev);
-  }, []);
 
-  const value = {
-    itineraryData,
-    tipsList,
-    places,
-    theme,
-    startDate,
-    endDate,
-    isLoading,
-    error,
-    activeCity,
-    openDay,
-    openPlaceId,
-    toggles,
-    isSidebarOpen,
-    isMobile,
-    popupPaddingTopLeft,
-    popupPaddingBottomRight,
-    setActiveCity: handleCityChange,
-    setOpenDay: handleDayChange,
-    setOpenPlaceId,
-    toggleCategory,
-    setAllToggles,
-    setIsSidebarOpen,
-    toggleSidebar
-  };
+  const value = useMemo(() => ({
+    ...state,
+    login,
+    logout,
+    setActiveCity,
+    setOpenDay,
+    setSidebarOpen,
+    toggleFilter,
+    updateItinerary,
+    updatePlace
+  }), [state, login, logout, setActiveCity, setOpenDay, setSidebarOpen, toggleFilter, updateItinerary, updatePlace]);
 
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+  return (
+    <AppContext.Provider value={value}>
+      {children}
+    </AppContext.Provider>
+  );
 };
 
 export const useAppStore = () => {
