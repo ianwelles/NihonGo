@@ -103,6 +103,14 @@ export const TimelineView: React.FC = () => {
     setOpenPlaceId 
   } = useAppStore();
 
+  const detailsRefs = useRef<Record<string, HTMLDetailsElement | null>>({});
+
+  useEffect(() => {
+    if (openDay && detailsRefs.current[openDay]) {
+      detailsRefs.current[openDay]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [openDay]);
+
   if (!activeCity) {
     return (
       <div className="py-12 px-6 text-center bg-card-bg rounded-2xl border border-border">
@@ -117,14 +125,6 @@ export const TimelineView: React.FC = () => {
 
   const filteredItineraryDays = fullItineraryDays.filter(day => day.city === activeCity);
   const activeCityColor = theme.cityColors[activeCity] || '#FF1744';
-
-  const detailsRefs = useRef<Record<string, HTMLDetailsElement | null>>({});
-
-  useEffect(() => {
-    if (openDay && detailsRefs.current[openDay]) {
-      detailsRefs.current[openDay]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }, [openDay]);
 
   const handleToggle = (e: React.MouseEvent, dayIdentifier: string) => {
     e.preventDefault();
